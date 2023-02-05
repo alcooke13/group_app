@@ -3,7 +3,7 @@ package com.group.group.models;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class GroupTests {
 
@@ -11,16 +11,32 @@ public class GroupTests {
     Event event1;
     Event event2;
     Event event3;
+    User user1;
+    User user2;
 
     @Before
     public void before() {
+        user1 = new User("ali", 071234456, "Edinburgh");
+        user2 = new User("rory", 071234436, "Edinburgh");
         event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking");
         event2 = new Event("25-02-2023", "Boogie", "The club", "Dancing");
         group1 = new Group("Dream Team");
         group1.setUpcomingEvent(event1);
-        group1.addToPastEvents(event2);
+        group1.addPastEvent(event2);
+        group1.addUser(user1);
     }
 
+
+    @Test
+    public void canGetUsers() {
+        assertEquals(1, group1.getUsers().size());
+    }
+
+    @Test
+    public void canAddUser() {
+        group1.addUser(user2);
+        assertEquals(2, group1.getUsers().size());
+    }
 
     @Test
     public void canGetGroupName() {
@@ -51,8 +67,8 @@ public class GroupTests {
     }
 
     @Test
-    public void canAddPastEvents() {
-        group1.addToPastEvents(event2);
+    public void canAddPastEvent() {
+        group1.addPastEvent(event2);
         assertEquals(2, group1.getPastEvents().size());
     }
 }

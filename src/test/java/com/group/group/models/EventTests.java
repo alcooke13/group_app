@@ -1,7 +1,7 @@
 package com.group.group.models;
+
 import org.junit.Before;
 import org.junit.Test;
-import com.group.group.models.Event;
 
 import static org.junit.Assert.*;
 

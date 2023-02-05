@@ -4,15 +4,24 @@ import java.util.ArrayList;
 
 public class Group {
 
-//    private ArrayList<User> users;
+    private ArrayList<User> users;
     private String groupName;
     private Event upcomingEvent;
     private ArrayList<Event> pastEvents;
 
     public Group(String groupName) {
+        this.users = new ArrayList<User>();
         this.groupName = groupName;
         this.upcomingEvent = null;
         this.pastEvents = new ArrayList<Event>();
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public void addUser(User user) {
+        this.users.add(user);
     }
 
     public String getGroupName() {
@@ -35,7 +44,7 @@ public class Group {
         return this.pastEvents;
     }
 
-    public void addToPastEvents(Event event){
+    public void addPastEvent(Event event){
         this.pastEvents.add(event);
     }
 
