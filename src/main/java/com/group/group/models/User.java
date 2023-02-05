@@ -1,7 +1,10 @@
 package com.group.group.models;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 
+@Entity
+@Table(name = "folders")
 public class User {
 
     private String userName;

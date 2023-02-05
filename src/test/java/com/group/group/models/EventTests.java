@@ -3,15 +3,25 @@ package com.group.group.models;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 public class EventTests {
 
     Event event1;
+    Date date;
+    ActivityPoll activityPoll;
+    LocationPoll locationPoll;
+    DatePoll datePoll;
 
     @Before
     public void before() {
         event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking");
+        date = new Date();
+        activityPoll = new ActivityPoll(date);
+        locationPoll = new LocationPoll(date);
+        datePoll = new DatePoll(date);
     }
 
     @Test
@@ -57,6 +67,43 @@ public class EventTests {
         event1.setActivity("Watching");
         assertEquals("Watching", event1.getActivity());
     }
+
+    @Test
+    public void canGetActivityPoll() {
+        assertNull(event1.getActivityPoll());
+    }
+
+    @Test
+    public void canSetActivityPoll() {
+        event1.setActivityPoll(activityPoll);
+        assertEquals(activityPoll, event1.getActivityPoll());
+    }
+
+    @Test
+    public void canGetLocationPoll() {
+        assertNull(event1.getLocationPoll());
+    }
+
+    @Test
+    public void canSetLocationPoll() {
+        event1.setLocationPoll(locationPoll);
+        assertEquals(locationPoll, event1.getLocationPoll());
+    }
+
+    @Test
+    public void canGetDatePoll() {
+        assertNull(event1.getDatePoll());
+    }
+
+
+    @Test
+    public void canSetDatePoll() {
+        event1.setDatePoll(datePoll);
+        assertEquals(datePoll, event1.getDatePoll());
+    }
+
+
+
 }
 
 

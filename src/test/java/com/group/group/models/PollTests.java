@@ -16,6 +16,7 @@ public class PollTests {
     Date date1;
     Date date2;
 
+
     @Before
     public void before() {
         user1 = new User("ali", 071234456, "Edinburgh");
@@ -55,4 +56,8 @@ public class PollTests {
         date2 = new Date();
         assertEquals(date2, activityPoll.getTimeout());
     }
+
+
+
+
 }
