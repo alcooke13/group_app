@@ -70,12 +70,12 @@ import org.springframework.stereotype.Component;
             groupRepository.save(group2);
             groupRepository.save(group3);
 
-                    Event event1 = new Event("Monday 15th Feb", "Catching Up", "Edinburgh", "Beach");
-                    Event event2 = new Event("Tuesday 20th Mar", "Seeing The Gang", "Edinburgh", "Pub");
-                    Event event3 = new Event("Saturday 25th March", "Hang Out", "Glasgow", "Sam's House");
-                    Event event4 = new Event("Sunday 3rd March", "Work Gals Night Out", "Edinburgh", "Dinner");
-                    Event event5 = new Event("Tuesday 16th Feb", "Ken's Bday", "Edinburgh", "Ken's House");
-                    Event event6 = new Event("Tuesday 16th Feb", "Games  Night", "Edinburgh", "Board Games");
+                    Event event1 = new Event("Monday 15th Feb", "Catching Up", "Edinburgh", "Beach", group1);
+                    Event event2 = new Event("Tuesday 20th Mar", "Seeing The Gang", "Edinburgh", "Pub", group1);
+                    Event event3 = new Event("Saturday 25th March", "Hang Out", "Glasgow", "Sam's House", group2);
+                    Event event4 = new Event("Sunday 3rd March", "Work Gals Night Out", "Edinburgh", "Dinner", group2);
+                    Event event5 = new Event("Tuesday 16th Feb", "Ken's Bday", "Edinburgh", "Ken's House", group3);
+                    Event event6 = new Event("Tuesday 16th Feb", "Games  Night", "Edinburgh", "Board Games", group3);
 
                     eventRepository.save(event1);
                     eventRepository.save(event2);

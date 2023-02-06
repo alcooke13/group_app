@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "groups")
@@ -30,31 +31,26 @@ public class Group {
                     nullable = false,
                     updatable = false)
             })
-    private ArrayList<User> users;
+    private List<User> users;
 
     @Column(name = "group_name")
     private String groupName;
 
-    @OneToOne
-    @JoinColumn(name = "group_id")
-    private Event upcomingEvent;
-
-    @OneToMany
-    @JoinColumn(name = "group_id")
-    private ArrayList<Event> pastEvents;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    private List<Event> events;
 
     public Group(String groupName) {
         this.users = new ArrayList<User>();
         this.groupName = groupName;
-        this.upcomingEvent = null;
-        this.pastEvents = new ArrayList<Event>();
+        this.events = new ArrayList<Event>();
     }
 
     public Group() {
 
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
@@ -70,20 +66,12 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public Event getUpcomingEvent() {
-        return this.upcomingEvent;
+    public List<Event> getEvents() {
+        return this.events;
     }
 
-    public void setUpcomingEvent(Event upcomingEvent) {
-        this.upcomingEvent = upcomingEvent;
-    }
-
-    public ArrayList<Event> getPastEvents() {
-        return this.pastEvents;
-    }
-
-    public void addPastEvent(Event event){
-        this.pastEvents.add(event);
+    public void addEvent(Event event){
+        this.events.add(event);
     }
 
 }
