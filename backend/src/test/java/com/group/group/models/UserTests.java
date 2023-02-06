@@ -15,9 +15,9 @@ public class UserTests {
 
     @Before
     public void before() {
-        user1 = new User("ali", 071234456, "Edinburgh");
-        user2 = new User("rory", 071234436, "Edinburgh");
-        user3 = new User("ed", 0712344361, "Edinburgh");
+        user1 = new User("ali", "071234456", "Edinburgh");
+        user2 = new User("rory", "071234436", "Edinburgh");
+        user3 = new User("ed", "0712344361", "Edinburgh");
         group1 = new Group("Dream Team");
         group2 = new Group("New Dream Team");
         user1.addGroup(group1);
@@ -37,13 +37,13 @@ public class UserTests {
 
     @Test
     public void canGetPhoneNumber() {
-        assertEquals(071234456, user1.getPhoneNumber());
+        assertEquals("071234456", user1.getPhoneNumber());
     }
 
     @Test
     public void canSetPhoneNumber() {
-        user1.setPhoneNumber(0723234234);
-        assertEquals(0723234234, user1.getPhoneNumber());
+        user1.setPhoneNumber("0723234234");
+        assertEquals("0723234234", user1.getPhoneNumber());
     }
 
     @Test

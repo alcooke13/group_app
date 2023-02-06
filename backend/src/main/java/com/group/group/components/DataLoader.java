@@ -38,16 +38,16 @@ import org.springframework.stereotype.Component;
         }
 
         public void run(ApplicationArguments args) {
-            User jenna = new User("Jenna", 07447646000, "23 Canonsleigh Crescent, Leigh-On-Sea");
-            User ed = new User("Ed", 07447351324, "1 Church Cottages, Church Street, Stratton Audley");
-            User rory = new User("Rory", 07412908765, "Sydenham, Victoria Road, Dodford");
-            User ali = new User("Alistair", 07908054321, "2 Mill Croft, Neston");
-            User jacob = new User("Jacob", 079542321098, "66 Baulk Lane, Harworth");
-            User heather = new User("Heather", 07163296035, "3 Fox Close, Dunton");
-            User grace = new User("Grace", 0776543289, "24 Grange Road, Riddlesden");
-            User samantha = new User("Samantha", 07096756432, "66 Baulk Lane, Harworth");
-            User barbara = new User("Barbara", 07009887653, "45 Oulton Avenue, Belmont");
-            User kenneth = new User("Kenneth", 07890888652, "The Cottage, Besselsleigh");
+            User jenna = new User("Jenna", "07447646000", "23 Canonsleigh Crescent, Leigh-On-Sea");
+            User ed = new User("Ed", "07447351324", "1 Church Cottages, Church Street, Stratton Audley");
+            User rory = new User("Rory", "07412908765", "Sydenham, Victoria Road, Dodford");
+            User ali = new User("Alistair", "07908054321", "2 Mill Croft, Neston");
+            User jacob = new User("Jacob", "079542321098", "66 Baulk Lane, Harworth");
+            User heather = new User("Heather", "07163296035", "3 Fox Close, Dunton");
+            User grace = new User("Grace", "0776543289", "24 Grange Road, Riddlesden");
+            User samantha = new User("Samantha", "07096756432", "66 Baulk Lane, Harworth");
+            User barbara = new User("Barbara", "07009887653", "45 Oulton Avenue, Belmont");
+            User kenneth = new User("Kenneth", "07890888652", "The Cottage, Besselsleigh");
 
 
             userRepository.save(jenna);
