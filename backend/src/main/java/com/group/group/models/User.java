@@ -42,17 +42,17 @@ public class User {
     private List<Group> groups;
 
     @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="tbl_friends",
+    @JoinTable(name="table_friends",
 
-            joinColumns=@JoinColumn(name="personId"),
-            inverseJoinColumns=@JoinColumn(name="friendId")
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="friend_id")
     )
     private List<User> friends;
 
     @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="tbl_friends",
-            joinColumns=@JoinColumn(name="friendId"),
-            inverseJoinColumns=@JoinColumn(name="personId")
+    @JoinTable(name="table_friends",
+            joinColumns=@JoinColumn(name="friend_id"),
+            inverseJoinColumns=@JoinColumn(name="user_id")
     )
     private List<User> friendOf;
 
@@ -106,16 +106,8 @@ public class User {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
-        this.friends = friends;
-    }
-
     public List<User> getFriendOf() {
         return friendOf;
-    }
-
-    public void setFriendOf(List<User> friendOf) {
-        this.friendOf = friendOf;
     }
 
     public void addFriend(User user){

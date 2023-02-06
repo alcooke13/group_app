@@ -57,7 +57,4 @@ public class PollTests {
         assertEquals(date2, activityPoll.getTimeout());
     }
 
-
-
-
 }

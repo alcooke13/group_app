@@ -7,10 +7,13 @@ import java.util.Date;
 @Entity
 @Table(name = "location_polls")
 public class LocationPoll extends Poll {
+
     public LocationPoll(Date timeout) {
         super(timeout);
     }
+
     public LocationPoll() {
+
     }
 
 }

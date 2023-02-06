@@ -54,7 +54,6 @@ import org.springframework.stereotype.Component;
             rory.addFriend(jenna);
             ed.addFriend(heather);
 
-
             userRepository.save(rory);
             userRepository.save(ali);
             userRepository.save(jenna);
@@ -66,9 +65,6 @@ import org.springframework.stereotype.Component;
             userRepository.save(barbara);
             userRepository.save(kenneth);
 
-
-
-
             Group group1 = new Group("Group 1");
             Group group2 = new Group("Group 2");
             Group group3 = new Group("Group 3");
@@ -77,41 +73,38 @@ import org.springframework.stereotype.Component;
             groupRepository.save(group2);
             groupRepository.save(group3);
 
-                    Event event1 = new Event("Monday 15th Feb", "Catching Up", "Edinburgh", "Beach", group1);
-                    Event event2 = new Event("Tuesday 20th Mar", "Seeing The Gang", "Edinburgh", "Pub", group1);
-                    Event event3 = new Event("Saturday 25th March", "Hang Out", "Glasgow", "Sam's House", group2);
-                    Event event4 = new Event("Sunday 3rd March", "Work Gals Night Out", "Edinburgh", "Dinner", group2);
-                    Event event5 = new Event("Tuesday 16th Feb", "Ken's Bday", "Edinburgh", "Ken's House", group3);
-                    Event event6 = new Event("Tuesday 16th Feb", "Games  Night", "Edinburgh", "Board Games", group3);
+            Event event1 = new Event("Monday 15th Feb", "Catching Up", "Edinburgh", "Beach", group1);
+            Event event2 = new Event("Tuesday 20th Mar", "Seeing The Gang", "Edinburgh", "Pub", group1);
+            Event event3 = new Event("Saturday 25th March", "Hang Out", "Glasgow", "Sam's House", group2);
+            Event event4 = new Event("Sunday 3rd March", "Work Gals Night Out", "Edinburgh", "Dinner", group2);
+            Event event5 = new Event("Tuesday 16th Feb", "Ken's Bday", "Edinburgh", "Ken's House", group3);
+            Event event6 = new Event("Tuesday 16th Feb", "Games  Night", "Edinburgh", "Board Games", group3);
 
-                    eventRepository.save(event1);
-                    eventRepository.save(event2);
-                    eventRepository.save(event3);
-                    eventRepository.save(event4);
-                    eventRepository.save(event5);
-                    eventRepository.save(event6);
+            eventRepository.save(event1);
+            eventRepository.save(event2);
+            eventRepository.save(event3);
+            eventRepository.save(event4);
+            eventRepository.save(event5);
+            eventRepository.save(event6);
 
-                    group1.addUser(jenna);
-                    group1.addUser(rory);
-                    group1.addUser(ed);
-                    group1.addUser(ali);
+            group1.addUser(jenna);
+            group1.addUser(rory);
+            group1.addUser(ed);
+            group1.addUser(ali);
 
-                    group2.addUser(samantha);
-                    group2.addUser(jacob);
-                    group2.addUser(heather);
-                    group2.addUser(grace);
-                    group2.addUser(barbara);
-                    group2.addUser(kenneth);
+            group2.addUser(samantha);
+            group2.addUser(jacob);
+            group2.addUser(heather);
+            group2.addUser(grace);
+            group2.addUser(barbara);
+            group2.addUser(kenneth);
 
-                    group3.addUser(samantha);
-                     group3.addUser(jacob);
-                group3.addUser(heather);
+            group3.addUser(samantha);
+            group3.addUser(jacob);
+            group3.addUser(heather);
 
             groupRepository.save(group1);
             groupRepository.save(group2);
             groupRepository.save(group3);
-
-
         }
-
     }

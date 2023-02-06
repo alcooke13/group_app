@@ -69,12 +69,12 @@ public class UserTests {
     }
 
     @Test
-    public void canGetContacts() {
+    public void canGetFriends() {
         assertEquals(1, user1.getFriends().size());
     }
 
     @Test
-    public void canAddContact() {
+    public void canAddFriend() {
         user1.addFriend(user3);
         assertEquals(2, user1.getFriends().size());
     }

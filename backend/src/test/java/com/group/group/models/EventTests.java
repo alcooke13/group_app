@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 public class EventTests {
 
+    Group group1;
     Event event1;
     Date date;
     ActivityPoll activityPoll;
@@ -17,7 +18,8 @@ public class EventTests {
 
     @Before
     public void before() {
-        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking");
+        group1 = new Group("Dream Team");
+        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking", group1);
         date = new Date();
         activityPoll = new ActivityPoll(date);
         locationPoll = new LocationPoll(date);
