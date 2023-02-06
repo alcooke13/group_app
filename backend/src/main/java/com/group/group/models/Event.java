@@ -1,5 +1,6 @@
 package com.group.group.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -11,6 +12,11 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
 
     @Column(name = "date")
     private String date;
@@ -25,18 +31,19 @@ public class Event {
     private String activity;
 
     @OneToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "activity_id")
     private ActivityPoll activityPoll;
 
     @OneToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "location_id")
     private LocationPoll locationPoll;
 
     @OneToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "date_id")
     private DatePoll datePoll;
 
-    public Event(String date, String eventName, String eventLocation, String activity) {
+    public Event(String date, String eventName, String eventLocation, String activity, Group group) {
+        this.group = group;
         this.date = date;
         this.eventName = eventName;
         this.eventLocation = eventLocation;
@@ -55,6 +62,14 @@ public class Event {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public String getDate() {

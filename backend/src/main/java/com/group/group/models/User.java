@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -38,10 +39,10 @@ public class User {
                     nullable = false,
                     updatable = false)
             })
-    private ArrayList<Group> groups;
+    private List<Group> groups;
 
     // To do
-    private ArrayList<User> contacts;
+    private List<User> contacts;
 
     public User(String userName, String phoneNumber, String address) {
         this.userName = userName;
@@ -71,7 +72,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public ArrayList<Group> getGroups() {
+    public List<Group> getGroups() {
         return this.groups;
     }
 
@@ -87,7 +88,7 @@ public class User {
         this.address = address;
     }
 
-    public ArrayList<User> getContacts() {
+    public List<User> getContacts() {
         return this.contacts;
     }
 
