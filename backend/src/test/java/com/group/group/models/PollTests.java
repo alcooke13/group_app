@@ -19,9 +19,9 @@ public class PollTests {
 
     @Before
     public void before() {
-        user1 = new User("ali", 071234456, "Edinburgh");
-        user2 = new User("rory", 071234436, "Edinburgh");
-        user3 = new User("ed", 0712344361, "Edinburgh");
+        user1 = new User("ali", "071234456", "Edinburgh");
+        user2 = new User("rory", "071234436", "Edinburgh");
+        user3 = new User("ed", "0712344361", "Edinburgh");
         date1 = new Date();
         activityPoll = new ActivityPoll(date1);
         activityPoll.addOption("hike");

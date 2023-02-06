@@ -16,8 +16,8 @@ public class GroupTests {
 
     @Before
     public void before() {
-        user1 = new User("ali", 071234456, "Edinburgh");
-        user2 = new User("rory", 071234436, "Edinburgh");
+        user1 = new User("ali", "071234456", "Edinburgh");
+        user2 = new User("rory", "071234436", "Edinburgh");
         event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking");
         event2 = new Event("25-02-2023", "Boogie", "The club", "Dancing");
         group1 = new Group("Dream Team");

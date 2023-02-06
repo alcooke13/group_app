@@ -18,7 +18,7 @@ public class User {
     private String userName;
 
     @Column(name = "phone_name")
-    private int phoneNumber;
+    private String phoneNumber;
 
     @Column(name = "address")
     private String address;
@@ -43,7 +43,7 @@ public class User {
     // To do
     private ArrayList<User> contacts;
 
-    public User(String userName, int phoneNumber, String address) {
+    public User(String userName, String phoneNumber, String address) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -63,11 +63,11 @@ public class User {
         this.userName = userName;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return this.phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
