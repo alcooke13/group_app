@@ -49,10 +49,15 @@ import org.springframework.stereotype.Component;
             User barbara = new User("Barbara", "07009887653", "45 Oulton Avenue, Belmont");
             User kenneth = new User("Kenneth", "07890888652", "The Cottage, Besselsleigh");
 
+            rory.addFriend(ed);
+            rory.addFriend(ali);
+            rory.addFriend(jenna);
+            ed.addFriend(heather);
 
-            userRepository.save(jenna);
-            userRepository.save(ali);
+
             userRepository.save(rory);
+            userRepository.save(ali);
+            userRepository.save(jenna);
             userRepository.save(ed);
             userRepository.save(jacob);
             userRepository.save(heather);
@@ -60,6 +65,8 @@ import org.springframework.stereotype.Component;
             userRepository.save(samantha);
             userRepository.save(barbara);
             userRepository.save(kenneth);
+
+
 
 
             Group group1 = new Group("Group 1");
