@@ -41,15 +41,29 @@ public class User {
             })
     private List<Group> groups;
 
-    // To do
-    private List<User> contacts;
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="tbl_friends",
+
+            joinColumns=@JoinColumn(name="personId"),
+            inverseJoinColumns=@JoinColumn(name="friendId")
+    )
+    private List<User> friends;
+
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="tbl_friends",
+            joinColumns=@JoinColumn(name="friendId"),
+            inverseJoinColumns=@JoinColumn(name="personId")
+    )
+    private List<User> friendOf;
 
     public User(String userName, String phoneNumber, String address) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.groups = new ArrayList<Group>();
-        this.contacts = new ArrayList<User>();
+        this.friends = new ArrayList<>();
+        this.friendOf = new ArrayList<>();
+        this.groups = new ArrayList<>();
+
     }
 
     public User() {
@@ -88,11 +102,23 @@ public class User {
         this.address = address;
     }
 
-    public List<User> getContacts() {
-        return this.contacts;
+    public List<User> getFriends() {
+        return friends;
     }
 
-    public void addContact(User user) {
-        this.contacts.add(user);
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
+
+    public List<User> getFriendOf() {
+        return friendOf;
+    }
+
+    public void setFriendOf(List<User> friendOf) {
+        this.friendOf = friendOf;
+    }
+
+    public void addFriend(User user){
+        this.friends.add(user);
     }
 }

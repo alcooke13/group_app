@@ -21,7 +21,7 @@ public class UserTests {
         group1 = new Group("Dream Team");
         group2 = new Group("New Dream Team");
         user1.addGroup(group1);
-        user1.addContact(user2);
+        user1.addFriend(user2);
     }
 
     @Test
@@ -70,12 +70,12 @@ public class UserTests {
 
     @Test
     public void canGetContacts() {
-        assertEquals(1, user1.getContacts().size());
+        assertEquals(1, user1.getFriends().size());
     }
 
     @Test
     public void canAddContact() {
-        user1.addContact(user3);
-        assertEquals(2, user1.getContacts().size());
+        user1.addFriend(user3);
+        assertEquals(2, user1.getFriends().size());
     }
 }
