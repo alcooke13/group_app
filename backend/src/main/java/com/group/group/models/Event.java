@@ -54,9 +54,8 @@ public class Event {
     }
 
     public Event() {
+
     }
-
-
 
     public Long getId() {
         return this.id;
@@ -129,4 +128,5 @@ public class Event {
     public void setDatePoll(DatePoll datePoll) {
         this.datePoll = datePoll;
     }
+    
 }

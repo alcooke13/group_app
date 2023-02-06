@@ -13,6 +13,7 @@ public class ActivityPoll extends Poll {
     }
 
     public ActivityPoll() {
+
     }
 
 }

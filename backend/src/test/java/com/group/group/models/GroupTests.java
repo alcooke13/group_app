@@ -10,7 +10,6 @@ public class GroupTests {
     Group group1;
     Event event1;
     Event event2;
-    Event event3;
     User user1;
     User user2;
 
@@ -18,14 +17,12 @@ public class GroupTests {
     public void before() {
         user1 = new User("ali", "071234456", "Edinburgh");
         user2 = new User("rory", "071234436", "Edinburgh");
-        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking");
-        event2 = new Event("25-02-2023", "Boogie", "The club", "Dancing");
         group1 = new Group("Dream Team");
-        group1.setUpcomingEvent(event1);
-        group1.addPastEvent(event2);
+        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking", group1);
+        event2 = new Event("25-02-2023", "Boogie", "The club", "Dancing", group1);
+        group1.addEvent(event1);
         group1.addUser(user1);
     }
-
 
     @Test
     public void canGetUsers() {
@@ -50,25 +47,13 @@ public class GroupTests {
     }
 
     @Test
-    public void canGetUpcomingEvent() {
-        assertEquals(event1, group1.getUpcomingEvent());
+    public void canGetEvents() {
+        assertEquals(1, group1.getEvents().size());
     }
 
     @Test
-    public void canSetUpcomingEvent() {
-        event3 =  new Event("20-03-2023", "Hangout", "Fountainpark", "Bowling");
-        group1.setUpcomingEvent(event3);
-        assertEquals(event3, group1.getUpcomingEvent());
-    }
-
-    @Test
-    public void canGetPastEvents() {
-        assertEquals(1, group1.getPastEvents().size());
-    }
-
-    @Test
-    public void canAddPastEvent() {
-        group1.addPastEvent(event2);
-        assertEquals(2, group1.getPastEvents().size());
+    public void canAddEvent() {
+        group1.addEvent(event2);
+        assertEquals(2, group1.getEvents().size());
     }
 }
