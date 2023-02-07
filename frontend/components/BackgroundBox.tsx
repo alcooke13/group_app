@@ -1,16 +1,19 @@
 import { StyleSheet, View } from 'react-native'
 
-interface BackgroundProps {
+interface Props {
     children: JSX.Element;
 }
 
-const BackgroundBox = (props: BackgroundProps) => {
-    const {children} = props
+const BackgroundBox = (props: Props) => {
+
+    const {children} = props;
     
-    return <View style={styles.boxContainer}>
-              {children}
-          </View>
-}
+    return (
+        <View style={styles.boxContainer}>
+            {children}
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     boxContainer: {
@@ -19,8 +22,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#E0E1F0",
         borderRadius: 15,   
     },
-
-})
-
+});
 
 export default BackgroundBox;

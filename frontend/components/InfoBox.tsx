@@ -1,26 +1,26 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-export type Props = {
+interface Props {
   header: string;
   children: JSX.Element;
 };
 
-const InfoBox: React.FC<Props> = ({
-  header, children
-}) => {
+const InfoBox = (props: Props) => {
+
+  const {header, children} = props;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.header}>
-          {header}
-        </Text>
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <Text style={styles.header}>
+            {header}
+          </Text>
+        </View>
+        <View style={styles.main}>
+          {children}
+        </View>
       </View>
-      <View style={styles.main}>
-        {children}
-      </View>
-    </View>
   );
 };
 
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '90%',
     maxHeight: '20%',
-
   },
   top: {
     width: '100%',
