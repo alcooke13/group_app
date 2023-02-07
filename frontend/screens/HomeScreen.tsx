@@ -2,12 +2,15 @@ import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import LineBreak from '../components/LineBreak';
+
 
 
 export default function HomeScreen(){
     return (
         <SafeAreaView style={styles.container}>
             <Text  style={styles.title} >Home view</Text>
+            <LineBreak/>
         </SafeAreaView>
     )
 
