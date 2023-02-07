@@ -12,9 +12,9 @@ const SmallButton = (props: Props) => {
     return (
         <TouchableOpacity
         onPress={onPress}
-        style={{...styles.container}}
+        style={styles.container}
         >
-        <Text style={{...styles.text }}> {title}
+        <Text style={styles.text }> {title}
             </Text>
             </TouchableOpacity>
     );
@@ -39,10 +39,4 @@ const SmallButton = (props: Props) => {
             borderRadius: 5,
         }
     })
-    SmallButton.defaultProps = {
-        width: 106,
-        height: 33,
-        margin:5,
-    }
-
     export default SmallButton;
