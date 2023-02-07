@@ -12,17 +12,16 @@ export default function App() {
   return (
 
     <SafeAreaProvider>
-      <Navigation/>
-      <StatusBar style="auto" />
+      <Navigation />
+      <StatusBar style="auto"/>
     </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    flex:1,
+    backgroundColor: 'black'
+   
+  }
 });
