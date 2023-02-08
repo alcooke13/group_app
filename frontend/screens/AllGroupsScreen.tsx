@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, View, Image, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -27,7 +27,7 @@ export default function AllGroupsScreen(){
     
     return (
         <SafeAreaView style={styles.container}>
-          <Text>hiya</Text>
+          <Image source={require('../assets/GroupLogo1.png')}/>
           {getGroupName}
         </SafeAreaView>
     )
