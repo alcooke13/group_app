@@ -14,13 +14,13 @@ public abstract class Poll {
     private Long id;
 
     @Column(name = "options")
-    private HashMap<String, ArrayList<User>> options;
+    private HashMap<String, ArrayList<Long>> options;
 
     @Column(name = "timeout")
     private LocalDateTime timeout;
 
     public Poll(LocalDateTime timeout) {
-        this.options = new HashMap<String, ArrayList<User>>();
+        this.options = new HashMap<String, ArrayList<Long>>();
         this.timeout = timeout;
     }
 
@@ -35,20 +35,20 @@ public abstract class Poll {
         this.id = id;
     }
 
-    public void setOptions(HashMap<String, ArrayList<User>> options) {
+    public void setOptions(HashMap<String, ArrayList<Long>> options) {
         this.options = options;
     }
 
-    public HashMap<String, ArrayList<User>> getOptions() {
+    public HashMap<String, ArrayList<Long>> getOptions() {
         return this.options;
     }
 
     public void addOption(String option) {
-        this.options.put(option, new ArrayList<User>());
+        this.options.put(option, new ArrayList<Long>());
     }
 
-    public void addUserToOption(String option, User user) {
-        this.options.get(option).add(user);
+    public void addUserToOption(String option, Long user_id) {
+        this.options.get(option).add(user_id);
     }
 
     public LocalDateTime getTimeout() {
