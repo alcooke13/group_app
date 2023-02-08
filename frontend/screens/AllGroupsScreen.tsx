@@ -19,16 +19,20 @@ export default function AllGroupsScreen(){
       })
     }, []);
 
-    var getGroupName = groups?.flatMap(function(val){
-      return <GroupNameButton title={val.groupName} status={false}/>
+    var allUsersGroupsByName = groups?.flatMap(function(val){
+      return <GroupNameButton title={val.groupName} status={false} onPress={singleGroupView(val.groupName)}/>
      })
+
+     function singleGroupView(val : string)
+      console.log(val)
+     }
 
 
     
     return (
         <SafeAreaView style={styles.container}>
           <Image source={require('../assets/GroupLogo1.png')}/>
-          {getGroupName}
+          {allUsersGroupsByName}
         </SafeAreaView>
     )
 }
