@@ -17,8 +17,8 @@ const ScreenHeaderText = (props: Props) => {
 const styles = StyleSheet.create({
     text: {
         fontSize: 30,
-        color:#ff914d,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color:"#ff914d"
     }
 });
 export default ScreenHeaderText;
