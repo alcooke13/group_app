@@ -10,7 +10,5 @@ import java.util.List;
 @Repository
 public interface DatePollRepository extends JpaRepository<DatePoll, Long> {
 
-    List<DatePoll> findDatePollsByEventsId(Long id);
-
-    List<DatePoll> findDatePollsByGroupId(Long id);
+    List<DatePoll> findDatePollByEventGroupUsersId(Long id);
 }

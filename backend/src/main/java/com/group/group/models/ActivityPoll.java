@@ -1,5 +1,7 @@
 package com.group.group.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.Date;
 @Table(name = "activity_polls")
 public class ActivityPoll extends Poll {
 
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
     private Event event;

@@ -27,15 +27,19 @@ public class Event {
     @Column(name = "event_location")
     private String eventLocation;
 
+
     @Column(name = "activity")
     private String activity;
 
+    @JsonBackReference
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private ActivityPoll activityPoll;
 
+    @JsonBackReference
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private LocationPoll locationPoll;
 
+    @JsonBackReference
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private DatePoll datePoll;
 
