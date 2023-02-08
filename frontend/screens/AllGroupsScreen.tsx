@@ -20,12 +20,13 @@ export default function AllGroupsScreen(){
     }, []);
 
     var allUsersGroupsByName = groups?.flatMap(function(val){
-      return <GroupNameButton title={val.groupName} status={false} onPress={singleGroupView(val.groupName)}/>
+      return <GroupNameButton key={index} value={val.} title={val.groupName} status={false} onPress={singleGroupView}/>
      })
 
-     function singleGroupView(val : string)
-      console.log(val)
+     function singleGroupView(event){
+      console.log(event.target.textContent)
      }
+     
 
 
     
