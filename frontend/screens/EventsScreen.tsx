@@ -6,6 +6,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 export default function EventsScreen(){
+
+    
+
+
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Events view</Text>

@@ -5,7 +5,7 @@ interface Props {
     children: string;
 }
 
-const MenuText = (props: Props) => {
+const ScreenHeaderText = (props: Props) => {
 
     const {children} = props;
     
@@ -16,8 +16,9 @@ const MenuText = (props: Props) => {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 36,
+        fontSize: 30,
+        fontWeight: 'bold',
         color:"#ff914d"
     }
 });
-export default MenuText;
+export default ScreenHeaderText;

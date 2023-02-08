@@ -8,23 +8,11 @@ import { getGroupData, GroupData } from './services/GroupServices';
 
 export default function App() {
 
-  const [groups, setGroup] = useState<GroupData[]>();
-
-  useEffect(() => {
-    const usersGroups = getGroupData();
-    usersGroups.then((response) => {
-      setGroup(response);
-    }
-    )
-    
-  }, []);
-
   return (
     <SafeAreaProvider>
       <Navigation />
       <StatusBar style="auto"/>
     </SafeAreaProvider>
-
   );
 }
 
