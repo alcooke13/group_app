@@ -30,16 +30,13 @@ public class Event {
     @Column(name = "activity")
     private String activity;
 
-    @OneToOne
-    @JoinColumn(name = "activity_id")
+    @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private ActivityPoll activityPoll;
 
-    @OneToOne
-    @JoinColumn(name = "location_id")
+    @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private LocationPoll locationPoll;
 
-    @OneToOne
-    @JoinColumn(name = "date_id")
+    @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private DatePoll datePoll;
 
     public Event(String date, String eventName, String eventLocation, String activity, Group group) {

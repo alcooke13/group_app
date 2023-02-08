@@ -89,17 +89,37 @@ import java.util.Date;
             eventRepository.save(event5);
             eventRepository.save(event6);
 
-            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023, 2, 18, 17, 0));
-            DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023, 2, 20, 11, 0));
-            DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023, 2, 19, 17, 0));
+            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
+            DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023, 2, 20, 11, 0), event2);
+            DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023, 2, 19, 17, 0), event4);
 
-            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023, 2, 18, 17, 0));
-            ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023, 2, 19, 17, 0));
-            ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023, 2, 20, 17, 0));
+            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023, 2, 18, 17, 0), event1);
+            ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event2);
+            ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023, 2, 20, 17, 0), event3);
 
-            LocationPoll locationPoll1 = new LocationPoll(LocalDateTime.of(2023, 2, 18, 17, 0));
-            LocationPoll locationPoll2 = new LocationPoll(LocalDateTime.of(2023, 2, 19, 17, 0));
-            LocationPoll locationPoll3 = new LocationPoll(LocalDateTime.of(2023, 2, 20, 17, 0));
+            LocationPoll locationPoll1 = new LocationPoll(LocalDateTime.of(2023, 2, 18, 17, 0), event1);
+            LocationPoll locationPoll2 = new LocationPoll(LocalDateTime.of(2023, 2, 19, 17, 0), event4);
+            LocationPoll locationPoll3 = new LocationPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event5);
+
+            event1.setDatePoll(datePoll1);
+            event1.setActivityPoll(activityPoll1);
+            event1.setLocationPoll(locationPoll1);
+
+            event2.setDatePoll(datePoll2);
+            event2.setActivityPoll(activityPoll2);
+
+            event3.setActivityPoll(activityPoll3);
+
+            event4.setDatePoll(datePoll3);
+            event4.setLocationPoll(locationPoll2);
+
+            event5.setLocationPoll(locationPoll3);
+
+            eventRepository.save(event1);
+            eventRepository.save(event2);
+            eventRepository.save(event3);
+            eventRepository.save(event4);
+            eventRepository.save(event5);
 
             group1.addUser(jenna);
             group1.addUser(rory);

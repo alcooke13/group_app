@@ -1,9 +1,6 @@
 package com.group.group.models;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +12,11 @@ public abstract class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "options")
     private HashMap<String, ArrayList<User>> options;
+
+    @Column(name = "timeout")
     private LocalDateTime timeout;
 
     public Poll(LocalDateTime timeout) {

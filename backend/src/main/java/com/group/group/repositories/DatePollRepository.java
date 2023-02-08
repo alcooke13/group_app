@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface DatePollRepository extends JpaRepository<DatePoll, Long> {
 
-    List<DatePoll> findDatePollsByUsersId(Long id);
+    List<DatePoll> findDatePollsByEventsId(Long id);
 
     List<DatePoll> findDatePollsByGroupId(Long id);
 }

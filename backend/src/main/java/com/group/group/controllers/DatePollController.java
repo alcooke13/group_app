@@ -24,7 +24,7 @@ public class DatePollController {
             @RequestParam(name="user_id", required = false) Long user_id,
             @RequestParam(name="group_id", required = false) Long group_id) {
         if (user_id != null) {
-            return new ResponseEntity<>(datePollRepository.findDatePollsByUsersId(user_id), HttpStatus.OK);
+            return new ResponseEntity<>(datePollRepository.findDatePollsByEventsId(user_id), HttpStatus.OK);
         } else if (group_id != null) {
             return new ResponseEntity<>(datePollRepository.findDatePollsByGroupId(group_id), HttpStatus.OK);
         } else {

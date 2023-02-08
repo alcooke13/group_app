@@ -9,12 +9,24 @@ import java.util.Date;
 @Table(name = "activity_polls")
 public class ActivityPoll extends Poll {
 
-    public ActivityPoll(LocalDateTime timeout) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
+    public ActivityPoll(LocalDateTime timeout, Event event) {
         super(timeout);
+        this.event = event;
     }
 
     public ActivityPoll() {
 
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 }
