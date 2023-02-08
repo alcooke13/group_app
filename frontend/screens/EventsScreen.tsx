@@ -5,9 +5,11 @@ import { getGroupData, GroupData } from '../services/GroupServices';
 import { useEffect, useState } from 'react';
 import CalendarMonth from '../components/Calendar';
 import InfoBox from '../components/InfoBox';
+
 import SmallButton from '../components/SmallButton';
 import BackArrow from '../components/BackArrow';
 import { useIsFocused } from "@react-navigation/native";
+
 
 interface Props {
   user: number
