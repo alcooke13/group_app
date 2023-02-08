@@ -2,9 +2,8 @@ import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import InfoBox from '../components/InfoBox';
-import TickBox from '../components/TickBox';
-import {useState} from 'react';
+
+
 
 export default function HomeScreen(){
   

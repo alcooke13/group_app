@@ -5,10 +5,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation from './navigation';
 
 export default function App() {
-  
+
 
   return (
-
     <SafeAreaProvider>
       <Navigation />
       <StatusBar style="auto"/>
@@ -22,8 +21,5 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     backgroundColor: 'black'
-   
   }
-
-
 });
