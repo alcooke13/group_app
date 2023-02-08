@@ -1,5 +1,5 @@
-import { Text, StyleSheet, View, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import { StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface Props {
@@ -11,32 +11,29 @@ interface Props {
    
     const TickBox = (props: Props) => {
     const { value, onPress, size, backgroundColor } = props;
-    let iconSize: number = 22;
    return (
    <TouchableOpacity
      activeOpacity={0.7}
      style={[
        styles.checkBoxContainer,
        {
-         height: size || 38,
-         width: size || 38,
-         backgroundColor: "white",
+         height: size || 59,
+         width: size || 61,
+         backgroundColor: "white" || backgroundColor,
          borderColor: '#FFFFFF',
        },
      ]}
      onPress={onPress}
    >
 
-     {value ? <Ionicons name="checkmark-sharp" size={size ? size: iconSize} color="#FF914D" /> : <></>}
+     {value ? <Ionicons name="checkmark-sharp" style={styles.activeIcon} size={size ? 0.9*size : 54} color="#FF914D" /> : <></>}
    </TouchableOpacity>
    );
    };
    
    const styles = StyleSheet.create({
    activeIcon: {
-   width: 32,
-   height: 32,
-   tintColor: 'white',
+    margin: "auto"
    },
     checkBoxContainer: {
      borderRadius: 5,
