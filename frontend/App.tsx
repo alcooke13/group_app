@@ -8,7 +8,6 @@ export default function App() {
 
 
   return (
-
     <SafeAreaProvider>
       <Navigation />
       <StatusBar style="auto"/>
@@ -22,6 +21,5 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     backgroundColor: 'black'
-   
   }
 });

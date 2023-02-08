@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import LineBreak from '../components/LineBreak';
+
 
 
 export default function HomeScreen(){
