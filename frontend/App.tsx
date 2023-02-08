@@ -3,9 +3,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation from './navigation';
+import { useEffect, useState } from 'react';
+import { getGroupData, GroupData } from './services/GroupServices';
 
 export default function App() {
-  
+
+  const [groups, setGroup] = useState<GroupData[]>();
+
+  useEffect(() => {
+    const usersGroups = getGroupData();
+    usersGroups.then((response) => {
+      setGroup(response);
+    }
+    )
+    
+  }, []);
 
   return (
     <SafeAreaProvider>
