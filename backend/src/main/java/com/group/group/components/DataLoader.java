@@ -127,19 +127,23 @@ import java.util.Date;
 
             event5.setLocationPoll(locationPoll3);
 
-            datePoll1.addUserToOption("2023-02-18T18:00",ed.getId());
-            datePoll2.addUserToOption("2023-02-18T18:00",rory.getId());
+            datePoll1.addOption("2023-02-18T18:00");
+            datePoll2.addOption("2023-02-18T18:00");
+            datePoll1.addUserToOption("2023-02-18T18:00",1L);
+            datePoll2.addUserToOption("2023-02-18T18:00",2L);
 
             datePollRepository.save(datePoll1);
             datePollRepository.save(datePoll2);
 
-            activityPoll1.addUserToOption("hike",rory.getId());
-            activityPoll1.addUserToOption("hike",jenna.getId());
+            activityPoll1.addOption("hike");
+            activityPoll1.addUserToOption("hike",2L);
+            activityPoll1.addUserToOption("hike",3L);
 
             activityPollRepository.save(activityPoll1);
             activityPollRepository.save(activityPoll1);
 
-            locationPoll1.addUserToOption("Edinburgh", ed.getId());
+            locationPoll1.addOption("Edinburgh");
+            locationPoll1.addUserToOption("Edinburgh", 1L);
 
             locationPollRepository.save(locationPoll1);
 
