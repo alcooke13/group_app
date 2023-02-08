@@ -6,13 +6,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 export default function HomeScreen(){
-  
+
+
     return (
         <SafeAreaView style={styles.container}>
             <Text  style={styles.title} >Home view</Text>
         </SafeAreaView>
     )
-
    
     }
 
