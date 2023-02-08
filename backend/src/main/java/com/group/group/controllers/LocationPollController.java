@@ -20,7 +20,7 @@ public class LocationPollController {
     LocationPollRepository locationPollRepository;
 
     @GetMapping(value = "/location-polls")
-    public ResponseEntity<List<LocationPoll>> getAllDatePolls(
+    public ResponseEntity<List<LocationPoll>> getAllLocationPolls(
             @RequestParam(name="user_id", required = false) Long user_id) {
         if (user_id != null) {
             return new ResponseEntity<>(locationPollRepository.findLocationPollByEventGroupUsersId(user_id), HttpStatus.OK);
