@@ -1,8 +1,6 @@
 package com.group.group.components;
 
-import com.group.group.models.Event;
-import com.group.group.models.Group;
-import com.group.group.models.User;
+import com.group.group.models.*;
 import com.group.group.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -10,8 +8,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
-    @Profile("!test") //Run every time EXCEPT Tests
+
+@Profile("!test") //Run every time EXCEPT Tests
     @Component
     public class DataLoader implements ApplicationRunner {
 
@@ -86,6 +88,18 @@ import org.springframework.stereotype.Component;
             eventRepository.save(event4);
             eventRepository.save(event5);
             eventRepository.save(event6);
+
+            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023, 2, 18, 17, 0));
+            DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023, 2, 20, 11, 0));
+            DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023, 2, 19, 17, 0));
+
+            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023, 2, 18, 17, 0));
+            ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023, 2, 19, 17, 0));
+            ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023, 2, 20, 17, 0));
+
+            LocationPoll locationPoll1 = new LocationPoll(LocalDateTime.of(2023, 2, 18, 17, 0));
+            LocationPoll locationPoll2 = new LocationPoll(LocalDateTime.of(2023, 2, 19, 17, 0));
+            LocationPoll locationPoll3 = new LocationPoll(LocalDateTime.of(2023, 2, 20, 17, 0));
 
             group1.addUser(jenna);
             group1.addUser(rory);

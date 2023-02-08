@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import InfoBox from '../components/InfoBox';
 
 
 export default function HomeScreen(){
@@ -10,7 +8,9 @@ export default function HomeScreen(){
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text  style={styles.title} >Home view</Text>
+            <InfoBox header='Upcoming Events'>
+                <Text>test</Text>
+            </InfoBox>
         </SafeAreaView>
     )
    

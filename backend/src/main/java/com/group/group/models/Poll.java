@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,9 +16,9 @@ public abstract class Poll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private HashMap<String, ArrayList<User>> options;
-    private Date timeout;
+    private LocalDateTime timeout;
 
-    public Poll(Date timeout) {
+    public Poll(LocalDateTime timeout) {
         this.options = new HashMap<String, ArrayList<User>>();
         this.timeout = timeout;
     }
@@ -49,11 +50,11 @@ public abstract class Poll {
         this.options.get(option).add(user);
     }
 
-    public Date getTimeout() {
+    public LocalDateTime getTimeout() {
         return this.timeout;
     }
 
-    public void setTimeout(Date timeout) {
+    public void setTimeout(LocalDateTime timeout) {
         this.timeout = timeout;
     }
 }
