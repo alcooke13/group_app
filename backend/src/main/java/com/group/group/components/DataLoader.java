@@ -93,13 +93,25 @@ import java.util.Date;
             DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023, 2, 20, 11, 0), event2);
             DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023, 2, 19, 17, 0), event4);
 
+            datePollRepository.save(datePoll1);
+            datePollRepository.save(datePoll2);
+            datePollRepository.save(datePoll3);
+
             ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023, 2, 18, 17, 0), event1);
             ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event2);
             ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023, 2, 20, 17, 0), event3);
 
+            activityPollRepository.save(activityPoll1);
+            activityPollRepository.save(activityPoll2);
+            activityPollRepository.save(activityPoll3);
+
             LocationPoll locationPoll1 = new LocationPoll(LocalDateTime.of(2023, 2, 18, 17, 0), event1);
             LocationPoll locationPoll2 = new LocationPoll(LocalDateTime.of(2023, 2, 19, 17, 0), event4);
             LocationPoll locationPoll3 = new LocationPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event5);
+
+            locationPollRepository.save(locationPoll1);
+            locationPollRepository.save(locationPoll2);
+            locationPollRepository.save(locationPoll3);
 
             event1.setDatePoll(datePoll1);
             event1.setActivityPoll(activityPoll1);
@@ -114,6 +126,22 @@ import java.util.Date;
             event4.setLocationPoll(locationPoll2);
 
             event5.setLocationPoll(locationPoll3);
+
+            datePoll1.addUserToOption("2023-02-18T18:00",ed.getId());
+            datePoll2.addUserToOption("2023-02-18T18:00",rory.getId());
+
+            datePollRepository.save(datePoll1);
+            datePollRepository.save(datePoll2);
+
+            activityPoll1.addUserToOption("hike",rory.getId());
+            activityPoll1.addUserToOption("hike",jenna.getId());
+
+            activityPollRepository.save(activityPoll1);
+            activityPollRepository.save(activityPoll1);
+
+            locationPoll1.addUserToOption("Edinburgh", ed.getId());
+
+            locationPollRepository.save(locationPoll1);
 
             eventRepository.save(event1);
             eventRepository.save(event2);
