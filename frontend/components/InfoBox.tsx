@@ -1,14 +1,16 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import SmallPlus from './SmallPlus';
 
 interface Props {
   header: string;
+  smallPlus?: any;
   children: JSX.Element;
 };
 
 const InfoBox = (props: Props) => {
 
-  const {header, children} = props;
+  const {header, smallPlus, children} = props;
 
   return (
       <View style={styles.container}>
@@ -16,6 +18,9 @@ const InfoBox = (props: Props) => {
           <Text style={styles.header}>
             {header}
           </Text>
+          <View style={styles.plus}>
+            {smallPlus}
+          </View>
         </View>
         <View style={styles.main}>
           {children}
@@ -33,18 +38,24 @@ const styles = StyleSheet.create({
     maxHeight: '20%',
   },
   top: {
+    flexDirection: 'row',
     width: '100%',
-    height: '20',
     backgroundColor: '#545264',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    justifyContent: 'center',
   },
   header: {
-    fontSize: 24,
+    fontSize: 26,
+    margin: 10,
     fontWeight: 'bold',
-    margin: 16,
     textAlign: 'center',
     color: '#FF914D',
+  },
+  plus: {
+    position: 'absolute',
+    right: 10,
+    top: 4,
   },
   main: {
     backgroundColor: '#E0E1F0',

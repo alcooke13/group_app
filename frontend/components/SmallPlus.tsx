@@ -6,7 +6,7 @@ interface Props {
     onPress?: () => void;
 }
 
-const BigPlus = (props: Props) => {
+const SmallPlus = (props: Props) => {
 
     const {onPress} = props;
 
@@ -16,11 +16,11 @@ const BigPlus = (props: Props) => {
         >
             <Ionicons 
             name="add-circle-sharp" 
-            size={60} 
+            size={40}
             color="#25E698"
             />
         </TouchableOpacity>
     );
 };
 
-export default BigPlus;
+export default SmallPlus;
