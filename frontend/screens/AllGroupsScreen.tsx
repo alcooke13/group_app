@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, Image, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, View, Image, StyleSheet, SafeAreaView, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -19,12 +19,12 @@ export default function AllGroupsScreen(){
       })
     }, []);
 
-    var allUsersGroupsByName = groups?.flatMap(function(val){
-      return <GroupNameButton key={index} value={val.} title={val.groupName} status={false} onPress={singleGroupView}/>
+    var allUsersGroupsByName = groups?.flatMap(function(val, index){
+      return <GroupNameButton key={index} value={val.id} title={val.groupName} status={false} onPress={()=>singleGroupView(val.id)}/>
      })
 
-     function singleGroupView(event){
-      console.log(event.target.textContent)
+     function singleGroupView(id){
+      console.log(id)
      }
      
 
