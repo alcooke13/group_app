@@ -3,6 +3,7 @@ package com.group.group.models;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -21,9 +22,9 @@ public class EventTests {
         group1 = new Group("Dream Team");
         event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking", group1);
         date = new Date();
-        activityPoll = new ActivityPoll(date);
-        locationPoll = new LocationPoll(date);
-        datePoll = new DatePoll(date);
+        activityPoll = new ActivityPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
+        locationPoll = new LocationPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
+        datePoll = new DatePoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
     }
 
     @Test
