@@ -63,7 +63,6 @@ public class User {
         this.friends = new ArrayList<>();
         this.friendOf = new ArrayList<>();
         this.groups = new ArrayList<>();
-
     }
 
     public User() {
