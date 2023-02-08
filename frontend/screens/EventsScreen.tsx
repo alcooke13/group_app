@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { getEventData, EventData } from '../services/EventServices';
 import { useEffect, useState } from 'react';
 import CalendarMonth from '../components/Calendar';
 import InfoBox from '../components/InfoBox';
-import TextHeader from '../components/TextHeader';
+import SmallButton from '../components/SmallButton';
+import BackArrow from '../components/BackArrow';
 
 
 export default function EventsScreen(){
     const [events, setEvents] = useState<EventData[]>();
-    const [view, setView] = useState("list")
+    const [view, setView] = useState("singleDay")
 
     useEffect(() => {
       getEventData()
@@ -20,42 +18,100 @@ export default function EventsScreen(){
         setEvents(allEvents);
       })
     }, []);
+    
+    const toggleCalenderView = () => {
+      setView("calender");
+    };
 
+    const toggleListView = () => {
+      setView("list");
+    };
 
+    const toggleDayView = () => {
+      setView("singleDay")
+    }
 
-    //3 Types of views -- state of view/setView
-    // Type 1 - Default = screen with calender --> (if view === calender) render calender screen
-    // Type 2 - List view = listing all events specific to that user (all events from different groups) if (view === list) render list view
-    // Type 3 - A single Day if (view === singleDay) == render day view
+    const eventList = events?.flatMap(function(val, index){
+      return <InfoBox key={index} header={val.eventName}>
+        <View style= {styles.textBox}>
+          <Text>Activity: {val.activity}</Text>
+          <Text>Date: {val.date}</Text>
+          <Text>Location: {val.eventLocation}</Text>
+        </View>  
+        </InfoBox>
+    });
 
-    // {view === "calender" ? <CalendarMonth></CalendarMonth> : ""}
+    const chosenEvent = <InfoBox header='TEST SINGLE DAY'><Text>TESTING TESTING</Text></InfoBox>
 
     
     return (
-        <SafeAreaView style={styles.container}>
-            {view === "calender" ? <InfoBox header='Calender'><CalendarMonth /></InfoBox> : ""}
-            {view === "list" ? <InfoBox header='testing'><Text>Testing Testing</Text></InfoBox>: ""} 
-            {/* Second Type */}
-    
+      <SafeAreaView style={[styles.containerList, view === "calender" ? styles.containerCalender: styles.containerList]}>
+        {/* LIST VIEW */}
+          {view === "list" ? <><View style={styles.calendarButtonBox}> 
+            <SmallButton title="Calender View" onPress={toggleCalenderView}/>
+          </View>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center' }}>
+           {eventList}
+            </ScrollView></> : ""}
+
+        {/* CALENDER VIEW */}
+
+          {view === "calender" ? <View style={styles.outer}>
+            <View style={styles.calendarButtonBox}> 
+            <SmallButton title="List View" onPress={toggleListView}/>
+          </View>
+          <ScrollView style={styles.containerCalender} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
+            <InfoBox header='Calender'><CalendarMonth /></InfoBox>
+            </ScrollView>
+            </View>: ""}   
+        {/* Changing Scroll View To View to stop from Scrolling calender however to fix Spacing between button and calender */}
+
+        {/* SINGLE DAY VIEW */}
+        {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalenderView}/></View>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
+        {chosenEvent}  
+        </ScrollView></View> : ""}
 
         </SafeAreaView>
-    )
-
-
-
+    )    
 }
 
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#25242B'
-      },
-      title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'white'
-      },
+    containerList: {
+      backgroundColor: "#25242B",
+      flex:1
       
+    },
+
+    containerCalender: {
+      backgroundColor: "#25242B",
+      flex: 1,
+      
+    },
+    calendarButtonBox: {
+      marginBottom: "5%",
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      marginRight: '5%',
+      marginTop: '5%'
+    },
+    
+    singleBackBox: {
+      marginBottom: "5%",
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      marginLeft: '5%',
+      marginTop: '5%'
+    },
+    textBox: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    outer: {
+      width: "100%",
+      height: "100%",
+    }
+
   });
