@@ -5,9 +5,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useEffect, useState } from 'react';
 import { getGroupData, GroupData } from '../services/GroupServices';
+import GroupNameButton from '../components/GroupNameButton';
 
 
-export default function AllGroups(){
+export default function AllGroupsScreen(){
 
     const [groups, setGroup] = useState<GroupData[]>();
 
@@ -17,10 +18,17 @@ export default function AllGroups(){
         setGroup(userGroups);
       })
     }, []);
+
+    var getGroupName = groups?.flatMap(function(val){
+      return <GroupNameButton title={val.groupName} status={false}/>
+     })
+
+
     
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Groups view</Text>
+          <Text>hiya</Text>
+          {getGroupName}
         </SafeAreaView>
     )
 }
