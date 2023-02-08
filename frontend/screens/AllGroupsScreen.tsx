@@ -8,9 +8,11 @@ import { getGroupData, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
 
 
+
 export default function AllGroupsScreen(){
 
     const [groups, setGroup] = useState<GroupData[]>();
+    const [singleGroup, setSingleGroup] = useState<GroupData>();
 
     useEffect(() => {
       getGroupData()
@@ -20,11 +22,11 @@ export default function AllGroupsScreen(){
     }, []);
 
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
-      return <GroupNameButton key={index} value={val.id} title={val.groupName} status={false} onPress={()=>singleGroupView(val.id)}/>
+      return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>singleGroupView(val)}/>
      })
 
-     function singleGroupView(id){
-      console.log(id)
+     function singleGroupView(group){
+      setSingleGroup(group)
      }
      
 
@@ -33,6 +35,7 @@ export default function AllGroupsScreen(){
     return (
         <SafeAreaView style={styles.container}>
           <Image source={require('../assets/GroupLogo1.png')}/>
+          <Text>{singleGroup?.groupName}</Text>
           {allUsersGroupsByName}
         </SafeAreaView>
     )
