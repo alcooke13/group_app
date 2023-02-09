@@ -105,8 +105,8 @@ import java.time.LocalDateTime;
             userRepository.save(scott);
 
             Group avengers = new Group("Avengers");
-            Group xMen = new Group("XMen");
-            Group marvelGals = new Group("MarvelGals");
+            Group xMen = new Group("X-Men");
+            Group marvelGals = new Group("Marvel Gals");
 
             groupRepository.save(avengers);
             groupRepository.save(xMen);
