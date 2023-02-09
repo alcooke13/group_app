@@ -10,6 +10,8 @@ import route from "../navigation";
 import { TabView } from '@rneui/base';
 import InfoBox from '../components/InfoBox';
 import TextHeader from '../components/TextHeader';
+import ScreenHeaderText from '../components/ScreenHeaderText';
+import BackArrow from '../components/BackArrow';
 
 interface Props {
   user: number
@@ -64,9 +66,6 @@ export default function AllGroupsScreen(props: Props) {
       setGroupView("singlegroup")
      }
 
-     function findUpcomingEvent (event: Event){
-      return event
-     }
 
      function SingleGroupDetails(){
         if (Date.parse(singleGroup.events[0].date) > Date.now()) {
@@ -93,13 +92,33 @@ export default function AllGroupsScreen(props: Props) {
                 }    
      }
 
+     function AllGroupView(){
+      return(
+      <>
+      <Image source={require('../assets/GroupLogo1.png')}/>
+      <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
+      </>
+      ) 
+    }
+     
+     function SingleGroupView(){
+      return(
+      <>
+      <View style={styles.header}>
+          <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
+          <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
+        </View>
+            <InfoBox header='Next Event'><SingleGroupDetails /></InfoBox>
+          </>
+        )
+     }
+
 
     
     return (
         <SafeAreaView style={styles.container}>
-          <Image source={require('../assets/GroupLogo1.png')}/>
-          {groupView === "allgroups" ? <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> : ""}
-          {groupView==="singlegroup"? <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>: ""}
+          {groupView === "allgroups" ? <AllGroupView/> : ""}
+          {groupView==="singlegroup"? <SingleGroupView/>: ""}
         </SafeAreaView>
     )
     }
@@ -119,5 +138,10 @@ const styles = StyleSheet.create({
       scroll: {
         flex: 1,
         width:'90%',
-    }
+      },
+      header: {
+        flexDirection: 'row',
+        alignItems: 'center'
+
+      }
   });
