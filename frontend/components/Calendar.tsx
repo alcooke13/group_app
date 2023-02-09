@@ -5,11 +5,11 @@ import { EventData } from '../services/EventServices';
 
 interface Props {
     onPress: () => void;
-    calenderEvents?: Array<EventData>;
+    calendarEvents?: Array<EventData>;
 }
 
 const CalendarMonth = (props: Props) => {
-    const {onPress, calenderEvents} = props
+    const {onPress, calendarEvents} = props
 
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -20,7 +20,11 @@ const CalendarMonth = (props: Props) => {
 
     const datesToMark = calendarEvents?.map((date) => {
         let dateObj: any = {};
-        dateObj[date.date.toString()] = {marked: true} 
+        dateObj[new Date(date.date).toLocaleDateString("fr-CA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            })] = {marked: true} 
         return dateObj
     });
    
@@ -32,12 +36,12 @@ const CalendarMonth = (props: Props) => {
         }
         return result;
     }, {});
-    
+
     return (
         <View style={styles.calendar}>
             <Calendar
+               
                 markedDates={resultDates}   
-                // markedDates={datesToMark}
                 current={today}
                 minDate={today}
                 // Handler which gets executed on day press. Default = undefined
