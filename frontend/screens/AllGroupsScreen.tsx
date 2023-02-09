@@ -47,23 +47,20 @@ export default function AllGroupsScreen(props: Props) {
       return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
      })
 
-     function captureChosenGroup(group){
+     function captureChosenGroup(group:GroupData){
       setSingleGroup(group)
       setGroupView("singlegroup")
      }
 
+     var singleGroupDetails
 
-    //  function resetSingleGroup(){
-    //   setSingleGroup()
-    //  }
+
     
     return (
         <SafeAreaView style={styles.container}>
           <Image source={require('../assets/GroupLogo1.png')}/>
           {groupView === "allgroups" ? <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> : ""}
           {groupView==="singlegroup"? <InfoBox header={singleGroup.groupName}><Text>{singleGroup.id}</Text></InfoBox>: ""}
-
-          
         </SafeAreaView>
     )
 }
