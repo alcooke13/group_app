@@ -17,7 +17,7 @@ export default function Navigation() {
     return (
         <NavigationContainer >
             <Tab.Navigator     
-                screenOptions={({ route }) => ({                
+                screenOptions={({ route, navigation }) => ({                
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, color, size }) => {

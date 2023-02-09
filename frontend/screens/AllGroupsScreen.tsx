@@ -6,6 +6,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useEffect, useState } from 'react';
 import { getGroupData, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
+import navigation from "../navigation";
+import { TabView } from '@rneui/base';
+import Navigation from '../navigation';
 
 
 
@@ -18,15 +21,22 @@ export default function AllGroupsScreen(){
       getGroupData()
       .then((userGroups) => {
         setGroup(userGroups);
+      }).then(()=>{
+        resetSingleGroup()
       })
-    }, []);
+    }, [navigation]);
+
 
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
-      return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>singleGroupView(val)}/>
+      return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
      })
 
-     function singleGroupView(group){
+     function captureChosenGroup(group){
       setSingleGroup(group)
+     }
+
+     function resetSingleGroup (){
+      setSingleGroup()
      }
      
 
