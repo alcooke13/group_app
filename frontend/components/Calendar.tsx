@@ -5,10 +5,11 @@ import { EventData } from '../services/EventServices';
 
 interface Props {
     onPress: () => void;
-    calenderEvents?: Array<EventData>;
+    calendarEvents?: Array<EventData>;
 }
+
 const CalendarMonth = (props: Props) => {
-    const {onPress, calenderEvents} = props
+    const {onPress, calendarEvents} = props
 
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -31,7 +32,7 @@ const CalendarMonth = (props: Props) => {
         }
         return result;
     }, {});
-
+    
     return (
         <View style={styles.calendar}>
             <Calendar

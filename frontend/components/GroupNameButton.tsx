@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 
 interface Props {
     title: string,
-    onPress?: () => void;
+    onPress: Function;
     status: boolean
 }
 
