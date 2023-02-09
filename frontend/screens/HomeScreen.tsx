@@ -4,7 +4,7 @@ import InfoBox from '../components/InfoBox';
 import { getEventData, EventData, getEventDataByUserId } from '../services/EventServices';
 import { getDatePollData, DatePollData, getDatePollDataByUserId } from '../services/DatePollServices';
 import { getLocationPollData, getLocationPollDataByUserId, LocationPollData } from '../services/LocationPollServices';
-import { getActivityPollData, ActivityPollData } from '../services/ActivityPollServices';
+import { getActivityPollData, ActivityPollData, getActivityPollDataByUserId } from '../services/ActivityPollServices';
 import { useEffect, useState } from 'react';
 import TextHeader from '../components/TextHeader';
 import SmallButton from '../components/SmallButton';
@@ -50,7 +50,7 @@ export default function HomeScreen(props: Props) {
 
             Promise.all([
                 getDatePollDataByUserId(user),
-                getDatePollDataByUserId(user),
+                getActivityPollDataByUserId(user),
                 getLocationPollDataByUserId(user)
             ]).then((polls) => {
                 polls.flat().forEach((poll) => {
@@ -62,7 +62,18 @@ export default function HomeScreen(props: Props) {
                         }
                     }
                 });
-            }).then(() => setPolls(allPolls));
+            }).then(() => {
+
+                allPolls.sort(function compare(
+                                pollA: DatePollData | LocationPollData | ActivityPollData, 
+                                pollB: DatePollData | LocationPollData | ActivityPollData) {
+                    const dateA: number = Date.parse(pollA.timeout);
+                    const dateB: number = Date.parse(pollB.timeout);
+                    return dateA - dateB;
+                });
+                
+                setPolls(allPolls)
+            });
         }
     }, [isFocused]);
 

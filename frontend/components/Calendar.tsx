@@ -18,7 +18,7 @@ const CalendarMonth = (props: Props) => {
         day: "2-digit",
         });
 
-    const datesToMark = calenderEvents?.map((date) => {
+    const datesToMark = calendarEvents?.map((date) => {
         let dateObj: any = {};
         dateObj[date.date.toString()] = {marked: true} 
         return dateObj
