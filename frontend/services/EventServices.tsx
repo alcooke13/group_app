@@ -20,3 +20,15 @@ export function getEventData(): Promise<EventData[]> {
 			return response as EventData[];
 		});
 }
+
+export function getEventDataByUserId(id: number): Promise<EventData[]> {
+	return fetch('http://127.0.0.1:8080/events?user_id=' + id.toString(), {
+		method: 'GET',
+		// headers: {
+		// },
+	})
+		.then((response) => response.json())
+		.then((response) => {
+			return response as EventData[];
+		});
+}

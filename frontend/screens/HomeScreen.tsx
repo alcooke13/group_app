@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import InfoBox from '../components/InfoBox';
-import { getEventData, EventData } from '../services/EventServices';
-import { getDatePollData, DatePollData } from '../services/DatePollServices';
-import { getLocationPollData, LocationPollData } from '../services/LocationPollServices';
+import { getEventData, EventData, getEventDataByUserId } from '../services/EventServices';
+import { getDatePollData, DatePollData, getDatePollDataByUserId } from '../services/DatePollServices';
+import { getLocationPollData, getLocationPollDataByUserId, LocationPollData } from '../services/LocationPollServices';
 import { getActivityPollData, ActivityPollData } from '../services/ActivityPollServices';
 import { useEffect, useState } from 'react';
 import TextHeader from '../components/TextHeader';
@@ -27,17 +27,31 @@ export default function HomeScreen(props: Props) {
     useEffect(() => {
 
         if (isFocused) {
-            getEventData()
-            .then((allEvents) => {
+            const allEvents: Array<EventData> = []
+
+            getEventDataByUserId(user)
+            .then((events) => {
+                events.forEach((event) => {
+                    if (Date.parse(event.date) > Date.now()) {
+                        allEvents.push(event);
+                    }
+                })
+            }).then(() => {
+                allEvents.sort(function compare(eventA: EventData, eventB: EventData) {
+                    const dateA: number = Date.parse(eventA.date);
+                    const dateB: number = Date.parse(eventB.date);
+                    return dateA - dateB;
+                });
+
                 setEvents(allEvents);
-            });
+            })
 
             const allPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
 
             Promise.all([
-                getDatePollData(),
-                getActivityPollData(),
-                getLocationPollData()
+                getDatePollDataByUserId(user),
+                getDatePollDataByUserId(user),
+                getLocationPollDataByUserId(user)
             ]).then((polls) => {
                 polls.flat().forEach((poll) => {
                     if (Date.parse(poll.timeout) > Date.now()) {
