@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import InfoBox from '../components/InfoBox';
 import { getEventData, EventData } from '../services/EventServices';
 import { getDatePollData, DatePollData } from '../services/DatePollServices';
@@ -42,19 +42,18 @@ export default function HomeScreen(props: Props) {
     }, []);
 
 
-    const eventItems = polls?.map((poll, index) => {
+    const pollItems = polls?.map((poll, index) => {
         return(
             <>
                 <View style={styles.upcomingEvent}>
                     <TextHeader key={index}>{poll.event.eventName}</TextHeader>
                     <SmallButton title='Vote'></SmallButton>
                 </View>
-                <View>
-                {/* {index} !== polls?.length ?   */}
+                {index !== polls?.length - 1 ?  
                     <LineBreak/>
-                {/* : 
-                    <Text></Text> */}
-                </View>
+                : 
+                   ""
+                }
             </>
         )
     }
@@ -64,10 +63,10 @@ export default function HomeScreen(props: Props) {
     return (
         <SafeAreaView style={styles.container}>
             
-            <InfoBox header='Upcoming Events'>
-                <View>
-                    {eventItems}
-                </View>
+            <InfoBox header='Open Polls'>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {pollItems}
+                </ScrollView>
             </InfoBox>
         </SafeAreaView>
     )
@@ -87,6 +86,9 @@ const styles = StyleSheet.create({
         color: 'white'
       },
       upcomingEvent: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        padding: 15,
+        justifyContent: 'space-between',
+        alignItems: 'center'
       }
   });
