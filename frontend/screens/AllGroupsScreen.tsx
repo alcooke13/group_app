@@ -24,7 +24,18 @@ export default function AllGroupsScreen(props: Props) {
   const initialState = {
     id: "",
     groupName: "",
-    events: [],
+    events: [
+      {
+      id:"",
+      date:"",
+      eventName:"",
+      eventLocation:"", 
+      activity:"", 
+      activityPoll:"",
+      locationPoll:"", 
+      datePoll:""
+      }
+    ],
   }; 
 
   const [groups, setGroup] = useState<GroupData[]>();
@@ -57,20 +68,30 @@ export default function AllGroupsScreen(props: Props) {
       return event
      }
 
-     var singleGroupDetails =groups?.filter(function(val,index){
-
-      val.events[0].date > Date.now
-
-
-      return (
-      <>
-      <TextHeader>{val.events[0].eventName}</TextHeader>
-      <Text>Date:         {val.events[0].date}</Text>
-      <Text>Time:         TBC</Text>
-      <Text>Location:   {val.events[0].eventLocation}</Text>
-      </>
-      )
-     })
+     function SingleGroupDetails(){
+        if (Date.parse(singleGroup.events[0].date) > Date.now()) {
+          return (
+            <>
+            <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
+            <>
+            <Text>Date:         {singleGroup.events[0].date}</Text>
+            <Text>Time:         TBC</Text>
+            <Text>Location:   {singleGroup.events[0].eventLocation}</Text>
+            </>
+            </>
+            )
+                } else
+                {
+                  return (
+                    <>
+                    <TextHeader> No upcoming event </TextHeader>
+                    <Text>Date:        </Text>
+                    <Text>Time:        </Text>
+                    <Text>Location:   </Text>
+                    </>
+                    )
+                }    
+     }
 
 
     
@@ -78,10 +99,10 @@ export default function AllGroupsScreen(props: Props) {
         <SafeAreaView style={styles.container}>
           <Image source={require('../assets/GroupLogo1.png')}/>
           {groupView === "allgroups" ? <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> : ""}
-          {groupView==="singlegroup"? <InfoBox header='Next Event'><>{singleGroupDetails}</></InfoBox>: ""}
+          {groupView==="singlegroup"? <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>: ""}
         </SafeAreaView>
     )
-}
+    }
 
 const styles = StyleSheet.create({
     container: {
