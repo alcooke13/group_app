@@ -30,7 +30,7 @@ public class PollTests {
         date1 = LocalDateTime.now().withNano(0);
         activityPoll = new ActivityPoll(LocalDateTime.now().withNano(0), event1);
         activityPoll.addOption("hike");
-        activityPoll.addUserToOption("hike", user1);
+        activityPoll.addUserToOption("hike", user1.getId());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class PollTests {
     @Test
     public void canAddUserToOption() {
         activityPoll.addOption("board game");
-        activityPoll.addUserToOption("board game", user2);
+        activityPoll.addUserToOption("board game", user2.getId());
         assertEquals(1, activityPoll.getOptions().get("board game").size());
     }
 

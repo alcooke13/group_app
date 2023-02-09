@@ -9,7 +9,14 @@ import SettingsScreen from '../screens/SettingsScreen';
 import EventsScreen from '../screens/EventsScreen';
 
 const Tab = createBottomTabNavigator();
-export default function Navigation() {
+
+interface Props {
+    user: number
+}
+
+export default function Navigation(props: Props) {
+
+    const { user } = props;
 
     return (
         <NavigationContainer>
@@ -50,19 +57,19 @@ export default function Navigation() {
             >
                 <Tab.Screen
                     name="Home"
-                    component={HomeScreen}
+                    children={()=><HomeScreen user={user}/>}
                 />
                 <Tab.Screen
                     name="Groups"
-                    component={AllGroups}
+                    children={()=><AllGroups user={user}/>}
                 />
                 <Tab.Screen
                     name="Events"
-                    component={EventsScreen}
+                    children={()=><EventsScreen user={user}/>}
                 />
                 <Tab.Screen
                     name="Settings"
-                    component={SettingsScreen}
+                    children={()=><SettingsScreen user={user}/>}
                 />
             </Tab.Navigator>
         </NavigationContainer>

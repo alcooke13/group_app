@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 
+interface Props {
+    user: number
+}
 
+export default function SettingsScreen(props: Props) {
 
-
-
-
-export default function SettingsScreen() {
+  const { user } = props;
 
   function onPressAccountSetting(){
     return console.log("Account settings pressed")
@@ -19,7 +20,6 @@ export default function SettingsScreen() {
   }
 
   
-
   return (
 
     <SafeAreaView style={styles.container}>
@@ -57,12 +57,7 @@ export default function SettingsScreen() {
 
     </SafeAreaView>
 
-
-
   )
-
-
-
 }
 
 

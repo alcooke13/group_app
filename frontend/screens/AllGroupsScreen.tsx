@@ -10,8 +10,13 @@ import route from "../navigation";
 import { TabView } from '@rneui/base';
 import InfoBox from '../components/InfoBox';
 
+interface Props {
+  user: number
+}
 
-export default function AllGroupsScreen(){
+export default function AllGroupsScreen(props: Props) {
+
+    const { user } = props;
 
   const isFocused = useIsFocused()
 

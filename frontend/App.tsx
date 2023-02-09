@@ -8,9 +8,11 @@ import { getGroupData, GroupData } from './services/GroupServices';
 
 export default function App() {
 
+  const [user, setUser] = useState(1);
+
   return (
     <SafeAreaProvider>
-      <Navigation />
+      <Navigation user={user} />
       <StatusBar style="auto"/>
     </SafeAreaProvider>
   );
