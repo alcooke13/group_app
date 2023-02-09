@@ -1,30 +1,38 @@
 import * as React from 'react';
 import { Text, View, Image, StyleSheet, SafeAreaView, Pressable } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, TabRouter, useIsFocused } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useEffect, useState } from 'react';
 import { getGroupData, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
-import navigation from "../navigation";
+import route from "../navigation";
 import { TabView } from '@rneui/base';
-import Navigation from '../navigation';
-
 
 
 export default function AllGroupsScreen(){
 
-    const [groups, setGroup] = useState<GroupData[]>();
-    const [singleGroup, setSingleGroup] = useState<GroupData>();
+  const isFocused = useIsFocused()
+
+  const initialState = {
+    id: "",
+    groupName: "",
+    events: [],
+  }; 
+
+  const [groups, setGroup] = useState<GroupData[]>();
+    const [singleGroup, setSingleGroup] = useState(initialState);
 
     useEffect(() => {
+      if (isFocused){
+        setSingleGroup(initialState)
+      }
       getGroupData()
       .then((userGroups) => {
         setGroup(userGroups);
-      }).then(()=>{
-        resetSingleGroup()
       })
-    }, [navigation]);
+    }, [isFocused]);
+
 
 
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
@@ -35,12 +43,10 @@ export default function AllGroupsScreen(){
       setSingleGroup(group)
      }
 
-     function resetSingleGroup (){
-      setSingleGroup()
-     }
+    //  function resetSingleGroup(){
+    //   setSingleGroup()
+    //  }
      
-
-
     
     return (
         <SafeAreaView style={styles.container}>

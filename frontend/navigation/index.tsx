@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {StyleSheet, Settings, Text, View, Image } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useIsFocused} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -9,15 +9,12 @@ import SettingsScreen from '../screens/SettingsScreen';
 import EventsScreen from '../screens/EventsScreen';
 
 const Tab = createBottomTabNavigator();
-
-
-
-
 export default function Navigation() {
+
     return (
-        <NavigationContainer >
+        <NavigationContainer>
             <Tab.Navigator     
-                screenOptions={({ route, navigation }) => ({                
+                screenOptions={({ route }) => ({                
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, color, size }) => {
@@ -25,9 +22,11 @@ export default function Navigation() {
                         if (route.name === 'Home') {
                             iconName = focused ? 'ios-home' : 'ios-home-outline';
                             size = 48;
+                            useIsFocused()
                         } else if (route.name === "Groups") {
                             iconName = focused ? 'people' : 'people-outline'
                             size = 48;
+                            useIsFocused()
                             // return (
 
                             // This is to add our group logo, once we have resized and got a green logo, add this back in.
@@ -40,6 +39,7 @@ export default function Navigation() {
                         } else if (route.name === 'Settings') {
                             iconName = focused ? 'ios-settings' : 'ios-settings-outline';
                             size = 48;
+                            useIsFocused()
                         }
                         return <Ionicons name={iconName} size={size} color={color} />;
                     },
