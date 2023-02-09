@@ -42,17 +42,7 @@ export default function Questions(props: Props) {
     return (
         <>
 
-            {/* {questions[randIndex[qTracker]].answerOptions.map((option, index) => {
-                return (
-
-                    <button key={index} onClick={() => {
-                        handleClick(option.isTrue)
-                    }}>
-                        {option.option}
-                    </button>
-                )
-            }
-            )} */}
+            
         </>
     )
 

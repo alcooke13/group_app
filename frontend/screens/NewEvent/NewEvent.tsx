@@ -192,7 +192,7 @@ export default function NewEvent(props: Props) {
 
 
                     <View style={styles.container}>
-                       <Questions updateCounter = {updateCounter} ></Questions>
+                       
                     </View>
                 </BackgroundBox>
                 <SmallButton title={"Submit"} onPress={()=>{
