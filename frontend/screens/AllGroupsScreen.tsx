@@ -9,6 +9,7 @@ import GroupNameButton from '../components/GroupNameButton';
 import route from "../navigation";
 import { TabView } from '@rneui/base';
 import InfoBox from '../components/InfoBox';
+import TextHeader from '../components/TextHeader';
 
 interface Props {
   user: number
@@ -52,7 +53,24 @@ export default function AllGroupsScreen(props: Props) {
       setGroupView("singlegroup")
      }
 
-     var singleGroupDetails
+     function findUpcomingEvent (event: Event){
+      return event
+     }
+
+     var singleGroupDetails =groups?.filter(function(val,index){
+
+      val.events[0].date > Date.now
+
+
+      return (
+      <>
+      <TextHeader>{val.events[0].eventName}</TextHeader>
+      <Text>Date:         {val.events[0].date}</Text>
+      <Text>Time:         TBC</Text>
+      <Text>Location:   {val.events[0].eventLocation}</Text>
+      </>
+      )
+     })
 
 
     
@@ -60,7 +78,7 @@ export default function AllGroupsScreen(props: Props) {
         <SafeAreaView style={styles.container}>
           <Image source={require('../assets/GroupLogo1.png')}/>
           {groupView === "allgroups" ? <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> : ""}
-          {groupView==="singlegroup"? <InfoBox header={singleGroup.groupName}><Text>{singleGroup.id}</Text></InfoBox>: ""}
+          {groupView==="singlegroup"? <InfoBox header='Next Event'><>{singleGroupDetails}</></InfoBox>: ""}
         </SafeAreaView>
     )
 }
