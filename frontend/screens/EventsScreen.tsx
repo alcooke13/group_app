@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { getEventData, EventData } from '../services/EventServices';
+import { getGroupData, GroupData } from '../services/GroupServices';
 import { useEffect, useState } from 'react';
 import CalendarMonth from '../components/Calendar';
 import InfoBox from '../components/InfoBox';
@@ -10,15 +11,26 @@ import BackArrow from '../components/BackArrow';
 
 export default function EventsScreen(){
     const [events, setEvents] = useState<EventData[]>();
-    const [view, setView] = useState("singleDay")
+    const [view, setView] = useState("calender")
+    const [groups, setGroups] = useState<GroupData[]>();
 
     useEffect(() => {
+      
       getEventData()
       .then((allEvents) => {
         setEvents(allEvents);
-      })
+      
+      getGroupData()
+      .then((allGroups) => {
+        setGroups(allGroups)
+      });
+      
+      });
+
+
     }, []);
-    
+
+
     const toggleCalenderView = () => {
       setView("calender");
     };
@@ -27,18 +39,21 @@ export default function EventsScreen(){
       setView("list");
     };
 
-    const toggleDayView = () => {
-      setView("singleDay")
+    const chooseDate = () => {
+      setView("singleDay");
+      
     }
 
-    const eventList = events?.flatMap(function(val, index){
-      return <InfoBox key={index} header={val.eventName}>
-        <View style= {styles.textBox}>
-          <Text>Activity: {val.activity}</Text>
-          <Text>Date: {val.date}</Text>
-          <Text>Location: {val.eventLocation}</Text>
-        </View>  
-        </InfoBox>
+
+    const eventList = groups?.map(function(val, index){
+      return <>
+      <InfoBox header={val.groupName} key={index}>
+      <View style={styles.textBox}>
+        <Text>{val.events[index].activity}</Text>
+        <Text>{val.events[index].eventLocation}</Text>
+        <Text>{val.events[index].date}</Text>
+      </View>
+      </InfoBox></>
     });
 
     const chosenEvent = <InfoBox header='TEST SINGLE DAY'><Text>TESTING TESTING</Text></InfoBox>
@@ -48,9 +63,9 @@ export default function EventsScreen(){
       <SafeAreaView style={[styles.containerList, view === "calender" ? styles.containerCalender: styles.containerList]}>
         {/* LIST VIEW */}
           {view === "list" ? <><View style={styles.calendarButtonBox}> 
-            <SmallButton title="Calender View" onPress={toggleCalenderView}/>
+            <SmallButton title="Calender View" onPress={toggleCalenderView} style={styles.button}/>
           </View>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center' }}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-evenly', alignSelf:'auto' }}>
            {eventList}
             </ScrollView></> : ""}
 
@@ -58,11 +73,13 @@ export default function EventsScreen(){
 
           {view === "calender" ? <View style={styles.outer}>
             <View style={styles.calendarButtonBox}> 
-            <SmallButton title="List View" onPress={toggleListView}/>
+            <SmallButton title="List View" onPress={toggleListView} style={styles.button}/>
           </View>
-          <ScrollView style={styles.containerCalender} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
-            <InfoBox header='Calender'><CalendarMonth /></InfoBox>
-            </ScrollView>
+          <View style={styles.containerCalender}>
+            <InfoBox header='Calender'>
+              <CalendarMonth onPress={chooseDate} calenderEvents={events}/>
+            </InfoBox>
+            </View>
             </View>: ""}   
         {/* Changing Scroll View To View to stop from Scrolling calender however to fix Spacing between button and calender */}
 
@@ -87,6 +104,8 @@ const styles = StyleSheet.create({
     containerCalender: {
       backgroundColor: "#25242B",
       flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
       
     },
     calendarButtonBox: {
@@ -112,6 +131,10 @@ const styles = StyleSheet.create({
     outer: {
       width: "100%",
       height: "100%",
+    },
+
+    button: {
+      backgroundColor: 'red'
     }
 
   });

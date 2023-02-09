@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '90%',
     maxHeight: '20%',
-    marginTop: 50, // added
+    marginVertical: "10%"
 
   },
   top: {
