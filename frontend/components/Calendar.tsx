@@ -1,9 +1,15 @@
 import { Calendar } from 'react-native-calendars';
 import { View, StyleSheet, Text } from 'react-native';
 import React from 'react';
+import { EventData } from '../services/EventServices';
 
+interface Props {
+    onPress: () => void;
+    calenderEvents?: Array<EventData>;
+}
+const CalendarMonth = (props: Props) => {
+    const {onPress, calenderEvents} = props
 
-const CalendarMonth = () => {
 
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -11,6 +17,12 @@ const CalendarMonth = () => {
         month: "2-digit",
         day: "2-digit",
         });
+
+
+    const allEventDates = calenderEvents?.map(function(val){
+        return val.date
+    })
+
     
     return (
         <View style={styles.calendar}>
@@ -22,8 +34,11 @@ const CalendarMonth = () => {
                 minDate={today}
                 // Handler which gets executed on day press. Default = undefined
                 onDayPress={day => {
-                    console.log('selected day', day);
+                    console.log(allEventDates);
                 }}
+
+                // onDayPress={onPress}
+
                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
                 monthFormat={'MMMM  yyyy'}
                 // Handler which gets executed when visible month changes in calendar. Default = undefined
