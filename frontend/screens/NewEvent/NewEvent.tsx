@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -12,28 +12,36 @@ import BackArrow from '../../components/BackArrow';
 import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
+import Questions from './Questions';
 
+interface Props {
+    children: any,
+    
+}
 
-// interface Props {
-//     knowsDetails: boolean,
-//     knowsDate: boolean,
-//     knowsLocation: boolean,
-//     knowsActivity: boolean
-// }
-const detailsKnownCheck: {[key: string]: boolean} = {date: false, activity: false, location: false };
+const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
+let questionOrder: string[];
 
-export default function NewEvent() {
-    const detailsKnownInfo: {[key: string]: string} = {};
+export default function NewEvent(props: Props) {
 
-    const [knownEvent, setKnownEvent] = useState(false);
-    const [unknownEvent, setUnknownEvent] = useState(false);
+    const {children} = props
+
+    // set up useStates for logic flow
+    const [eventNameKnown, setEventNameKnown] = useState(false);
+
+    const [showQuestions, setShowQuestions] = useState(false);
+
+    const [eventTitle, setEventTitle] = useState('');
+    const [title, onChangeTitle] = useState('');
+
     const [dateKnown, setDateKnown] = useState(false);
     const [activityKnown, setActivityKnown] = useState(false);
     const [locationKnown, setLocationKnown] = useState(false);
-    
 
+    const [knownEvent, setKnownEvent] = useState(false);
+    const [unknownEvent, setUnknownEvent] = useState(false);
 
-
+    const [counter, setCounter] = useState(0);
     const onPressYes = () => {
         setKnownEvent(true)
         console.log("You pressed yes!")
@@ -43,90 +51,226 @@ export default function NewEvent() {
         console.log("You pressed no!")
     }
 
-    const onDateTickBoxPress = () => {
-      if (!detailsKnownCheck.date){
-        detailsKnownCheck.date = true;
-      }else{detailsKnownCheck.date = false}
-       
-       setDateKnown(!dateKnown);
-       console.log(detailsKnownCheck)
-        
-
-    }
-    const onActivityTickBoxPress = () => {
-        if (!detailsKnownCheck.activity){
-            detailsKnownCheck.activity = true;
-          }
-        else{detailsKnownCheck.activity = false}
-       setActivityKnown(!activityKnown);
-       console.log(detailsKnownCheck)
-        
-
-    }
-    const onLocationTickBoxPress = () => {
-        if (!detailsKnownCheck.location){
-            detailsKnownCheck.location = true;
-          }else{detailsKnownCheck.location = false}
-       setLocationKnown(!locationKnown);
-       console.log(detailsKnownCheck)
-        
-
-    }
-    
 
 
-   function CheckDetails(){
+    const EventName = () => {
+        let titleValue: string;
+
+        const onTitleEnd = () => {
+            setEventTitle(titleValue)
+        }
+
+        return (
+            <>
+
+                <BackgroundBox>
+                    <View>
+                        <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
+                            What is your events name?
+                        </Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => {
+                                titleValue = text;
+                            }}
+                            onEndEditing={onTitleEnd}
+                        />
+                        <SmallButton title={"Submit"} onPress={() => {
+                            setEventNameKnown(!eventNameKnown)
+                        }} ></SmallButton>
+                    </View>
+                </BackgroundBox>
+            </>
+        );
+
+
+
+    };
+
+    const CheckDetailsKnown = () => {
+
+        const onDateTickBoxPress = () => {
+            detailsKnownCheck.date = !detailsKnownCheck.date
+            setDateKnown(!dateKnown);
+
+        }
+        const onActivityTickBoxPress = () => {
+            detailsKnownCheck.activity = !detailsKnownCheck.activity
+            setActivityKnown(!activityKnown);
+
+        }
+        const onLocationTickBoxPress = () => {
+            detailsKnownCheck.location = !detailsKnownCheck.location
+            setLocationKnown(!locationKnown);
+
+        }
+
+        const onKnownQuestionCheck = () => {
+            if (detailsKnownCheck.date) {
+                questionOrder.push("date")
+            }
+            if (detailsKnownCheck.activity) {
+                questionOrder.push("activity")
+            }
+            if (detailsKnownCheck.location) {
+                questionOrder.push("location")
+            }
+            setShowQuestions(true);
+
+
+            console.log(questionOrder)
+            // setNextPressed(!nextPressed)
+
+        }
+
+
         if (knownEvent) {
+
+
+            return (
+                <View>
+                    <BackgroundBox>
+                        <View>
+
+                            <Text>Known Event</Text>
+
+                            <TickBox value={dateKnown} onPress={onDateTickBoxPress}></TickBox>
+                            <TickBox value={activityKnown} onPress={onActivityTickBoxPress}></TickBox>
+                            <TickBox value={locationKnown} onPress={onLocationTickBoxPress}></TickBox>
+
+
+                        </View>
+                    </BackgroundBox>
+                    <SmallButton title={"Next"} onPress={onKnownQuestionCheck} ></SmallButton>
+
+                </View>
+            )
+        }
+
+        if (unknownEvent) {
+
+            return (
+                <Text>Unknown Event</Text>
+            )
+        }
+
+
+
+        const getQuestion = (questionType: string) => {
+            let question: string;
+            switch (questionType) {
+                case "date":
+                    question = "What is the date of your event?"
+                    break;
+                case "activity":
+                    question = "What is the events activity?"
+                    break;
+                case "location":
+                    question = "Where is the events location?"
+                    break;
+
+            }
+        }
+
+        const updateCounter = () => {
+            let newCounter = counter;
+            if (counter < questionOrder.length){
+                newCounter += 1
+                setCounter(newCounter)
+
+
+            }
+        }
+
+        if (showQuestions && knownEvent) {
+
+
+
             return (
                 <>
-                    <Text> Select what you know:</Text>
-                    <View>
-                        <TickBox value={dateKnown} onPress={onDateTickBoxPress}></TickBox>
-                        <TickBox value={activityKnown} onPress={onActivityTickBoxPress}></TickBox>
-                        <TickBox value={locationKnown} onPress={onLocationTickBoxPress}></TickBox>
+                <BackgroundBox width={'90%'}>
+
+
+                    <View style={styles.container}>
+                       <Questions updateCounter = {updateCounter} ></Questions>
                     </View>
+                </BackgroundBox>
+                <SmallButton title={"Submit"} onPress={()=>{
+
+                }} ></SmallButton>
                 </>
 
 
 
-                
-            ) 
-        }
-        else if (unknownEvent){
-            return (
-            
-                    <Text> unknown event</Text>
-                
             )
-           
-        }
-        return (
-            <View >
-                <Text style={styles.title}>Do you know the event details?</Text>
-                <View style={styles.buttonsParent}>
-                    <View style={styles.buttons} >
-                        <SmallButton title={"Yes"} onPress={onPressYes} ></SmallButton>
-                    </View>
-                    <View style={styles.buttons}>
-                        <SmallButton title={"No"} onPress={onPressNo} ></SmallButton>
-                    </View>
-                </View>
-            </View>
-        )
-    }
 
-    return (
-        <View>
+        }
+
+
+        return (
+
             <BackgroundBox width={'90%'}>
-                <View style={styles.container} >
-                   <CheckDetails></CheckDetails>
+
+
+                <View style={styles.container}>
+                    <Text style={styles.title}>Do you know the event details?</Text>
+                    <View style={styles.buttonsParent}>
+                        <View style={styles.buttons} >
+                            <SmallButton title={"Yes"} onPress={onPressYes} ></SmallButton>
+                        </View>
+                        <View style={styles.buttons}>
+                            <SmallButton title={"No"} onPress={onPressNo} ></SmallButton>
+                        </View>
+                    </View>
                 </View>
             </BackgroundBox>
-        </View>
+        )
+
+
+
+    }
+
+
+
+
+
+
+    // set up question database
+    // starts from group page, creates a new event for that group
+    // asks user for title of event
+    return (
+        <>
+            <View>
+                <>
+                    {!eventNameKnown ? <EventName /> : <CheckDetailsKnown />}
+                </>
+            </View>
+
+        </>
     )
+    // create new event to post to database. Request event name and make post
+
+
+    // Ask user if they know details or not
+
+    // if details are known, show tickboxes
+
+    // from tickboxes show relevant questions, be able to go back and change response
+
+    // if details are not known goes to event page 
+
+
+
 }
 
+
 const styles = StyleSheet.create({
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+    },
     container: {
         flex: 1,
         alignItems: 'center',
@@ -145,5 +289,6 @@ const styles = StyleSheet.create({
     buttons: {
         padding: 15
     }
-
 });
+
+
