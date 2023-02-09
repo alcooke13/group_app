@@ -11,7 +11,7 @@ import java.util.Date;
 public class LocationPoll extends Poll {
 
     @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "event_id")
     private Event event;
 

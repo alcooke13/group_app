@@ -8,7 +8,7 @@ const LineBreak = () => {
             height: 1,
             alignSelf: 'stretch'                    
             }}> 
-        <Divider inset={true} insetType="middle" color='#E0E1F0' width={1} ></Divider>
+        <Divider insetType="middle" color='#545264' width={1} ></Divider>
         </View> 
     );
 };

@@ -7,8 +7,13 @@ import { useEffect, useState } from 'react';
 import { getGroupData, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
 
+interface Props {
+  user: number
+}
 
-export default function AllGroupsScreen(){
+export default function AllGroupsScreen(props: Props) {
+
+    const { user } = props;
 
     const [groups, setGroup] = useState<GroupData[]>();
 

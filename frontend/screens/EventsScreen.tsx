@@ -9,8 +9,14 @@ import CalendarMonth from '../components/Calendar';
 import InfoBox from '../components/InfoBox';
 import TextHeader from '../components/TextHeader';
 
+interface Props {
+  user: number
+}
 
-export default function EventsScreen(){
+export default function EventsScreen(props: Props) {
+
+    const { user } = props;
+
     const [events, setEvents] = useState<EventData[]>();
     const [view, setView] = useState("list")
 
