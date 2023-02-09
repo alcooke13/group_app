@@ -37,7 +37,7 @@ export default function EventsScreen(props: Props) {
           setGroups(allGroups)
         });
       }
-    }, [props, isFocused]);
+    }, [isFocused]);
 
 
     const toggleCalendarView = () => {
@@ -56,16 +56,13 @@ export default function EventsScreen(props: Props) {
     const eventList = groups?.map(function(val, index){
       return <>
       <InfoBox header={val.groupName} key={index}>
-      <View style={styles.textBox}>
-        <Text>{val.events[index].activity}</Text>
-        <Text>{val.events[index].eventLocation}</Text>
-        <Text>{val.events[index].date}</Text>
-      </View>
+        <View style={styles.textBox}>
+          <Text>{val.events[index].activity}</Text>
+          <Text>{val.events[index].eventLocation}</Text>
+          <Text>{val.events[index].date}</Text>
+        </View>
       </InfoBox></>
     });
-
-    const chosenEvent = <InfoBox header='TEST SINGLE DAY'><Text>TESTING TESTING</Text></InfoBox>
-
     
     return (
       <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
@@ -94,7 +91,7 @@ export default function EventsScreen(props: Props) {
         {/* SINGLE DAY VIEW */}
         {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
-        {chosenEvent}  
+          {eventList}  
         </ScrollView></View> : ""}
 
         </SafeAreaView>
