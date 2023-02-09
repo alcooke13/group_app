@@ -18,12 +18,14 @@ public class PollTests {
     LocalDateTime date2;
     Event event1;
     Group group1;
+    LocalDateTime eventDate;
 
 
     @Before
     public void before() {
         group1 = new Group("Dream Team");
-        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking", group1);
+        eventDate = LocalDateTime.of(2023, 2, 5, 17, 0);
+        event1 = new Event(date1, "Hangout", "The pub", "Drinking", group1);
         user1 = new User("ali", "071234456", "Edinburgh");
         user2 = new User("rory", "071234436", "Edinburgh");
         user3 = new User("ed", "0712344361", "Edinburgh");
