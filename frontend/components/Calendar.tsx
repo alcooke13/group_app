@@ -10,7 +10,6 @@ interface Props {
 const CalendarMonth = (props: Props) => {
     const {onPress, calenderEvents} = props
 
-
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
         year: "numeric",
@@ -18,26 +17,33 @@ const CalendarMonth = (props: Props) => {
         day: "2-digit",
         });
 
+    const datesToMark = calenderEvents?.map((date) => {
+        let dateObj: any = {};
+        dateObj[date.date.toString()] = {marked: true} 
+        return dateObj
+    });
+   
+    let resultDates = datesToMark?.reduce(function(result, currentObject) {
+        for(var key in currentObject) {
+            if (currentObject.hasOwnProperty(key)) {
+                result[key] = currentObject[key];
+            }
+        }
+        return result;
+    }, {});
 
-    const allEventDates = calenderEvents?.map(function(val){
-        return val.date
-    })
-
-    
     return (
         <View style={styles.calendar}>
             <Calendar
-                markedDates={{
-                    '2023-02-18': {marked: true},
-                    }}
+                markedDates={resultDates}   
+                // markedDates={datesToMark}
                 current={today}
                 minDate={today}
                 // Handler which gets executed on day press. Default = undefined
-                onDayPress={day => {
-                    console.log(allEventDates);
-                }}
 
-                // onDayPress={onPress}
+                onDayPress={day => {
+                    console.log(datesToMark);
+                }}
 
                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
                 monthFormat={'MMMM  yyyy'}
