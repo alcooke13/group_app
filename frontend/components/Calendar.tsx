@@ -5,10 +5,11 @@ import { EventData } from '../services/EventServices';
 
 interface Props {
     onPress: () => void;
-    calenderEvents?: Array<EventData>;
+    calendarEvents?: Array<EventData>;
 }
+
 const CalendarMonth = (props: Props) => {
-    const {onPress, calenderEvents} = props
+    const {onPress, calendarEvents} = props
 
 
     const currentDate: Date = new Date();
@@ -19,7 +20,7 @@ const CalendarMonth = (props: Props) => {
         });
 
 
-    const allEventDates = calenderEvents?.map(function(val){
+    const allEventDates = calendarEvents?.map(function(val){
         return val.date
     })
 

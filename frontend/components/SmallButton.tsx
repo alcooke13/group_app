@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 interface Props {
     title: string;
     onPress?: () => void;
-    style: any;
+    style?: any;
 }
 
 const SmallButton = (props: Props) => {

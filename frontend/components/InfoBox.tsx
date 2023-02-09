@@ -5,8 +5,7 @@ import SmallPlus from './SmallPlus';
 interface Props {
   header: string;
   smallPlus?: any;
-  children: JSX.Element | JSX.Element[]; //added
-  
+  children: JSX.Element | JSX.Element[];
 };
 
 const InfoBox = (props: Props) => {
@@ -36,9 +35,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '90%',
-    maxHeight: '20%',
+    maxHeight: '35%',
     marginVertical: "10%"
-
   },
   top: {
     flexDirection: 'row',
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    minHeight: 225
+    minHeight: '25%'
   },
 });
 

@@ -62,6 +62,11 @@ export default function HomeScreen(props: Props) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <InfoBox header='Upcoming Events'>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {pollItems}
+                </ScrollView>
+            </InfoBox>
             
             <InfoBox header='Open Polls'>
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -77,7 +82,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         backgroundColor: '#25242B'
       },
       title: {

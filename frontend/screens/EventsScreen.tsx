@@ -7,6 +7,7 @@ import CalendarMonth from '../components/Calendar';
 import InfoBox from '../components/InfoBox';
 import SmallButton from '../components/SmallButton';
 import BackArrow from '../components/BackArrow';
+import { useIsFocused } from "@react-navigation/native";
 
 interface Props {
   user: number
@@ -14,31 +15,33 @@ interface Props {
 
 export default function EventsScreen(props: Props) {
 
+    const isFocused = useIsFocused();
+
     const { user } = props;
 
     const [events, setEvents] = useState<EventData[]>();
-    const [view, setView] = useState("calender")
+    const [view, setView] = useState("calendar")
     const [groups, setGroups] = useState<GroupData[]>();
 
-    useEffect(() => {
-      
-      getEventData()
-      .then((allEvents) => {
-        setEvents(allEvents);
-      
-      getGroupData()
-      .then((allGroups) => {
-        setGroups(allGroups)
-      });
-      
-      });
+    useEffect(() => { 
+      if (isFocused) { 
+        setView("calendar") ;
+
+        getEventData()
+        .then((allEvents) => {
+          setEvents(allEvents);
+        });
+        
+        getGroupData()
+        .then((allGroups) => {
+          setGroups(allGroups)
+        });
+      }
+    }, [props, isFocused]);
 
 
-    }, []);
-
-
-    const toggleCalenderView = () => {
-      setView("calender");
+    const toggleCalendarView = () => {
+      setView("calendar");
     };
 
     const toggleListView = () => {
@@ -49,7 +52,6 @@ export default function EventsScreen(props: Props) {
       setView("singleDay");
       
     }
-
 
     const eventList = groups?.map(function(val, index){
       return <>
@@ -66,31 +68,31 @@ export default function EventsScreen(props: Props) {
 
     
     return (
-      <SafeAreaView style={[styles.containerList, view === "calender" ? styles.containerCalender: styles.containerList]}>
+      <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
         {/* LIST VIEW */}
           {view === "list" ? <><View style={styles.calendarButtonBox}> 
-            <SmallButton title="Calender View" onPress={toggleCalenderView} style={styles.button}/>
+            <SmallButton title="Calendar View" onPress={toggleCalendarView} style={styles.button}/>
           </View>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-evenly', alignSelf:'auto' }}>
            {eventList}
             </ScrollView></> : ""}
 
-        {/* CALENDER VIEW */}
+        {/* CALENDAR VIEW */}
 
-          {view === "calender" ? <View style={styles.outer}>
+          {view === "calendar" ? <View style={styles.outer}>
             <View style={styles.calendarButtonBox}> 
             <SmallButton title="List View" onPress={toggleListView} style={styles.button}/>
           </View>
-          <View style={styles.containerCalender}>
-            <InfoBox header='Calender'>
-              <CalendarMonth onPress={chooseDate} calenderEvents={events}/>
+          <View style={styles.containerCalendar}>
+            <InfoBox header='Calendar'>
+              <CalendarMonth onPress={chooseDate} calendarEvents={events}/>
             </InfoBox>
             </View>
             </View>: ""}   
-        {/* Changing Scroll View To View to stop from Scrolling calender however to fix Spacing between button and calender */}
+        {/* Changing Scroll View To View to stop from Scrolling calendar however to fix Spacing between button and calendar */}
 
         {/* SINGLE DAY VIEW */}
-        {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalenderView}/></View>
+        {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
         {chosenEvent}  
         </ScrollView></View> : ""}
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
       
     },
 
-    containerCalender: {
+    containerCalendar: {
       backgroundColor: "#25242B",
       flex: 1,
       alignItems: 'center',
