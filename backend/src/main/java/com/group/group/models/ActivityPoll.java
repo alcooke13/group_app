@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-//@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
 @Table(name = "activity_polls")
 public class ActivityPoll extends Poll {

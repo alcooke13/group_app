@@ -7,8 +7,13 @@ import { getLocationPollData, LocationPollData } from '../services/LocationPollS
 import { getActivityPollData, ActivityPollData } from '../services/ActivityPollServices';
 import { useEffect, useState } from 'react';
 
+interface Props {
+    user: number
+}
 
-export default function HomeScreen(){
+export default function HomeScreen(props: Props) {
+
+    const { user } = props;
 
     const [events, setEvents] = useState<EventData[]>();
     const [polls, setPolls] = useState<Array<DatePollData[] | ActivityPollData[] | LocationPollData[]>>();
@@ -16,22 +21,34 @@ export default function HomeScreen(){
     useEffect(() => {
         const allPolls: Array<DatePollData[] | ActivityPollData[] | LocationPollData[]> = [];
 
-        getDatePollData()
-        .then((datePolls) => {
-            allPolls.push(datePolls);
-        })
+        Promise.all([
+            getDatePollData(),
+            getActivityPollData(),
+            getLocationPollData()
+        ]).then((polls) => {
+            polls.flat().forEach((poll) => {
+                if (Date.parse(poll.timeout) > Date.now() && ) {
 
-        getActivityPollData()
-        .then((activityPolls) => {
-            allPolls.push(activityPolls);
-        })
+                }
+            })
+        }
 
-        getLocationPollData()
-        .then((locationPolls) => {
-            allPolls.push(locationPolls);
-            setPolls(allPolls);
-            console.log(allPolls);
-        })
+        // getDatePollData()
+        // .then((datePolls) => {
+        //     allPolls.push(datePolls);
+        // })
+
+        // getActivityPollData()
+        // .then((activityPolls) => {
+        //     allPolls.push(activityPolls);
+        // })
+
+        // getLocationPollData()
+        // .then((locationPolls) => {
+        //     allPolls.push(locationPolls);
+        //     setPolls(allPolls);
+        //     console.log(allPolls);
+        // })
     }, []);
 
 
