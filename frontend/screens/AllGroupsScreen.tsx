@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, Image, StyleSheet, SafeAreaView, Pressable } from 'react-native';
+import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native';
 import { NavigationContainer, TabRouter, useIsFocused } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +8,7 @@ import { getGroupData, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
 import route from "../navigation";
 import { TabView } from '@rneui/base';
+import InfoBox from '../components/InfoBox';
 
 
 export default function AllGroupsScreen(){
@@ -22,10 +23,12 @@ export default function AllGroupsScreen(){
 
   const [groups, setGroup] = useState<GroupData[]>();
     const [singleGroup, setSingleGroup] = useState(initialState);
+    const [groupView, setGroupView] = useState("allgroups")
 
     useEffect(() => {
       if (isFocused){
         setSingleGroup(initialState)
+        setGroupView("allgroups")
       }
       getGroupData()
       .then((userGroups) => {
@@ -41,18 +44,24 @@ export default function AllGroupsScreen(){
 
      function captureChosenGroup(group){
       setSingleGroup(group)
+      setGroupView("singlegroup")
      }
+
+    var singleGroupView = ()=> {
+      return <GroupNameButton key={index} title={singleGroup.groupName} status={true} onPress={()=>captureChosenGroup(val)}/>
+    }
 
     //  function resetSingleGroup(){
     //   setSingleGroup()
     //  }
-     
     
     return (
         <SafeAreaView style={styles.container}>
           <Image source={require('../assets/GroupLogo1.png')}/>
-          <Text>{singleGroup?.groupName}</Text>
-          {allUsersGroupsByName}
+          {groupView === "allgroups" ? <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> : ""}
+          {groupView==="singlegroup"? <InfoBox header={singleGroup.groupName}>{singleGroup.id.toString}</InfoBox>: ""}
+
+          
         </SafeAreaView>
     )
 }
@@ -68,5 +77,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: 'white'
-      }
+      },
+      scroll: {
+        flex: 1,
+        width:'90%',
+    }
   });
