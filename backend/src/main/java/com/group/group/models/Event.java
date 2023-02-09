@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "events")
@@ -20,7 +20,7 @@ public class Event {
     private Group group;
 
     @Column(name = "date")
-    private String date;
+    private LocalDateTime date;
 
     @Column(name = "event_name")
     private String eventName;
@@ -44,7 +44,7 @@ public class Event {
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private DatePoll datePoll;
 
-    public Event(Date date, String eventName, String eventLocation, String activity, Group group) {
+    public Event(LocalDateTime date, String eventName, String eventLocation, String activity, Group group) {
         this.group = group;
         this.date = date;
         this.eventName = eventName;
@@ -75,11 +75,11 @@ public class Event {
         this.group = group;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 @Profile("!test") //Run every time EXCEPT Tests
@@ -51,11 +50,16 @@ import java.util.Date;
             User wanda = new User("Wanda Maximoff", "07096756432", "66 Baulk Lane, Harworth");
             User bucky = new User("Bucky Barnes", "07009887653", "45 Oulton Avenue, Belmont");
             User natasha = new User("Natasha Romanoff", "07890888652", "The Cottage, Besselsleigh");
-            User clint = new User("Clint Barton", "07890888652", "The Cottage, Besselsleigh");
-            User henry = new User("Henry Pym", "07890888652", "The Cottage, Besselsleigh");
-            User tchalla = new User("T'Challa Udaku", "07890888652", "The Cottage, Besselsleigh");
-            User ororo = new User("Ororo Munroe", "07890888652", "The Cottage, Besselsleigh");
-            User carol = new User("Carol Danvers", "07890888652", "The Cottage, Besselsleigh");
+            User clint = new User("Clint Barton", "07234567123", "The Cottage, Besselsleigh");
+            User henry = new User("Henry Pym", "07890000999", "The Cottage, Besselsleigh");
+            User tchalla = new User("T'Challa Udaku", "07334211567", "The Cottage, Besselsleigh");
+            User ororo = new User("Ororo Munroe", "07899765432", "The Cottage, Besselsleigh");
+            User carol = new User("Carol Danvers", "07723098700", "The Cottage, Besselsleigh");
+            User jennifer = new User("Jennifer Walters", "07897654788", "The Cottage, Besselsleigh");
+            User jane = new User("Jane Foster", "07898776554", "The Cottage, Besselsleigh");
+            User rogue = new User("Rogue", "07789543111", "The Cottage, Besselsleigh");
+            User xavier = new User("Charles Xavier", "07665454676", "The Cottage, Besselsleigh");
+            User scott = new User("Scott Summers", "07990887889", "The Cottage, Besselsleigh");
 
             stan.addFriend(peter);
             stan.addFriend(bruce);
@@ -72,6 +76,11 @@ import java.util.Date;
             stan.addFriend(tchalla);
             stan.addFriend(ororo);
             stan.addFriend(carol);
+            stan.addFriend(jennifer);
+            stan.addFriend(jane);
+            stan.addFriend(rogue);
+            stan.addFriend(xavier);
+            stan.addFriend(scott);
 
             userRepository.save(stan);
             userRepository.save(peter);
@@ -89,6 +98,11 @@ import java.util.Date;
             userRepository.save(tchalla);
             userRepository.save(ororo);
             userRepository.save(carol);
+            userRepository.save(jennifer);
+            userRepository.save(jane);
+            userRepository.save(rogue);
+            userRepository.save(xavier);
+            userRepository.save(scott);
 
             Group avengers = new Group("Avengers");
             Group xMen = new Group("XMen");
@@ -98,57 +112,58 @@ import java.util.Date;
             groupRepository.save(xMen);
             groupRepository.save(marvelGals);
 
-            Event event1 = new Event( "Catching Up", "Edinburgh", "Beach", group1);
-            Event event2 = new Event("Tuesday 20th Mar", "Seeing The Gang", "Edinburgh", "Pub", group1);
-            Event event3 = new Event("Saturday 25th March", "Hang Out", "Glasgow", "Sam's House", group2);
-            Event event4 = new Event("Sunday 3rd March", "Work Gals Night Out", "Edinburgh", "Dinner", group2);
-            Event event5 = new Event("Tuesday 16th Feb", "Ken's Bday", "Edinburgh", "Ken's House", group3);
-            Event event6 = new Event("Tuesday 16th Feb", "Games  Night", "Edinburgh", "Board Games", group3);
+            Event tonysBirthday = new Event((LocalDateTime.of(2023,3,5,17,0)), "Tony's Birthday", "Edinburgh", "Laser Quest", avengers);
+            Event xMenReunion = new Event((LocalDateTime.of(2023,3,10,17,0)), "X-Men Reunion", "Edinburgh", "Pub", xMen);
+            Event girlsNightFeb = new Event((LocalDateTime.of(2023,3,2,17,0)), "Girls Night Out", "Glasgow", "Meal & Drinks", marvelGals);
+            Event gamesNight = new Event((LocalDateTime.of(2023,2,7,11,0)), "Games Night", "Edinburgh", "Boardgames", avengers);
+            Event ninjaWarrior = new Event((LocalDateTime.of(2023,2,1,9,0)), "Ninja Warrior", "Glasgow", "Getting Fit", xMen);
+            Event girlsNightJan = new Event((LocalDateTime.of(2023,2,3,17,0)), "Girls Night Out", "Edinburgh", "Natasha's House", marvelGals);
+            Event avengersassemble = new Event((LocalDateTime.of(2023,1,3,14,0)), "Avengers Assemble", "Glasgow", "Tony's House", avengers);
 
-            eventRepository.save(event1);
-            eventRepository.save(event2);
-            eventRepository.save(event3);
-            eventRepository.save(event4);
-            eventRepository.save(event5);
-            eventRepository.save(event6);
 
-            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
-            DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023, 2, 20, 11, 0), event2);
-            DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023, 2, 19, 17, 0), event4);
+            eventRepository.save(tonysBirthday);
+            eventRepository.save(xMenReunion);
+            eventRepository.save(girlsNightFeb);
+            eventRepository.save(gamesNight);
+            eventRepository.save(ninjaWarrior);
+            eventRepository.save(girlsNightJan);
+            eventRepository.save(avengersassemble);
+
+            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023,3,5,17,0), tonysBirthday);
+            DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
+            DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023,3,2,17,0), girlsNightFeb);
 
             datePollRepository.save(datePoll1);
             datePollRepository.save(datePoll2);
             datePollRepository.save(datePoll3);
 
-            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023, 2, 18, 17, 0), event1);
-            ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event2);
-            ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023, 2, 20, 17, 0), event3);
+            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023,3,5,17,0), tonysBirthday);
+            ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
+            ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023,3,2,17,0), girlsNightFeb);
 
             activityPollRepository.save(activityPoll1);
             activityPollRepository.save(activityPoll2);
             activityPollRepository.save(activityPoll3);
 
-            LocationPoll locationPoll1 = new LocationPoll(LocalDateTime.of(2023, 2, 18, 17, 0), event1);
-            LocationPoll locationPoll2 = new LocationPoll(LocalDateTime.of(2023, 2, 19, 17, 0), event4);
-            LocationPoll locationPoll3 = new LocationPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event5);
+            LocationPoll locationPoll1 = new LocationPoll(LocalDateTime.of(2023,3,5,17,0), tonysBirthday);
+            LocationPoll locationPoll2 = new LocationPoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
+            LocationPoll locationPoll3 = new LocationPoll(LocalDateTime.of(2023,3,2,17,0), girlsNightFeb);
 
             locationPollRepository.save(locationPoll1);
             locationPollRepository.save(locationPoll2);
             locationPollRepository.save(locationPoll3);
 
-            event1.setDatePoll(datePoll1);
-            event1.setActivityPoll(activityPoll1);
-            event1.setLocationPoll(locationPoll1);
+            tonysBirthday.setDatePoll(datePoll1);
+            tonysBirthday.setActivityPoll(activityPoll1);
+            tonysBirthday.setLocationPoll(locationPoll1);
 
-            event2.setDatePoll(datePoll2);
-            event2.setActivityPoll(activityPoll2);
+            xMenReunion.setDatePoll(datePoll2);
+            xMenReunion.setActivityPoll(activityPoll2);
+            xMenReunion.setLocationPoll(locationPoll2);
 
-            event3.setActivityPoll(activityPoll3);
-
-            event4.setDatePoll(datePoll3);
-            event4.setLocationPoll(locationPoll2);
-
-            event5.setLocationPoll(locationPoll3);
+            girlsNightFeb.setActivityPoll(activityPoll3);
+            girlsNightFeb.setDatePoll(datePoll3);
+            girlsNightFeb.setLocationPoll(locationPoll3);
 
             datePoll1.addOption("2023-02-18T18:00");
             datePoll2.addOption("2023-02-18T18:00");
@@ -170,30 +185,48 @@ import java.util.Date;
 
             locationPollRepository.save(locationPoll1);
 
-            eventRepository.save(event1);
-            eventRepository.save(event2);
-            eventRepository.save(event3);
-            eventRepository.save(event4);
-            eventRepository.save(event5);
+            eventRepository.save(tonysBirthday);
+            eventRepository.save(xMenReunion);
+            eventRepository.save(girlsNightFeb);
+            eventRepository.save(gamesNight);
+            eventRepository.save(ninjaWarrior);
+            eventRepository.save(girlsNightJan);
+            eventRepository.save(avengersassemble);
 
-            group1.addUser(jenna);
-            group1.addUser(rory);
-            group1.addUser(ed);
-            group1.addUser(ali);
 
-            group2.addUser(samantha);
-            group2.addUser(jacob);
-            group2.addUser(heather);
-            group2.addUser(grace);
-            group2.addUser(barbara);
-            group2.addUser(kenneth);
+            avengers.addUser(stan);
+            avengers.addUser(tony);
+            avengers.addUser(peter);
+            avengers.addUser(bruce);
+            avengers.addUser(shuri);
+            avengers.addUser(steve);
+            avengers.addUser(stephen);
+            avengers.addUser(thor);
+            avengers.addUser(wanda);
+            avengers.addUser(bucky);
+            avengers.addUser(natasha);
+            avengers.addUser(clint);
+            avengers.addUser(henry);
+            avengers.addUser(tchalla);
 
-            group3.addUser(samantha);
-            group3.addUser(jacob);
-            group3.addUser(heather);
+            xMen.addUser(stan);
+            xMen.addUser(rogue);
+            xMen.addUser(xavier);
+            xMen.addUser(scott);
+            xMen.addUser(ororo);
 
-            groupRepository.save(group1);
-            groupRepository.save(group2);
-            groupRepository.save(group3);
+            marvelGals.addUser(stan);
+            marvelGals.addUser(shuri);
+            marvelGals.addUser(wanda);
+            marvelGals.addUser(natasha);
+            marvelGals.addUser(rogue);
+            marvelGals.addUser(carol);
+            marvelGals.addUser(jennifer);
+            marvelGals.addUser(jane);
+
+
+            groupRepository.save(avengers);
+            groupRepository.save(xMen);
+            groupRepository.save(marvelGals);
         }
     }
