@@ -53,6 +53,18 @@ export default function HomeScreen(props: Props) {
     }, [isFocused]);
 
     const eventItems = events?.map((event, index) => {
+
+        const eventDate = new Date(event.date).toLocaleString('en-GB', { 
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+        });
+
+        const eventTime = new Date(event.date).toLocaleTimeString("en-US", {
+            hour: '2-digit', 
+            minute:'2-digit'
+        });
+
         return(
             <TouchableOpacity onPress={() => {}}>
                 <View style={styles.eventItem} key={index}>
@@ -60,8 +72,8 @@ export default function HomeScreen(props: Props) {
                         <TextHeader>{event.eventName}</TextHeader>
                     </View>
                     <View style={styles.eventInfo}>
-                    <Text>Date:         {event.date}</Text>
-                    <Text>Time:         TBC</Text>
+                    <Text>Date:         {eventDate}</Text>
+                    <Text>Time:         {eventTime}</Text>
                     <Text>Location:   {event.eventLocation}</Text>
                     </View>
                 </View>
@@ -137,4 +149,4 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
       }
-  });
+});
