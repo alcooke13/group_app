@@ -3,6 +3,8 @@ package com.group.group.models;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.*;
 
 public class GroupTests {
@@ -12,14 +14,18 @@ public class GroupTests {
     Event event2;
     User user1;
     User user2;
+    LocalDateTime date1;
+    LocalDateTime date2;
 
     @Before
     public void before() {
+        LocalDateTime date1 = LocalDateTime.of(2023, 2, 5, 17, 0);
+        LocalDateTime date2 = LocalDateTime.of(2023, 2, 17, 11, 0);
         user1 = new User("ali", "071234456", "Edinburgh");
         user2 = new User("rory", "071234436", "Edinburgh");
         group1 = new Group("Dream Team");
-        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking", group1);
-        event2 = new Event("25-02-2023", "Boogie", "The club", "Dancing", group1);
+        event1 = new Event(date1, "Hangout", "The pub", "Drinking", group1);
+        event2 = new Event(date2, "Boogie", "The club", "Dancing", group1);
         group1.addEvent(event1);
         group1.addUser(user1);
     }

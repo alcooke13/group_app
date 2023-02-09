@@ -75,12 +75,19 @@ import java.util.Date;
             groupRepository.save(group2);
             groupRepository.save(group3);
 
-            Event event1 = new Event("Monday 15th Feb", "Catching Up", "Edinburgh", "Beach", group1);
-            Event event2 = new Event("Tuesday 20th Mar", "Seeing The Gang", "Edinburgh", "Pub", group1);
-            Event event3 = new Event("Saturday 25th March", "Hang Out", "Glasgow", "Sam's House", group2);
-            Event event4 = new Event("Sunday 3rd March", "Work Gals Night Out", "Edinburgh", "Dinner", group2);
-            Event event5 = new Event("Tuesday 16th Feb", "Ken's Bday", "Edinburgh", "Ken's House", group3);
-            Event event6 = new Event("Tuesday 16th Feb", "Games  Night", "Edinburgh", "Board Games", group3);
+            LocalDateTime date1 = LocalDateTime.of(2023, 2, 5, 17, 0);
+            LocalDateTime date2 = LocalDateTime.of(2023, 2, 17, 11, 0);
+            LocalDateTime date3 = LocalDateTime.of(2023, 3, 5, 15, 0);
+            LocalDateTime date4 = LocalDateTime.of(2023, 2, 19, 17, 0);
+            LocalDateTime date5 = LocalDateTime.of(2023, 2, 17, 18, 0);
+            LocalDateTime date6 = LocalDateTime.of(2023, 3, 12, 19, 0);
+
+            Event event1 = new Event(date1, "Catching Up", "Edinburgh", "Beach", group1);
+            Event event2 = new Event(date2, "Seeing The Gang", "Edinburgh", "Pub", group1);
+            Event event3 = new Event(date3, "Hang Out", "Glasgow", "Sam's House", group2);
+            Event event4 = new Event(date4, "Work Gals Night Out", "Edinburgh", "Dinner", group2);
+            Event event5 = new Event(date5, "Ken's Bday", "Edinburgh", "Ken's House", group3);
+            Event event6 = new Event(date6, "Games  Night", "Edinburgh", "Board Games", group3);
 
             eventRepository.save(event1);
             eventRepository.save(event2);
