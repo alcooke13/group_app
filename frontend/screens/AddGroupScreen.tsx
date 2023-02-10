@@ -7,6 +7,8 @@ import SmallButton from '../components/SmallButton';
 import LineBreak from '../components/LineBreak';
 import { useIsFocused } from "@react-navigation/native";
 import BackgroundBox from '../components/BackgroundBox';
+import { getFriendsByUserId, UserData } from '../services/UserServices';
+import DatePollButton from '../components/DatePollButton';
 
 interface Props {
     user: number
@@ -18,14 +20,25 @@ export default function AddGroupScreen(props: Props) {
 
     const { user } = props;
 
+    const [friends, setFriends] = useState<UserData[]>();
+
+
     useEffect(() => {
-
         if (isFocused) {
-
+            getFriendsByUserId(user)
+            .then((userFriends) => {
+                setFriends(userFriends);
+            })
         }
     }, [isFocused]);
 
-    const memberItems = {}
+
+    const memberItems = friends?.map((friend, index) => {
+
+        return(
+            <DatePollButton dateOption={friend.userName} onPress={() => {}} votedOn={false} key={index}></DatePollButton>
+        )
+    });
 
     return (
         <SafeAreaView style={styles.container}>
@@ -38,8 +51,14 @@ export default function AddGroupScreen(props: Props) {
             
             <InfoBox header='Group Members'>
                 <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.members}>
+                        {memberItems}
+                    </View>
                 </ScrollView>
             </InfoBox>
+            <View style={styles.doneButton}>
+                <SmallButton title='Done' onPress={() => {}}></SmallButton>
+            </View>
         </SafeAreaView>
     );
 }
@@ -68,5 +87,13 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         padding: 10,
         fontSize: 16
+    },
+    members: {
+        alignItems: 'center',
+        paddingTop: 10
+    },
+    doneButton: {
+        alignSelf: 'flex-end',
+        paddingRight: '5%'
     }
 });

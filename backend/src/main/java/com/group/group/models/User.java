@@ -57,14 +57,14 @@ public class User {
             joinColumns=@JoinColumn(name="friend_id"),
             inverseJoinColumns=@JoinColumn(name="user_id")
     )
-    private List<User> friendof;
+    private List<User> friendOf;
 
     public User(String userName, String phoneNumber, String address) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.friends = new ArrayList<>();
-        this.friendof = new ArrayList<>();
+        this.friendOf = new ArrayList<>();
         this.groups = new ArrayList<>();
     }
 
@@ -117,7 +117,7 @@ public class User {
     }
 
     public List<User> getFriendOf() {
-        return friendof;
+        return friendOf;
     }
 
     public void addFriend(User user){
