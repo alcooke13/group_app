@@ -130,11 +130,7 @@ export default function AllGroupsScreen(props: Props) {
                 }    
      }
 
-    //  var allUsersGroupsByName = groups?.flatMap(function(val, index){
-    //   return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
-    //  })
-
-     function GroupPollDetails(){
+     function SingleGroupPollDetails(){
       for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
         return(
         <DatePollButton dateOption={option} onPress={()=>captureChosenVote()} votedOn ></DatePollButton>
@@ -142,8 +138,13 @@ export default function AllGroupsScreen(props: Props) {
       }
      }
 
-
-
+     function captureChosenVote(){
+        for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)){
+          user_ids.push(user)
+          console.log(user_ids.length)
+        }
+      }
+     
 
      function AllGroupView(){
       return(
@@ -164,7 +165,7 @@ export default function AllGroupsScreen(props: Props) {
           <BurgerIcon></BurgerIcon>
         </View>
             <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>
-            <InfoBox header={activeGroupPoll.event.eventName}><View>{GroupPollDetails()}</View></InfoBox>
+            <InfoBox header={activeGroupPoll.event.eventName}><View>{SingleGroupPollDetails()}</View></InfoBox>
           </>
         )
      }

@@ -167,8 +167,11 @@ import java.time.LocalDateTime;
             girlsNightFeb.setLocationPoll(locationPoll3);
 
             datePoll1.addOption("2023-02-18T18:00");
+            datePoll1.addOption("2023-02-19T18:00");
             datePoll2.addOption("2023-02-18T18:00");
             datePoll1.addUserToOption("2023-02-18T18:00",1L);
+            datePoll1.addUserToOption("2023-02-18T18:00",2L);
+            datePoll1.addUserToOption("2023-02-18T18:00",3L);
             datePoll2.addUserToOption("2023-02-18T18:00",2L);
 
             datePollRepository.save(datePoll1);
