@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    minHeight: '25%'
+    // minHeight: '25%'
+     minHeight: '10%'
   },
 });
 

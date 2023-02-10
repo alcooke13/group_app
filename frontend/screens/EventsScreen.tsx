@@ -81,21 +81,20 @@ export default function EventsScreen(props: Props) {
       return result;
   }, {});
 
-  const filteredEvents = events?.map((event, index) => {
-    if(new Date(event.date).toLocaleDateString("fr-CA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }) === date){
-      console.log("WORKS")
-      return <>
-      <View>
-        <Text>TESTING 123</Text>
-      </View>
-        </>
-    }
-    
-  })
+  // const filteredEvents = events?.map((event, index) => {
+  //   if(new Date(event.date).toLocaleDateString("fr-CA", {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //   }) === date){
+  //     console.log("WORKS")
+  //     return <>
+  //     <View>
+  //       <Text>TESTING 123</Text>
+  //     </View>
+  //       </>
+  //   }
+  // })
 
     const eventList = groups?.map((group)=>  {
       return group.events.map((event, index) => {
@@ -133,7 +132,7 @@ export default function EventsScreen(props: Props) {
           </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
-              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates}/>
+              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates} date={date}/>
             </InfoBox>
             </View>
             </View>: ""}   

@@ -1,6 +1,6 @@
 import { Calendar } from 'react-native-calendars';
 import { View, StyleSheet, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EventData } from '../services/EventServices';
 import { setDate } from 'date-fns';
 
@@ -10,10 +10,11 @@ interface Props {
     chooseDate: () => void;
     setDate: any;
     resultDates: any;
+    date: any;
 }
 
 const CalendarMonth = (props: Props) => {
-    const {onPress, calendarEvents, chooseDate, setDate, resultDates} = props
+    const {onPress, calendarEvents, chooseDate, setDate, resultDates, date} = props
     ;
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -33,10 +34,11 @@ const CalendarMonth = (props: Props) => {
                 // Handler which gets executed on day press. Default = undefined
 
                 onDayPress={day => {
-                    setDate(`${day.year}-${day.month}-${day.day}`) 
-                    }   
-                }
-                
+                    let newDate = (`${day.year}-${day.month}-${day.day}`)
+                    setDate(newDate)
+                    chooseDate()
+                }}
+
                 // onDayPress={day => {
                 //     console.log('selected day', day);
                 //   }}
