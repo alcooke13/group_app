@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import { getEventData, EventData } from '../services/EventServices';
+import { getEventData, EventData, getEventDataByUserId } from '../services/EventServices';
 import { getGroupData, GroupData } from '../services/GroupServices';
 import { useEffect, useState } from 'react';
 import CalendarMonth from '../components/Calendar';
@@ -30,10 +30,10 @@ export default function EventsScreen(props: Props) {
       if (isFocused) { 
         setView("calendar") ;
 
-        getEventData()
+        getEventDataByUserId(user)
         .then((allEvents) => {
-          setEvents(allEvents);
-        });
+            setEvents(allEvents);
+          });
         
         getGroupData()
         .then((allGroups) => {
@@ -114,13 +114,13 @@ export default function EventsScreen(props: Props) {
   // });
 
 
-    const eventList = groups?.map(function(val, index){
+    const eventList = groups?.map(function(group, index){
       return <>
-      <InfoBox header={val.groupName} key={index}>
+      <InfoBox header={group.groupName} key={index}>
         <View style={styles.textBox}>
-          <Text>{val.events[index].activity}</Text>
-          <Text>{val.events[index].eventLocation}</Text>
-          <Text>{new Date(val.events[index].date).toLocaleDateString("en-GB", {
+          <Text>{group.events[0]?.activity}</Text>
+          <Text>{group.events[0]?.eventLocation}</Text>
+          <Text>{new Date(group.events[0]?.date).toLocaleDateString("en-GB", {
             // year: "numeric",
             month: "short",
             day: "2-digit",
@@ -196,7 +196,8 @@ const styles = StyleSheet.create({
     textBox: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      padding: "20%"
     },
     outer: {
       width: "100%",
