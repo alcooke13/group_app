@@ -96,13 +96,39 @@ export default function EventsScreen(props: Props) {
   //   }
   // })
 
+   function FilteredEvents(){
+    const date = Date.parse("2023-03-02").toString()
+    for(let group of groups){
+      for(let event of group.events){
+        if(Date.parse(event.date).toString() === date){
+          console.log("workjs")
+          
+        }
+        return <InfoBox header={group.groupName} key={Math.random()}>
+        <View style={styles.filteredBox}>
+          <Text>Activity: {event.activity}</Text>
+          <Text>Location: {event.eventLocation}</Text>
+          <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
+            // year: "numeric",
+            month: "short",
+            day: "2-digit",
+            weekday: "long"
+            })}</Text>
+        </View>
+      </InfoBox>
+      }
+      
+    }
+    
+  }
+
     const eventList = groups?.map((group)=>  {
       return group.events.map((event, index) => {
         return <InfoBox header={group.groupName} key={index}>
         <View style={styles.textBox}>
-          <Text>{event.activity}</Text>
-          <Text>{event.eventLocation}</Text>
-          <Text>{new Date(event.date).toLocaleDateString("en-GB", {
+          <Text>Activity: {event.activity}</Text>
+          <Text>Location: {event.eventLocation}</Text>
+          <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
             // year: "numeric",
             month: "short",
             day: "2-digit",
@@ -138,11 +164,12 @@ export default function EventsScreen(props: Props) {
             </View>: ""}   
 
         {/* FILTERERED LIST OF EVENTS ON A CHOSEN DATE */}
-        {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
-          {eventList}
-        </ScrollView></View> : ""}
-        
+        {view === "singleDay" ? <><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-evenly'}}>
+          {/* {eventList} */}
+          <><FilteredEvents/></>
+        </ScrollView></> : ""}
+
         </SafeAreaView>
     )    
 }
@@ -151,7 +178,7 @@ export default function EventsScreen(props: Props) {
 const styles = StyleSheet.create({
     containerList: {
       backgroundColor: "#25242B",
- 
+      flex:1
       
     },
 
@@ -181,15 +208,19 @@ const styles = StyleSheet.create({
       
       justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: "20%"
+      paddingTop: '15%'
     },
     outer: {
       width: "100%",
       height: "100%",
     },
-
     button: {
       backgroundColor: 'red'
+    },
+    filteredBox: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '10%',
+    
     }
-
   });
