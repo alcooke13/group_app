@@ -14,17 +14,11 @@ import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
 import Questions from './Questions';
 
-interface Props {
-    children: any,
-    
-}
 
 const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
-let questionOrder: string[];
 
-export default function NewEvent(props: Props) {
+export default function NewEvent() {
 
-    const {children} = props
 
     // set up useStates for logic flow
     const [eventNameKnown, setEventNameKnown] = useState(false);
@@ -41,7 +35,16 @@ export default function NewEvent(props: Props) {
     const [knownEvent, setKnownEvent] = useState(false);
     const [unknownEvent, setUnknownEvent] = useState(false);
 
+    const [activeQuestion, setActiveQuestion] = useState(0);
+
     const [counter, setCounter] = useState(0);
+
+    const [dateProvided, setDate] = useState("")
+    const [activityProvided, setActivity] = useState("")
+    const [locationProvided, setLocation] = useState("")
+
+
+    const questionOrder : Array<string> = [];
     const onPressYes = () => {
         setKnownEvent(true)
         console.log("You pressed yes!")
@@ -51,10 +54,9 @@ export default function NewEvent(props: Props) {
         console.log("You pressed no!")
     }
 
-
-
     const EventName = () => {
         let titleValue: string;
+       
 
         const onTitleEnd = () => {
             setEventTitle(titleValue)
@@ -88,7 +90,7 @@ export default function NewEvent(props: Props) {
     };
 
     const CheckDetailsKnown = () => {
-
+        
         const onDateTickBoxPress = () => {
             detailsKnownCheck.date = !detailsKnownCheck.date
             setDateKnown(!dateKnown);
@@ -106,6 +108,11 @@ export default function NewEvent(props: Props) {
         }
 
         const onKnownQuestionCheck = () => {
+            
+
+            console.log(questionOrder)
+
+            questionOrder.splice(0,questionOrder.length)
             if (detailsKnownCheck.date) {
                 questionOrder.push("date")
             }
@@ -131,13 +138,11 @@ export default function NewEvent(props: Props) {
                 <View>
                     <BackgroundBox>
                         <View>
-
                             <Text>Known Event</Text>
 
                             <TickBox value={dateKnown} onPress={onDateTickBoxPress}></TickBox>
                             <TickBox value={activityKnown} onPress={onActivityTickBoxPress}></TickBox>
                             <TickBox value={locationKnown} onPress={onLocationTickBoxPress}></TickBox>
-
 
                         </View>
                     </BackgroundBox>
@@ -156,31 +161,82 @@ export default function NewEvent(props: Props) {
 
 
 
-        const getQuestion = (questionType: string) => {
-            let question: string;
-            switch (questionType) {
-                case "date":
-                    question = "What is the date of your event?"
-                    break;
-                case "activity":
-                    question = "What is the events activity?"
-                    break;
-                case "location":
-                    question = "Where is the events location?"
-                    break;
-
-            }
-        }
-
         const updateCounter = () => {
             let newCounter = counter;
-            if (counter < questionOrder.length){
+            if (counter < questionOrder.length) {
                 newCounter += 1
                 setCounter(newCounter)
 
 
             }
         }
+        let dateAnswer: string;
+        let locationAnswer: string;
+        let activityAnswer: string;
+
+        const onLocationEnd= () => {
+            setLocation(locationAnswer)
+        } 
+        const onDateEnd = () => {
+            setDate(dateAnswer)
+        } 
+        const onActivityEnd = () => {
+            setActivity(activityAnswer)
+        }
+
+
+        const DateQuestion = () => {
+            return (
+                <View>
+                    <Text>"What is the date of your event?"</Text>
+                    <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => {
+                                dateAnswer = text;
+                            }}
+                            onEndEditing={onDateEnd}
+                        />
+                        <SmallButton title={"Submit"} onPress={() => {
+                            // setEventNameKnown(!eventNameKnown)
+                        }} ></SmallButton>
+                </View>
+            )
+        }
+        const LocationQuestion = () => {
+            return (
+                <View>
+                    <Text>"What is the location of your event?"</Text>
+                    <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => {
+                                locationAnswer = text;
+                            }}
+                            onEndEditing={onDateEnd}
+                        />
+                        <SmallButton title={"Submit"} onPress={() => {
+                            // setEventNameKnown(!eventNameKnown)
+                        }} ></SmallButton>
+                </View>
+            )
+        }
+        const ActivityQuestion = () => {
+            return (
+                <View>
+                    <Text>"What is the activity of your event?"</Text>
+                    <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => {
+                                activityAnswer = text;
+                            }}
+                            onEndEditing={onActivityEnd}
+                        />
+                        <SmallButton title={"Submit"} onPress={() => {
+                            // setEventNameKnown(!eventNameKnown)
+                        }} ></SmallButton>
+                </View>
+            )
+        }
+
 
         if (showQuestions && knownEvent) {
 
@@ -188,16 +244,18 @@ export default function NewEvent(props: Props) {
 
             return (
                 <>
-                <BackgroundBox width={'90%'}>
+                    <BackgroundBox width={'90%'}>
 
 
-                    <View style={styles.container}>
-                       
-                    </View>
-                </BackgroundBox>
-                <SmallButton title={"Submit"} onPress={()=>{
+                        <View style={styles.container}>
+                        { dateProvided != "" && questionOrder.includes("date") ? <DateQuestion/> : <></> }
+                        { activityProvided != "" && questionOrder.includes("activity") ? <ActivityQuestion/> : <></> }
+                        { locationProvided != "" && questionOrder.includes("location") ? <LocationQuestion/> : <></> }
+                        </View>
+                    </BackgroundBox>
+                    <SmallButton title={"Submit"} onPress={() => {
 
-                }} ></SmallButton>
+                    }} ></SmallButton>
                 </>
 
 
