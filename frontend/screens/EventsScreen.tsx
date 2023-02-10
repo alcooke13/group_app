@@ -24,6 +24,7 @@ export default function EventsScreen(props: Props) {
     const [events, setEvents] = useState<EventData[]>();
     const [view, setView] = useState("calendar")
     const [groups, setGroups] = useState<GroupData[]>();
+    const [date, setDate] = useState("")
 
     useEffect(() => { 
       if (isFocused) { 
@@ -54,18 +55,80 @@ export default function EventsScreen(props: Props) {
       setView("singleDay");
       
     }
+    //Step 1
+    // Gets all events as an array of key value pairs, date in YYYY-MM-DD as key with value of another key value pair of marked: true
+    const datesToMark = events?.map((date) => {
+      let dateObj: any = {};
+      dateObj[new Date(date.date).toLocaleDateString("fr-CA", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          })] = {marked: true} 
+      return dateObj
+  });
+  
+  //Step 2
+  // Calender doesn't accept the array this converts datesToMark to a single object with multiple key value pairs inside to mark dates in the calender
+  let resultDates = datesToMark?.reduce(function(result, currentObject) {
+      for(let key in currentObject) {
+          if (currentObject.hasOwnProperty(key)) {
+              result[key] = currentObject[key];
+          }
+      }
+      return result;
+  }, {});
+
+  const filteredEvents = events?.map((event, index) => {
+    if(new Date(event.date).toLocaleDateString("fr-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }) == date)
+    console.log("This matches")
+  })
+  
+  // const filterEvent = new Date(events).toLocaleDateString("fr-CA", {
+  //   year: "numeric",
+  //   month: "2-digit",
+  //   day: "2-digit",
+  // })
+  // console.log(filterEvent)
+  
+  // const getKeys = () => {
+  //   let dateKeys = [];  
+  //   for (let value of Object.keys(resultDates)) {
+  //         dateKeys.push(value);
+  //     }
+  //     return dateKeys
+  // };
+  
+  // const filteredEvents = events?.map(function(val, index){
+  //   let dateKeys= getKeys();
+  //   console.log(dateKeys)
+  //   if(new Date(val.date).toLocaleDateString("fr-CA", {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //     }) === dateKeys[0].toString())
+  //     return <View><Text>Does this work???</Text></View>
+  // });
+
 
     const eventList = groups?.map(function(val, index){
       return <>
       <InfoBox header={val.groupName} key={index}>
         <View style={styles.textBox}>
-          <Text>{val.events[0].activity}</Text>
-          <Text>{val.events[0].eventLocation}</Text>
-          <Text>{val.events[0].date}</Text>
+          <Text>{val.events[index].activity}</Text>
+          <Text>{val.events[index].eventLocation}</Text>
+          <Text>{new Date(val.events[index].date).toLocaleDateString("en-GB", {
+            // year: "numeric",
+            month: "short",
+            day: "2-digit",
+            weekday: "long"
+            })}</Text>
         </View>
       </InfoBox></>
     });
-    
     return (
       <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
         {/* LIST VIEW */}
@@ -84,16 +147,16 @@ export default function EventsScreen(props: Props) {
           </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
-              <CalendarMonth onPress={chooseDate} calenderEvents={events}/>
+              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates}/>
             </InfoBox>
             </View>
             </View>: ""}   
         {/* Changing Scroll View To View to stop from Scrolling calendar however to fix Spacing between button and calendar */}
 
-        {/* SINGLE DAY VIEW */}
+        {/* FILTERERED LIST OF EVENTS ON A CHOSEN DATE */}
         {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
-          {eventList}  
+          {/* {filteredEvents} */}
         </ScrollView></View> : ""}
         
         </SafeAreaView>

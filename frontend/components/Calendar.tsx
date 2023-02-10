@@ -1,16 +1,20 @@
 import { Calendar } from 'react-native-calendars';
 import { View, StyleSheet, Text } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { EventData } from '../services/EventServices';
+import { setDate } from 'date-fns';
 
 interface Props {
     onPress: () => void;
     calendarEvents?: Array<EventData>;
+    chooseDate: () => void;
+    setDate: any;
+    resultDates: any;
 }
 
 const CalendarMonth = (props: Props) => {
-    const {onPress, calendarEvents} = props
-
+    const {onPress, calendarEvents, chooseDate, setDate, resultDates} = props
+    ;
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
         year: "numeric",
@@ -18,25 +22,33 @@ const CalendarMonth = (props: Props) => {
         day: "2-digit",
         });
 
-    const datesToMark = calendarEvents?.map((date) => {
-        let dateObj: any = {};
-        dateObj[new Date(date.date).toLocaleDateString("fr-CA", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            })] = {marked: true} 
-        return dateObj
-    });
+    
+    // const datesToMark = calendarEvents?.map((date) => {
+    //     let dateObj: any = {};
+    //     dateObj[new Date(date.date).toLocaleDateString("fr-CA", {
+    //         year: "numeric",
+    //         month: "2-digit",
+    //         day: "2-digit",
+    //         })] = {marked: true} 
+    //     return dateObj
+    // });
    
-    let resultDates = datesToMark?.reduce(function(result, currentObject) {
-        for(var key in currentObject) {
-            if (currentObject.hasOwnProperty(key)) {
-                result[key] = currentObject[key];
-            }
-        }
-        return result;
-    }, {});
+    // let resultDates = datesToMark?.reduce(function(result, currentObject) {
+    //     for(let key in currentObject) {
+    //         if (currentObject.hasOwnProperty(key)) {
+    //             result[key] = currentObject[key];
+    //         }
+    //     }
+    //     return result;
+    // }, {});
 
+    // const getKeys = () => {
+    //     for (let value of Object.keys(resultDates)) {
+    //         console.log(value);
+    //     }
+    // };
+    
+    
     return (
         <View style={styles.calendar}>
             <Calendar
@@ -46,10 +58,12 @@ const CalendarMonth = (props: Props) => {
                 minDate={today}
                 // Handler which gets executed on day press. Default = undefined
 
-                onDayPress={day => {
-                    console.log(datesToMark);
-                }}
+                onDayPress={day => {setDate(`${day.year}-${day.month}-${day.day}`)}}
+                // onDayPress={getKeys}
 
+                // onDayPress={day => {
+                //     console.log('selected day', day);
+                //   }}
                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
                 monthFormat={'MMMM  yyyy'}
                 // Handler which gets executed when visible month changes in calendar. Default = undefined
