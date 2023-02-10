@@ -1,22 +1,30 @@
 package com.group.group.controllers;
 
 import com.group.group.models.Group;
+import com.group.group.models.User;
 import com.group.group.repositories.GroupRepository;
+import com.group.group.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class GroupController {
 
     @Autowired
     GroupRepository groupRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping(value = "/groups")
     public ResponseEntity<List<Group>> getAllGroups(
@@ -46,17 +54,26 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/groups/{id}")
-    public ResponseEntity<Group> updateGroup(@PathVariable long id,@RequestBody Employee employeeDetails) {
-        Employee updateEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id: " + id));
+    @PutMapping("/groups/{id}/add-users")
+    public ResponseEntity<Group> updateGroup(
+            @PathVariable long id,
+            @RequestBody List<Long> userIds) {
 
-        updateEmployee.setFirstName(employeeDetails.getFirstName());
-        updateEmployee.setLastName(employeeDetails.getLastName());
-        updateEmployee.setEmailId(employeeDetails.getEmailId());
+        Group updateGroup = groupRepository
+                            .findById(id)
+                            .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
 
-        employeeRepository.save(updateEmployee);
+        for (Long userId : userIds) {
+            User groupUser = userRepository
+                            .findById(userId)
+                            .orElseThrow(() -> new RuntimeException("User Not Found: " + userId));
+            if (groupUser != null) {
+                updateGroup.addUser(groupUser);
+            }
+        }
 
-        return ResponseEntity.ok(updateEmployee);
+        groupRepository.save(updateGroup);
+
+        return ResponseEntity.ok(updateGroup);
     }
 }
