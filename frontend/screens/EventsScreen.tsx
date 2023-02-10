@@ -114,28 +114,47 @@ export default function EventsScreen(props: Props) {
   // });
 
 
-    const eventList = groups?.map(function(group, index){
-      return <>
-      <InfoBox header={group.groupName} key={index}>
+
+    const eventList = groups?.map((group)=>  {
+      return group.events.map((event, index) => {
+        return <InfoBox header={group.groupName} key={index}>
         <View style={styles.textBox}>
-          <Text>{group.events[0]?.activity}</Text>
-          <Text>{group.events[0]?.eventLocation}</Text>
-          <Text>{new Date(group.events[0]?.date).toLocaleDateString("en-GB", {
+          <Text>{event.activity}</Text>
+          <Text>{event.eventLocation}</Text>
+          <Text>{new Date(event.date).toLocaleDateString("en-GB", {
             // year: "numeric",
             month: "short",
             day: "2-digit",
             weekday: "long"
             })}</Text>
         </View>
-      </InfoBox></>
-    });
+      </InfoBox>
+      })
+    })
+
+
+    // const eventList = groups?.map(function(group, index){
+    //   return <>
+    //   <InfoBox header={group.groupName} key={index}>
+    //     <View style={styles.textBox}>
+    //       <Text>{group.events[0]?.activity}</Text>
+    //       <Text>{group.events[0]?.eventLocation}</Text>
+    //       <Text>{new Date(group.events[0]?.date).toLocaleDateString("en-GB", {
+    //         // year: "numeric",
+    //         month: "short",
+    //         day: "2-digit",
+    //         weekday: "long"
+    //         })}</Text>
+    //     </View>
+    //   </InfoBox></>
+    // });
     return (
       <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
         {/* LIST VIEW */}
           {view === "list" ? <><View style={styles.calendarButtonBox}> 
             <SmallButton title="Calendar View" onPress={toggleCalendarView} style={styles.button}/>
           </View>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-evenly', alignSelf:'auto' }}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-evenly'}}>
            {eventList}
             </ScrollView></> : ""}
 
@@ -151,7 +170,6 @@ export default function EventsScreen(props: Props) {
             </InfoBox>
             </View>
             </View>: ""}   
-        {/* Changing Scroll View To View to stop from Scrolling calendar however to fix Spacing between button and calendar */}
 
         {/* FILTERERED LIST OF EVENTS ON A CHOSEN DATE */}
         {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
@@ -167,7 +185,7 @@ export default function EventsScreen(props: Props) {
 const styles = StyleSheet.create({
     containerList: {
       backgroundColor: "#25242B",
-      flex:1
+ 
       
     },
 
@@ -194,10 +212,10 @@ const styles = StyleSheet.create({
       marginTop: '5%'
     },
     textBox: {
-      flex: 1,
+      
       justifyContent: 'center',
       alignItems: 'center',
-      padding: "20%"
+      paddingTop: "20%"
     },
     outer: {
       width: "100%",
