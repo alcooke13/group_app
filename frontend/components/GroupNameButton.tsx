@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 40,
         position: 'absolute',
-        right: 10,
-        top: 4,
+        right:-30,
+        top: -4,
     },
 
     notifationOff: {
