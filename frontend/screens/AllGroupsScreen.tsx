@@ -63,8 +63,10 @@ export default function AllGroupsScreen(props: Props) {
       .then((userGroups) => {
         setGroup(userGroups);
       })
+    }, [isFocused]);
 
-    const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
+    useEffect(()=>{
+      const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
 
     Promise.all([
         getDatePollDataByGroupId(singleGroup.id),
@@ -81,8 +83,8 @@ export default function AllGroupsScreen(props: Props) {
               findActivePoll(allGroupsPolls)
             })
             , [];
-          }, [isFocused]);
-
+          }, [singleGroup]);
+    
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
       return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
      })
@@ -93,6 +95,7 @@ export default function AllGroupsScreen(props: Props) {
      }
 
      function addNewGroup(){}
+     function captureChosenVote (){}
 
 
      function findActivePoll(allGroupPolls){
@@ -133,21 +136,12 @@ export default function AllGroupsScreen(props: Props) {
      function GroupPollDetails(){
       for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
         return(
-        <DatePollButton dateOption={option} onPress={console.log('hi')} votedOn="False"></DatePollButton>
+        <DatePollButton dateOption={option} onPress={()=>captureChosenVote()} votedOn ></DatePollButton>
         )
       }
      }
 
-  //    var GroupPollOptions = activeGroupPoll?.options (val,index){
-  //       return <Text>{activeGroupPoll.options.date}</Text>
-  //     }
-  //   }
 
-  //   for (const [option, user_ids] of Object.entries(poll.options)) {
-  //     if (user_ids.every((user_id) => user_id != user)) {
-  //         allPolls.push(poll);
-  //     }                        
-  // }
 
 
      function AllGroupView(){
@@ -169,7 +163,7 @@ export default function AllGroupsScreen(props: Props) {
           <BurgerIcon></BurgerIcon>
         </View>
             <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>
-            <InfoBox header='{insert active poll name}'><View>{GroupPollDetails()}</View></InfoBox>
+            <InfoBox header={activeGroupPoll.event.eventName}><View>{GroupPollDetails()}</View></InfoBox>
           </>
         )
      }
