@@ -2,6 +2,7 @@ package com.group.group.controllers;
 
 import com.group.group.models.ActivityPoll;
 import com.group.group.models.DatePoll;
+import com.group.group.models.LocationPoll;
 import com.group.group.repositories.ActivityPollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,19 @@ public class ActivityPollController {
     @Autowired
     ActivityPollRepository activityPollRepository;
 
+
     @GetMapping(value = "/activity-polls")
     public ResponseEntity<List<ActivityPoll>> getAllActivityPolls(
-            @RequestParam(name="user_id", required = false) Long user_id) {
-        if (user_id != null) {
+            @RequestParam(name="user_id", required = false) Long user_id,
+            @RequestParam(name="group_id", required = false) Long group_id)
+    {
+        if (user_id != null & group_id == null) {
             return new ResponseEntity<>(activityPollRepository.findActivityPollByEventGroupUsersId(user_id), HttpStatus.OK);
-        } else {
+        } else if (user_id == null & group_id != null) {
+            return new ResponseEntity<>(activityPollRepository.findActivityPollByEventGroupId(group_id), HttpStatus.OK);
+        }
+        else
+        {
             return new ResponseEntity<>(activityPollRepository.findAll(), HttpStatus.OK);
         }
     }

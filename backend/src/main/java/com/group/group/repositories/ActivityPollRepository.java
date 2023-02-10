@@ -12,4 +12,5 @@ import java.util.List;
 public interface ActivityPollRepository extends JpaRepository<ActivityPoll, Long> {
 
     List<ActivityPoll> findActivityPollByEventGroupUsersId(Long id);
+    List<ActivityPoll> findActivityPollByEventGroupId(Long id);
 }
