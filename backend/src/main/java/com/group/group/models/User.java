@@ -1,5 +1,6 @@
 package com.group.group.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cascade;
 
@@ -41,6 +42,7 @@ public class User {
             })
     private List<Group> groups;
 
+    @JsonBackReference
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="table_friends",
 
@@ -49,19 +51,20 @@ public class User {
     )
     private List<User> friends;
 
+    @JsonManagedReference
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="table_friends",
             joinColumns=@JoinColumn(name="friend_id"),
             inverseJoinColumns=@JoinColumn(name="user_id")
     )
-    private List<User> friendOf;
+    private List<User> friendof;
 
     public User(String userName, String phoneNumber, String address) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.friends = new ArrayList<>();
-        this.friendOf = new ArrayList<>();
+        this.friendof = new ArrayList<>();
         this.groups = new ArrayList<>();
     }
 
@@ -114,7 +117,7 @@ public class User {
     }
 
     public List<User> getFriendOf() {
-        return friendOf;
+        return friendof;
     }
 
     public void addFriend(User user){
