@@ -12,6 +12,12 @@ import InfoBox from '../components/InfoBox';
 import TextHeader from '../components/TextHeader';
 import ScreenHeaderText from '../components/ScreenHeaderText';
 import BackArrow from '../components/BackArrow';
+import BigPlus from '../components/BigPlus';
+import BurgerIcon from '../components/BurgerIcon';
+import { DatePollData, getDatePollDataByGroupId } from '../services/DatePollServices';
+import { getLocationPollDataByGroupId, LocationPollData } from '../services/LocationPollServices';
+import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
+import DatePollButton from '../components/DatePollButton';
 
 interface Props {
   user: number
@@ -42,7 +48,11 @@ export default function AllGroupsScreen(props: Props) {
 
   const [groups, setGroup] = useState<GroupData[]>();
     const [singleGroup, setSingleGroup] = useState(initialState);
-    const [groupView, setGroupView] = useState("allgroups")
+    const [groupView, setGroupView] = useState("allgroups");
+    const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
+    const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
+
+
 
     useEffect(() => {
       if (isFocused){
@@ -55,8 +65,26 @@ export default function AllGroupsScreen(props: Props) {
       })
     }, [isFocused]);
 
+    useEffect(()=>{
+      const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
 
-
+    Promise.all([
+        getDatePollDataByGroupId(singleGroup.id),
+        getActivityPollDataByGroupId(singleGroup.id),
+        getLocationPollDataByGroupId(singleGroup.id)
+    ]).then((polls) => {
+        polls.flat().forEach((poll) => {
+            if (Date.parse(poll.timeout) > Date.now()) {
+              allGroupsPolls.push(poll);
+                    }                        
+                })
+            })
+            .then(()=>{
+              findActivePoll(allGroupsPolls)
+            })
+            , [];
+          }, [singleGroup]);
+    
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
       return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
      })
@@ -64,6 +92,15 @@ export default function AllGroupsScreen(props: Props) {
      function captureChosenGroup(group:GroupData){
       setSingleGroup(group)
       setGroupView("singlegroup")
+     }
+
+     function addNewGroup(){}
+     function captureChosenVote (){}
+
+
+     function findActivePoll(allGroupPolls){
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+      setActiveGroupPoll(upcomingPoll)
      }
 
 
@@ -92,11 +129,27 @@ export default function AllGroupsScreen(props: Props) {
                 }    
      }
 
+    //  var allUsersGroupsByName = groups?.flatMap(function(val, index){
+    //   return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
+    //  })
+
+     function GroupPollDetails(){
+      for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
+        return(
+        <DatePollButton dateOption={option} onPress={()=>captureChosenVote()} votedOn ></DatePollButton>
+        )
+      }
+     }
+
+
+
+
      function AllGroupView(){
       return(
       <>
       <Image source={require('../assets/GroupLogo1.png')}/>
       <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
+      <BigPlus onPress={() => addNewGroup()}/>
       </>
       ) 
     }
@@ -107,8 +160,10 @@ export default function AllGroupsScreen(props: Props) {
       <View style={styles.header}>
           <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
+          <BurgerIcon></BurgerIcon>
         </View>
-            <InfoBox header='Next Event'><SingleGroupDetails /></InfoBox>
+            <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>
+            <InfoBox header={activeGroupPoll.event.eventName}><View>{GroupPollDetails()}</View></InfoBox>
           </>
         )
      }
@@ -128,7 +183,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#25242B'
+        backgroundColor: '#25242B',
+
       },
       title: {
         fontSize: 20,
@@ -141,7 +197,10 @@ const styles = StyleSheet.create({
       },
       header: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        alignContent:'space-between',
+        width:"100%",
+      justifyContent: 'space-around',
 
       }
   });

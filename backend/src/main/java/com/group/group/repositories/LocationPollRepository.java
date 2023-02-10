@@ -12,4 +12,5 @@ import java.util.List;
 public interface LocationPollRepository extends JpaRepository<LocationPoll, Long> {
 
     List<LocationPoll> findLocationPollByEventGroupUsersId(Long id);
+    List<LocationPoll> findLocationPollByEventGroupId(Long id);
 }

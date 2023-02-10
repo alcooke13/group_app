@@ -21,10 +21,16 @@ public class LocationPollController {
 
     @GetMapping(value = "/location-polls")
     public ResponseEntity<List<LocationPoll>> getAllLocationPolls(
-            @RequestParam(name="user_id", required = false) Long user_id) {
-        if (user_id != null) {
-            return new ResponseEntity<>(locationPollRepository.findLocationPollByEventGroupUsersId(user_id), HttpStatus.OK);
-        } else {
+            @RequestParam(name="user_id", required = false) Long user_id,
+            @RequestParam(name="group_id", required = false) Long group_id)
+    {
+        if (user_id != null & group_id == null) {
+            return new ResponseEntity<>(locationPollRepository.findLocationPollByEventGroupId(user_id), HttpStatus.OK);
+        } else if (user_id == null & group_id != null) {
+            return new ResponseEntity<>(locationPollRepository.findLocationPollByEventGroupId(group_id), HttpStatus.OK);
+        }
+        else
+        {
             return new ResponseEntity<>(locationPollRepository.findAll(), HttpStatus.OK);
         }
     }

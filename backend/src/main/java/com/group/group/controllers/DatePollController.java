@@ -21,10 +21,16 @@ public class DatePollController {
 
     @GetMapping(value = "/date-polls")
     public ResponseEntity<List<DatePoll>> getAllDatePolls(
-            @RequestParam(name="user_id", required = false) Long user_id) {
-        if (user_id != null) {
+            @RequestParam(name="user_id", required = false) Long user_id,
+            @RequestParam(name="group_id", required = false) Long group_id)
+{
+        if (user_id != null & group_id == null) {
             return new ResponseEntity<>(datePollRepository.findDatePollByEventGroupUsersId(user_id), HttpStatus.OK);
-        } else {
+        } else if (user_id == null & group_id != null) {
+            return new ResponseEntity<>(datePollRepository.findDatePollByEventGroupId(group_id), HttpStatus.OK);
+        }
+        else
+        {
             return new ResponseEntity<>(datePollRepository.findAll(), HttpStatus.OK);
         }
     }
@@ -33,4 +39,6 @@ public class DatePollController {
     public ResponseEntity getDatePoll(@PathVariable Long id){
         return new ResponseEntity<>(datePollRepository.findById(id), HttpStatus.OK);
     }
+
+
 }
