@@ -15,7 +15,7 @@ public class Event {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference("group-event") // causes issues
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
@@ -31,15 +31,15 @@ public class Event {
     @Column(name = "activity")
     private String activity;
 
-    @JsonBackReference
+    @JsonBackReference("event-activityPoll")
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private ActivityPoll activityPoll;
 
-    @JsonBackReference
+    @JsonBackReference("event-locationPoll")
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private LocationPoll locationPoll;
 
-    @JsonBackReference
+    @JsonBackReference("event-datePoll")
     @OneToOne(mappedBy = "event", cascade=CascadeType.ALL)
     private DatePoll datePoll;
 

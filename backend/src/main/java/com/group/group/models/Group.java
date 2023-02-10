@@ -1,6 +1,7 @@
 package com.group.group.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cascade;
 
@@ -17,7 +18,7 @@ public class Group {
     private Long id;
 
     @ManyToMany
-    @JsonBackReference
+    @JsonManagedReference(value="user-group") // causes issues
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinTable(
             name = "users_groups",
@@ -36,7 +37,7 @@ public class Group {
     @Column(name = "group_name")
     private String groupName;
 
-    @JsonManagedReference
+    @JsonBackReference("group-event") // causes issues
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private List<Event> events;
 
