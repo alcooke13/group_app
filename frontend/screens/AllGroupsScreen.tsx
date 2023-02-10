@@ -14,6 +14,10 @@ import ScreenHeaderText from '../components/ScreenHeaderText';
 import BackArrow from '../components/BackArrow';
 import BigPlus from '../components/BigPlus';
 import BurgerIcon from '../components/BurgerIcon';
+import { DatePollData, getDatePollDataByGroupId } from '../services/DatePollServices';
+import { getLocationPollDataByGroupId, LocationPollData } from '../services/LocationPollServices';
+import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
+import DatePollButton from '../components/DatePollButton';
 
 interface Props {
   user: number
@@ -44,7 +48,11 @@ export default function AllGroupsScreen(props: Props) {
 
   const [groups, setGroup] = useState<GroupData[]>();
     const [singleGroup, setSingleGroup] = useState(initialState);
-    const [groupView, setGroupView] = useState("allgroups")
+    const [groupView, setGroupView] = useState("allgroups");
+    const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
+    const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
+
+
 
     useEffect(() => {
       if (isFocused){
@@ -57,6 +65,23 @@ export default function AllGroupsScreen(props: Props) {
       })
     }, [isFocused]);
 
+    const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
+
+    Promise.all([
+        getDatePollDataByGroupId(singleGroup.id),
+        getActivityPollDataByGroupId(singleGroup.id),
+        getLocationPollDataByGroupId(singleGroup.id)
+    ]).then((polls) => {
+        polls.flat().forEach((poll) => {
+            if (Date.parse(poll.timeout) > Date.now()) {
+              allGroupsPolls.push(poll);
+                    }                        
+                })
+            })
+            .then(()=>{
+              setGroupPolls(allGroupsPolls)
+            })
+            , [isFocused];
 
 
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
@@ -69,6 +94,13 @@ export default function AllGroupsScreen(props: Props) {
      }
 
      function addNewGroup(){}
+
+
+     function FindActivePoll(){
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupsPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+      setActiveGroupPoll(upcomingPoll)
+      return activeGroupPoll
+     }
 
 
      function SingleGroupDetails(){
@@ -96,6 +128,16 @@ export default function AllGroupsScreen(props: Props) {
                 }    
      }
 
+     function GroupPollDetails(){
+      {
+        return (
+          <>
+          <Text>{activeGroupPoll?.event.eventName}</Text>
+          </>
+        )}
+     }
+
+
      function AllGroupView(){
       return(
       <>
@@ -115,6 +157,7 @@ export default function AllGroupsScreen(props: Props) {
           <BurgerIcon></BurgerIcon>
         </View>
             <InfoBox header='Next Event'><SingleGroupDetails /></InfoBox>
+            <InfoBox header='{insert active poll name}'><GroupPollDetails/></InfoBox>
           </>
         )
      }
