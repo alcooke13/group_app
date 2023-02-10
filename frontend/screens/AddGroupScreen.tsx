@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Tex
 import InfoBox from '../components/InfoBox';
 import { useEffect, useState } from 'react';
 import TextHeader from '../components/TextHeader';
-import SmallButton from '../components/SmallButton';
+import BigButton from '../components/BigButton';
 import LineBreak from '../components/LineBreak';
 import { useIsFocused } from "@react-navigation/native";
 import BackgroundBox from '../components/BackgroundBox';
@@ -57,7 +57,7 @@ export default function AddGroupScreen(props: Props) {
                 </ScrollView>
             </InfoBox>
             <View style={styles.doneButton}>
-                <SmallButton title='Done' onPress={() => {}}></SmallButton>
+                <BigButton title='Done' onPress={() => {}}></BigButton>
             </View>
         </SafeAreaView>
     );
