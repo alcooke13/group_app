@@ -16,7 +16,7 @@ export interface GroupData {
 }
 
 export function getGroupData(): Promise<GroupData[]> {
-	return fetch('http://127.0.0.1:8080/groups?user_id=3', {
+	return fetch('http://127.0.0.1:8080/groups?user_id=1', {
 		method: 'GET',
 		// headers: {
 		// },

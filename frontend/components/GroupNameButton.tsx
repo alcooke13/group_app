@@ -27,10 +27,11 @@ const GroupNameButton = (props: Props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#E0E1F0",
-        width: "90%",
+        width: "100%",
         minHeight: 57,
-        justifyContent: "center",
-        alignItems: "center",
+        alignContent:'center',
+        justifyContent:'center',
+        alignItems:'center',
         borderRadius: 10,
         marginBottom:15,
         marginTop:15
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
     text: {
         color: "#FF914D",
         fontSize: 36,
+        alignItems:'center'
     },
 
     notificationOn: {
@@ -47,7 +49,10 @@ const styles = StyleSheet.create({
         height: 10,
         width: 10,
         marginTop: 10,
-        marginLeft: 40
+        marginLeft: 40,
+        position: 'absolute',
+        right: 10,
+        top: 4,
     },
 
     notifationOff: {

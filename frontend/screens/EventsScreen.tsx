@@ -57,9 +57,9 @@ export default function EventsScreen(props: Props) {
       return <>
       <InfoBox header={val.groupName} key={index}>
         <View style={styles.textBox}>
-          <Text>{val.events[index].activity}</Text>
-          <Text>{val.events[index].eventLocation}</Text>
-          <Text>{val.events[index].date}</Text>
+          <Text>{val.events[0].activity}</Text>
+          <Text>{val.events[0].eventLocation}</Text>
+          <Text>{val.events[0].date}</Text>
         </View>
       </InfoBox></>
     });

@@ -9,6 +9,9 @@ import GroupNameButton from '../components/GroupNameButton';
 import route from "../navigation";
 import { TabView } from '@rneui/base';
 import InfoBox from '../components/InfoBox';
+import TextHeader from '../components/TextHeader';
+import ScreenHeaderText from '../components/ScreenHeaderText';
+import BackArrow from '../components/BackArrow';
 
 interface Props {
   user: number
@@ -23,7 +26,18 @@ export default function AllGroupsScreen(props: Props) {
   const initialState = {
     id: "",
     groupName: "",
-    events: [],
+    events: [
+      {
+      id:"",
+      date:"",
+      eventName:"",
+      eventLocation:"", 
+      activity:"", 
+      activityPoll:"",
+      locationPoll:"", 
+      datePoll:""
+      }
+    ],
   }; 
 
   const [groups, setGroup] = useState<GroupData[]>();
@@ -47,26 +61,67 @@ export default function AllGroupsScreen(props: Props) {
       return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
      })
 
-     function captureChosenGroup(group){
+     function captureChosenGroup(group:GroupData){
       setSingleGroup(group)
       setGroupView("singlegroup")
      }
 
 
-    //  function resetSingleGroup(){
-    //   setSingleGroup()
-    //  }
+     function SingleGroupDetails(){
+        if (Date.parse(singleGroup.events[0].date) > Date.now()) {
+          return (
+            <>
+            <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
+            <>
+            <Text>Date:         {singleGroup.events[0].date}</Text>
+            <Text>Time:         TBC</Text>
+            <Text>Location:   {singleGroup.events[0].eventLocation}</Text>
+            </>
+            </>
+            )
+                } else
+                {
+                  return (
+                    <>
+                    <TextHeader> No upcoming event </TextHeader>
+                    <Text>Date:        </Text>
+                    <Text>Time:        </Text>
+                    <Text>Location:   </Text>
+                    </>
+                    )
+                }    
+     }
+
+     function AllGroupView(){
+      return(
+      <>
+      <Image source={require('../assets/GroupLogo1.png')}/>
+      <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
+      </>
+      ) 
+    }
+     
+     function SingleGroupView(){
+      return(
+      <>
+      <View style={styles.header}>
+          <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
+          <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
+        </View>
+            <InfoBox header='Next Event'><SingleGroupDetails /></InfoBox>
+          </>
+        )
+     }
+
+
     
     return (
         <SafeAreaView style={styles.container}>
-          <Image source={require('../assets/GroupLogo1.png')}/>
-          {groupView === "allgroups" ? <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> : ""}
-          {groupView==="singlegroup"? <InfoBox header={singleGroup.groupName}><Text>{singleGroup.id}</Text></InfoBox>: ""}
-
-          
+          {groupView === "allgroups" ? <AllGroupView/> : ""}
+          {groupView==="singlegroup"? <SingleGroupView/>: ""}
         </SafeAreaView>
     )
-}
+    }
 
 const styles = StyleSheet.create({
     container: {
@@ -83,5 +138,10 @@ const styles = StyleSheet.create({
       scroll: {
         flex: 1,
         width:'90%',
-    }
+      },
+      header: {
+        flexDirection: 'row',
+        alignItems: 'center'
+
+      }
   });
