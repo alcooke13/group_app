@@ -63,7 +63,6 @@ export default function AllGroupsScreen(props: Props) {
       .then((userGroups) => {
         setGroup(userGroups);
       })
-    }, [isFocused]);
 
     const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
 
@@ -79,10 +78,10 @@ export default function AllGroupsScreen(props: Props) {
                 })
             })
             .then(()=>{
-              setGroupPolls(allGroupsPolls)
+              findActivePoll(allGroupsPolls)
             })
-            , [isFocused];
-
+            , [];
+          }, [isFocused]);
 
     var allUsersGroupsByName = groups?.flatMap(function(val, index){
       return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
@@ -96,10 +95,9 @@ export default function AllGroupsScreen(props: Props) {
      function addNewGroup(){}
 
 
-     function FindActivePoll(){
-      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupsPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+     function findActivePoll(allGroupPolls){
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
       setActiveGroupPoll(upcomingPoll)
-      return activeGroupPoll
      }
 
 
@@ -128,14 +126,28 @@ export default function AllGroupsScreen(props: Props) {
                 }    
      }
 
+    //  var allUsersGroupsByName = groups?.flatMap(function(val, index){
+    //   return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
+    //  })
+
      function GroupPollDetails(){
-      {
-        return (
-          <>
-          <Text>{activeGroupPoll?.event.eventName}</Text>
-          </>
-        )}
+      for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
+        return(
+        <DatePollButton dateOption={option} onPress={console.log('hi')} votedOn="False"></DatePollButton>
+        )
+      }
      }
+
+  //    var GroupPollOptions = activeGroupPoll?.options (val,index){
+  //       return <Text>{activeGroupPoll.options.date}</Text>
+  //     }
+  //   }
+
+  //   for (const [option, user_ids] of Object.entries(poll.options)) {
+  //     if (user_ids.every((user_id) => user_id != user)) {
+  //         allPolls.push(poll);
+  //     }                        
+  // }
 
 
      function AllGroupView(){
@@ -156,8 +168,8 @@ export default function AllGroupsScreen(props: Props) {
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
           <BurgerIcon></BurgerIcon>
         </View>
-            <InfoBox header='Next Event'><SingleGroupDetails /></InfoBox>
-            <InfoBox header='{insert active poll name}'><GroupPollDetails/></InfoBox>
+            <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>
+            <InfoBox header='{insert active poll name}'><View>{GroupPollDetails()}</View></InfoBox>
           </>
         )
      }
