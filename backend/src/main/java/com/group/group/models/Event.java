@@ -28,7 +28,6 @@ public class Event {
     @Column(name = "event_location")
     private String eventLocation;
 
-
     @Column(name = "activity")
     private String activity;
 

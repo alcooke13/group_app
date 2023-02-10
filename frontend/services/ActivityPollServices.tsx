@@ -26,3 +26,15 @@ return fetch('http://127.0.0.1:8080/activity-polls', {
         return response as ActivityPollData[];
     });
 }
+
+export function getActivityPollDataByUserId(id: number): Promise<ActivityPollData[]> {
+    return fetch('http://127.0.0.1:8080/activity-polls?user_id=' + id.toString(), {
+        method: 'GET',
+        // headers: {
+        // },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as ActivityPollData[];
+        });
+}

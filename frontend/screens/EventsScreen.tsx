@@ -82,7 +82,7 @@ export default function EventsScreen(props: Props) {
           </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
-              <CalendarMonth onPress={chooseDate} calendarEvents={events}/>
+              <CalendarMonth onPress={chooseDate} calenderEvents={events}/>
             </InfoBox>
             </View>
             </View>: ""}   

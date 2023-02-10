@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
         }
 
         public void run(ApplicationArguments args) {
+        
             User stan = new User("Stan Lee", "07890765398", "1290 Avenue Of The Americas");
             User peter = new User("Peter Parker", "07447646000", "23 Canonsleigh Crescent, Leigh-On-Sea");
             User bruce = new User("Bruce Bannerman", "07447351324", "1 Church Cottages, Church Street, Stratton Audley");
@@ -132,7 +133,7 @@ import java.time.LocalDateTime;
             DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023,3,5,17,0), tonysBirthday);
             DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
             DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023,3,2,17,0), girlsNightFeb);
-
+            
             datePollRepository.save(datePoll1);
             datePollRepository.save(datePoll2);
             datePollRepository.save(datePoll3);

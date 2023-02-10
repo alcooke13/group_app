@@ -16,11 +16,14 @@ public class EventTests {
     ActivityPoll activityPoll;
     LocationPoll locationPoll;
     DatePoll datePoll;
+    LocalDateTime date1;
+    LocalDateTime date2;
 
     @Before
     public void before() {
         group1 = new Group("Dream Team");
-        event1 = new Event("20-02-2023", "Hangout", "The pub", "Drinking", group1);
+        date1 = LocalDateTime.of(2023, 2, 5, 17, 0);
+        event1 = new Event(date1, "Hangout", "The pub", "Drinking", group1);
         date = new Date();
         activityPoll = new ActivityPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
         locationPoll = new LocationPoll(LocalDateTime.of(2023, 2, 5, 17, 0), event1);
@@ -29,13 +32,14 @@ public class EventTests {
 
     @Test
     public void canGetDate() {
-        assertEquals("20-02-2023", event1.getDate());
+        assertEquals(LocalDateTime.of(2023, 2, 5, 17, 0), event1.getDate());
     }
 
     @Test
     public void canSetDate() {
-        event1.setDate("25-02-2023");
-        assertEquals("25-02-2023", event1.getDate());
+        date2 = LocalDateTime.of(2023, 2, 17, 11, 0);
+        event1.setDate(date2);
+        assertEquals(LocalDateTime.of(2023, 2, 17, 11, 0), event1.getDate());
     }
 
     @Test
