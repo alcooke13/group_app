@@ -12,6 +12,8 @@ import InfoBox from '../components/InfoBox';
 import TextHeader from '../components/TextHeader';
 import ScreenHeaderText from '../components/ScreenHeaderText';
 import BackArrow from '../components/BackArrow';
+import BigPlus from '../components/BigPlus';
+import BurgerIcon from '../components/BurgerIcon';
 
 interface Props {
   user: number
@@ -66,6 +68,8 @@ export default function AllGroupsScreen(props: Props) {
       setGroupView("singlegroup")
      }
 
+     function addNewGroup(){}
+
 
      function SingleGroupDetails(){
         if (Date.parse(singleGroup.events[0].date) > Date.now()) {
@@ -97,6 +101,7 @@ export default function AllGroupsScreen(props: Props) {
       <>
       <Image source={require('../assets/GroupLogo1.png')}/>
       <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
+      <BigPlus onPress={() => addNewGroup()}/>
       </>
       ) 
     }
@@ -107,6 +112,7 @@ export default function AllGroupsScreen(props: Props) {
       <View style={styles.header}>
           <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
+          <BurgerIcon></BurgerIcon>
         </View>
             <InfoBox header='Next Event'><SingleGroupDetails /></InfoBox>
           </>
@@ -128,7 +134,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#25242B'
+        backgroundColor: '#25242B',
+
       },
       title: {
         fontSize: 20,
@@ -141,7 +148,10 @@ const styles = StyleSheet.create({
       },
       header: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        alignContent:'space-between',
+        width:"100%",
+      justifyContent: 'space-around',
 
       }
   });
