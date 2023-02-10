@@ -41,21 +41,30 @@ public class GroupController {
         return new ResponseEntity<>(groupRepository.findById(id), HttpStatus.OK);
     }
 
+//    @PostMapping(path = "/groups",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Group> createGroup(@RequestBody Group newGroup) throws ServerException {
+//
+//        Group group = groupRepository.save(newGroup);
+//        if (group != null) {
+//            return new ResponseEntity<>(group, HttpStatus.CREATED);
+//        } else {
+//            throw new ServerException("error: could not create group");
+//        }
+//    }
+
     @PostMapping(path = "/groups",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Group> createGroup(@RequestBody Group newGroup) throws ServerException {
+    public Group createGroup(@RequestBody Group newGroup) throws ServerException {
 
-        Group group = groupRepository.save(newGroup);
-        if (group != null) {
-            return new ResponseEntity<>(group, HttpStatus.CREATED);
-        } else {
-            throw new ServerException("error: could not create group");
-        }
+        return groupRepository.save(newGroup);
+
     }
 
     @PutMapping("/groups/{id}/add-users")
-    public ResponseEntity<Group> updateGroup(
+    public ResponseEntity<Group> addUsersToGroup(
             @PathVariable long id,
             @RequestBody List<Long> userIds) {
 
