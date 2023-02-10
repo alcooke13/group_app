@@ -23,32 +23,6 @@ const CalendarMonth = (props: Props) => {
         });
 
     
-    // const datesToMark = calendarEvents?.map((date) => {
-    //     let dateObj: any = {};
-    //     dateObj[new Date(date.date).toLocaleDateString("fr-CA", {
-    //         year: "numeric",
-    //         month: "2-digit",
-    //         day: "2-digit",
-    //         })] = {marked: true} 
-    //     return dateObj
-    // });
-   
-    // let resultDates = datesToMark?.reduce(function(result, currentObject) {
-    //     for(let key in currentObject) {
-    //         if (currentObject.hasOwnProperty(key)) {
-    //             result[key] = currentObject[key];
-    //         }
-    //     }
-    //     return result;
-    // }, {});
-
-    // const getKeys = () => {
-    //     for (let value of Object.keys(resultDates)) {
-    //         console.log(value);
-    //     }
-    // };
-    
-    
     return (
         <View style={styles.calendar}>
             <Calendar
@@ -58,9 +32,11 @@ const CalendarMonth = (props: Props) => {
                 minDate={today}
                 // Handler which gets executed on day press. Default = undefined
 
-                onDayPress={day => {setDate(`${day.year}-${day.month}-${day.day}`)}}
-                // onDayPress={getKeys}
-
+                onDayPress={day => {
+                    setDate(`${day.year}-${day.month}-${day.day}`) 
+                    }   
+                }
+                
                 // onDayPress={day => {
                 //     console.log('selected day', day);
                 //   }}

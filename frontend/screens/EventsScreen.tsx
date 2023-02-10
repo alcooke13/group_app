@@ -40,6 +40,7 @@ export default function EventsScreen(props: Props) {
           setGroups(allGroups)
         });
       }
+  
     }, [isFocused]);
 
 
@@ -52,7 +53,9 @@ export default function EventsScreen(props: Props) {
     };
 
     const chooseDate = () => {
+      console.log(date)
       setView("singleDay");
+      
       
     }
     //Step 1
@@ -83,37 +86,16 @@ export default function EventsScreen(props: Props) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    }) == date)
-    console.log("This matches")
+    }) === date){
+      console.log("WORKS")
+      return <>
+      <View>
+        <Text>TESTING 123</Text>
+      </View>
+        </>
+    }
+    
   })
-  
-  // const filterEvent = new Date(events).toLocaleDateString("fr-CA", {
-  //   year: "numeric",
-  //   month: "2-digit",
-  //   day: "2-digit",
-  // })
-  // console.log(filterEvent)
-  
-  // const getKeys = () => {
-  //   let dateKeys = [];  
-  //   for (let value of Object.keys(resultDates)) {
-  //         dateKeys.push(value);
-  //     }
-  //     return dateKeys
-  // };
-  
-  // const filteredEvents = events?.map(function(val, index){
-  //   let dateKeys= getKeys();
-  //   console.log(dateKeys)
-  //   if(new Date(val.date).toLocaleDateString("fr-CA", {
-  //     year: "numeric",
-  //     month: "2-digit",
-  //     day: "2-digit",
-  //     }) === dateKeys[0].toString())
-  //     return <View><Text>Does this work???</Text></View>
-  // });
-
-
 
     const eventList = groups?.map((group)=>  {
       return group.events.map((event, index) => {
@@ -132,22 +114,7 @@ export default function EventsScreen(props: Props) {
       })
     })
 
-
-    // const eventList = groups?.map(function(group, index){
-    //   return <>
-    //   <InfoBox header={group.groupName} key={index}>
-    //     <View style={styles.textBox}>
-    //       <Text>{group.events[0]?.activity}</Text>
-    //       <Text>{group.events[0]?.eventLocation}</Text>
-    //       <Text>{new Date(group.events[0]?.date).toLocaleDateString("en-GB", {
-    //         // year: "numeric",
-    //         month: "short",
-    //         day: "2-digit",
-    //         weekday: "long"
-    //         })}</Text>
-    //     </View>
-    //   </InfoBox></>
-    // });
+    
     return (
       <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
         {/* LIST VIEW */}
@@ -174,7 +141,7 @@ export default function EventsScreen(props: Props) {
         {/* FILTERERED LIST OF EVENTS ON A CHOSEN DATE */}
         {view === "singleDay" ? <View><View style={styles.singleBackBox}><BackArrow onPress={toggleCalendarView}/></View>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
-          {/* {filteredEvents} */}
+          {eventList}
         </ScrollView></View> : ""}
         
         </SafeAreaView>
