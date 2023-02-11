@@ -2,6 +2,7 @@ package com.group.group.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cascade;
 
@@ -27,7 +28,7 @@ public class User {
     private String address;
 
     @ManyToMany
-    @JsonBackReference(value="user-group") // causes issues
+    @JsonIgnoreProperties("users")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinTable(
             name = "users_groups",

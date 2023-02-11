@@ -1,6 +1,7 @@
 package com.group.group.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -15,7 +16,6 @@ public class Event {
     private Long id;
 
     @ManyToOne
-    @JsonManagedReference("group-event") // causes issues
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
