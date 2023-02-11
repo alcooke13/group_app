@@ -142,13 +142,13 @@ export default function AllGroupsScreen(props: Props) {
           voteCount.set(option, user_ids)
         }
           var getOptions = availableOptions.map(function(val, index){
-          return <><DatePollButton key={index} dateOption={val} onPress={()=>captureChosenVote(val)}></DatePollButton><Text style={styles.voteCounter}>{voteCount.size}</Text></>
+          return <><DatePollButton key={index} dateOption={val} onPress={()=>captureChosenVote(val)}></DatePollButton><Text style={styles.voteCounter}>2</Text></>
         })
 
         function captureChosenVote(val: string){
           for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
             if (val == option){
-              console.log(val)
+              console.log(user_ids.length)
             }
           }
             }
