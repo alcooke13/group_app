@@ -17,34 +17,36 @@ import Questions from './Questions';
 
 const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
+
+
 export default function NewEvent() {
+    const [eventNameKnown, setEventNameKnown] = useState<boolean>(false);
+
+    const [showQuestions, setShowQuestions] = useState<boolean>(false);
+
+    const [eventTitle, setEventTitle] = useState('');
+    const [questionOrder, setQuestions] = useState<string []>([]);
+
+    const [dateKnown, setDateKnown] = useState<boolean>(false);
+    const [activityKnown, setActivityKnown] = useState<boolean>(false);
+    const [locationKnown, setLocationKnown] = useState<boolean>(false);
+
+    const [knownEvent, setKnownEvent] = useState<boolean>(false);
+    const [unknownEvent, setUnknownEvent] = useState<boolean>(false);
+
+    const [activeQuestion, setActiveQuestion] = useState<string>("");
+
+    const [counter, setCounter] = useState<number>(0);
+
+    const [dateProvided, setDate] = useState<string>("")
+    const [activityProvided, setActivity] = useState<string>("")
+    const [locationProvided, setLocation] = useState<string>("")
 
 
     // set up useStates for logic flow
-    const [eventNameKnown, setEventNameKnown] = useState(false);
-
-    const [showQuestions, setShowQuestions] = useState(false);
-
-    const [eventTitle, setEventTitle] = useState('');
-    const [title, onChangeTitle] = useState('');
-
-    const [dateKnown, setDateKnown] = useState(false);
-    const [activityKnown, setActivityKnown] = useState(false);
-    const [locationKnown, setLocationKnown] = useState(false);
-
-    const [knownEvent, setKnownEvent] = useState(false);
-    const [unknownEvent, setUnknownEvent] = useState(false);
-
-    const [activeQuestion, setActiveQuestion] = useState(0);
-
-    const [counter, setCounter] = useState(0);
-
-    const [dateProvided, setDate] = useState("")
-    const [activityProvided, setActivity] = useState("")
-    const [locationProvided, setLocation] = useState("")
 
 
-    const questionOrder : Array<string> = [];
+    
     const onPressYes = () => {
         setKnownEvent(true)
         console.log("You pressed yes!")
@@ -56,7 +58,7 @@ export default function NewEvent() {
 
     const EventName = () => {
         let titleValue: string;
-       
+
 
         const onTitleEnd = () => {
             setEventTitle(titleValue)
@@ -90,7 +92,7 @@ export default function NewEvent() {
     };
 
     const CheckDetailsKnown = () => {
-        
+
         const onDateTickBoxPress = () => {
             detailsKnownCheck.date = !detailsKnownCheck.date
             setDateKnown(!dateKnown);
@@ -108,24 +110,27 @@ export default function NewEvent() {
         }
 
         const onKnownQuestionCheck = () => {
-            
+            const userQuestions: Array<string> = [];
 
             console.log(questionOrder)
 
-            questionOrder.splice(0,questionOrder.length)
             if (detailsKnownCheck.date) {
-                questionOrder.push("date")
+                userQuestions.push("date")
             }
             if (detailsKnownCheck.activity) {
-                questionOrder.push("activity")
+                userQuestions.push("activity")
             }
             if (detailsKnownCheck.location) {
-                questionOrder.push("location")
+                userQuestions.push("location")
             }
+            setQuestions(userQuestions)
             setShowQuestions(true);
+            setActiveQuestion(questionOrder[0])
 
 
             console.log(questionOrder)
+            console.log(activeQuestion)
+            console.log(questionOrder.includes("date"))
             // setNextPressed(!nextPressed)
 
         }
@@ -160,111 +165,6 @@ export default function NewEvent() {
         }
 
 
-
-        const updateCounter = () => {
-            let newCounter = counter;
-            if (counter < questionOrder.length) {
-                newCounter += 1
-                setCounter(newCounter)
-
-
-            }
-        }
-        let dateAnswer: string;
-        let locationAnswer: string;
-        let activityAnswer: string;
-
-        const onLocationEnd= () => {
-            setLocation(locationAnswer)
-        } 
-        const onDateEnd = () => {
-            setDate(dateAnswer)
-        } 
-        const onActivityEnd = () => {
-            setActivity(activityAnswer)
-        }
-
-
-        const DateQuestion = () => {
-            return (
-                <View>
-                    <Text>"What is the date of your event?"</Text>
-                    <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => {
-                                dateAnswer = text;
-                            }}
-                            onEndEditing={onDateEnd}
-                        />
-                        <SmallButton title={"Submit"} onPress={() => {
-                            // setEventNameKnown(!eventNameKnown)
-                        }} ></SmallButton>
-                </View>
-            )
-        }
-        const LocationQuestion = () => {
-            return (
-                <View>
-                    <Text>"What is the location of your event?"</Text>
-                    <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => {
-                                locationAnswer = text;
-                            }}
-                            onEndEditing={onDateEnd}
-                        />
-                        <SmallButton title={"Submit"} onPress={() => {
-                            // setEventNameKnown(!eventNameKnown)
-                        }} ></SmallButton>
-                </View>
-            )
-        }
-        const ActivityQuestion = () => {
-            return (
-                <View>
-                    <Text>"What is the activity of your event?"</Text>
-                    <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => {
-                                activityAnswer = text;
-                            }}
-                            onEndEditing={onActivityEnd}
-                        />
-                        <SmallButton title={"Submit"} onPress={() => {
-                            // setEventNameKnown(!eventNameKnown)
-                        }} ></SmallButton>
-                </View>
-            )
-        }
-
-
-        if (showQuestions && knownEvent) {
-
-
-
-            return (
-                <>
-                    <BackgroundBox width={'90%'}>
-
-
-                        <View style={styles.container}>
-                        { dateProvided != "" && questionOrder.includes("date") ? <DateQuestion/> : <></> }
-                        { activityProvided != "" && questionOrder.includes("activity") ? <ActivityQuestion/> : <></> }
-                        { locationProvided != "" && questionOrder.includes("location") ? <LocationQuestion/> : <></> }
-                        </View>
-                    </BackgroundBox>
-                    <SmallButton title={"Submit"} onPress={() => {
-
-                    }} ></SmallButton>
-                </>
-
-
-
-            )
-
-        }
-
-
         return (
 
             <BackgroundBox width={'90%'}>
@@ -288,7 +188,108 @@ export default function NewEvent() {
 
     }
 
+    const UpdateCounter = () => {
+        let newCounter = counter;
+        newCounter+=1
+        console.log(newCounter)
+        setCounter(newCounter)
+        console.log(activeQuestion)
+        setActiveQuestion(questionOrder[counter])
+        console.log()
+        
+        console.log(counter)
+        
+    }
 
+    
+    const DateQuestion = () => {
+        let dateAnswer: string;
+        const onDateEnd = () => {
+            setDate(dateAnswer)
+            console.log(dateProvided)
+        }
+
+
+        return (
+            <View style={styles.container}>
+                <BackgroundBox >
+                    <View>
+
+
+                    <Text>"What is the date of your event?"</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={(text) => {
+                            dateAnswer = text;
+                        }}
+                        onEndEditing={onDateEnd}
+                    />
+
+                    </View>
+                </BackgroundBox>
+
+                <SmallButton title={"Submit"} onPress={() => {
+                    UpdateCounter();
+                }} ></SmallButton>
+            </View>
+        )
+    }
+    const LocationQuestion = () => {
+        let locationAnswer: string;
+        const onLocationEnd = () => {
+            setLocation(locationAnswer)
+            console.log(locationProvided)
+        }
+        
+       
+
+
+        return (
+            <View>
+                <Text>"What is the location of your event?"</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text) => {
+                        locationAnswer = text;
+                    }}
+                    onEndEditing={onLocationEnd}
+                />
+                <SmallButton title={"Submit"} onPress={() => {
+                    UpdateCounter();
+                }} ></SmallButton>
+            </View>
+        )
+    }
+    const ActivityQuestion = () => {
+        let activityAnswer: string;
+        const onActivityEnd = () => {
+            setActivity(activityAnswer)
+            console.log(activityProvided)
+        }
+        
+
+        return (
+            <View>
+                <Text>"What is the activity of your event?"</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text) => {
+                        activityAnswer = text;
+                    }}
+                    onEndEditing={onActivityEnd}
+                />
+                <SmallButton title={"Submit"} onPress={() => {
+                    UpdateCounter();
+                }} ></SmallButton>
+            </View>
+        )
+    }
+
+    
+
+   
+   
+    
 
 
 
@@ -300,7 +301,12 @@ export default function NewEvent() {
         <>
             <View>
                 <>
-                    {!eventNameKnown ? <EventName /> : <CheckDetailsKnown />}
+                    {!eventNameKnown ? <EventName /> : <></>}
+                    {eventNameKnown && !showQuestions ? <CheckDetailsKnown /> : <></>}
+                    {showQuestions && eventNameKnown && dateKnown ? <DateQuestion/> : <></>}
+                    {showQuestions && eventNameKnown && activityKnown ? <ActivityQuestion/> : <></>}
+                    {showQuestions && eventNameKnown && locationKnown ? <LocationQuestion/> : <></>}
+
                 </>
             </View>
 
@@ -332,6 +338,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center'
     },
     title: {
         fontSize: 24,

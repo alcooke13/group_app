@@ -14,36 +14,30 @@ import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
 
 interface Props {
-    children: any
+    question: string,
+    onChangeText: () => void,
+    onEndEditing: () => void,
+    onPress: Function;
+    
 }
 
 export default function Questions(props: Props) {
 
-    const {updateCounter}= props; 
-
-    const getQuestion = (questionType: string) => {
-        let question: string;
-        switch (questionType) {
-            case "date":
-                question = "What is the date of your event?"
-                break;
-            case "activity":
-                question = "What is the events activity?"
-                break;
-            case "location":
-                question = "Where is the events location?"
-                break;
-
-        }
-    }
-
-    updateCounter()
-
+    const { question, onChangeText, onEndEditing, onPress } = props;
     return (
-        <>
 
-            
-        </>
+        <View>
+            <Text>{question}</Text>
+            <TextInput
+                style={{}}
+                onChangeText={onChangeText}
+
+                onEndEditing={onEndEditing}
+            />
+        </View>
+
+
+
     )
 
 }
