@@ -34,7 +34,7 @@ public class EventController {
 //    @PostMapping(path = "/events",
 //            consumes = MediaType.APPLICATION_JSON_VALUE,
 //            produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Group> createGroup(@RequestBody Group newGroup) throws ServerException {
+//    public ResponseEntity<Event> createGroup(@RequestBody Event newGroup) throws ServerException {
 //
 //        Group group = groupRepository.save(newGroup);
 //        if (group != null) {

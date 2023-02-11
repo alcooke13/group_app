@@ -6,14 +6,17 @@ interface Props {
   header: string;
   smallPlus?: any;
   children: JSX.Element | JSX.Element[];
+  boxHeight?: string;
+  boxMarginTop?: string;
+  boxMarginBottom?: string;
 };
 
 const InfoBox = (props: Props) => {
 
-  const {header, smallPlus, children} = props;
+  const {header, smallPlus, children, boxHeight, boxMarginTop, boxMarginBottom} = props;
 
   return (
-      <View style={styles.container}>
+      <View style={[styles.container, {marginTop: boxMarginTop, marginBottom: boxMarginBottom}]}>
         <View style={styles.top}>
           <Text style={styles.header}>
             {header}
@@ -22,7 +25,7 @@ const InfoBox = (props: Props) => {
             {smallPlus}
           </View>
         </View>
-        <View style={styles.main}>
+        <View style={[styles.main, {height: boxHeight}]}>
           {children}
         </View>
       </View>
@@ -34,9 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '90%',
-    maxHeight: '35%',
-    marginVertical: "10%"
+    width: '90%'
   },
   top: {
     flexDirection: 'row',
@@ -63,8 +64,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    // minHeight: '25%'
-     minHeight: '10%'
   },
 });
 
