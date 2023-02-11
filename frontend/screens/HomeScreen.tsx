@@ -10,7 +10,7 @@ import TextHeader from '../components/TextHeader';
 import SmallButton from '../components/SmallButton';
 import LineBreak from '../components/LineBreak';
 import { useIsFocused } from "@react-navigation/native";
-
+import NewEvent from './NewEvent/NewEvent';
 
 interface Props {
     user: number
@@ -130,7 +130,7 @@ export default function HomeScreen(props: Props) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <InfoBox header='Upcoming Events'>
+            {/* <InfoBox header='Upcoming Events'>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {eventItems}
                 </ScrollView>
@@ -140,7 +140,9 @@ export default function HomeScreen(props: Props) {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {pollItems}
                 </ScrollView>
-            </InfoBox>
+            </InfoBox> */}
+            <NewEvent></NewEvent>
+            
 
         </SafeAreaView>
     );

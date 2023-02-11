@@ -34,7 +34,7 @@ export function getEventDataByUserId(id: number): Promise<EventData[]> {
 }
 
 
-export function postNewEvent(payload: Object): Promise<EventData>{
+export function postEvent(payload: Object): Promise<EventData>{
 	return fetch("http://127.0.0.1:8080/events", {
 		method: 'POST',
 		body: JSON.stringify(payload),
@@ -44,5 +44,8 @@ export function postNewEvent(payload: Object): Promise<EventData>{
 			}
 	})
 	.then(response => response.json())
+		.then((response)=>{
+			return response as EventData
+		})
 	
 }
