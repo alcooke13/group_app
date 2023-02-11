@@ -15,9 +15,13 @@ public class DatePoll extends Poll {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    @Column(name = "date_type")
+    private String type;
+
     public DatePoll(LocalDateTime timeout, Event event) {
         super(timeout);
         this.event = event;
+        this.type= "Date";
     }
 
     public DatePoll() {
