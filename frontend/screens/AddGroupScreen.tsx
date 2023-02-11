@@ -39,11 +39,7 @@ export default function AddGroupScreen(props: Props) {
 
         postGroup(groupDetails)
         .then((group) => {
-            console.log(group)
-            updateGroupDataWithNewUsers(group.id, friendsAdded.current)
-            .then((newGroup) => {
-                console.log(newGroup)
-            });
+            updateGroupDataWithNewUsers(group.id, friendsAdded.current);
         });
     }
 
@@ -55,14 +51,11 @@ export default function AddGroupScreen(props: Props) {
                                 if (!friendsAdded.current.includes(friend.id)) {
                                     friendsAdded.current.push(friend.id);
                                 } else {
-                                    var index = friendsAdded.current.indexOf(friend.id);
+                                    const index = friendsAdded.current.indexOf(friend.id);
                                     if (index !== -1) {
                                         friendsAdded.current.splice(index, 1);
                                     }
                                 }
-                                
-                                console.log(friendsAdded.current)
-                                
                             }} 
                             votedOn={friendsAdded.current.includes(friend.id)}
                             key={index}></DatePollButton>

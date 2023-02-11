@@ -42,7 +42,7 @@ export function postGroup(payload: Object): Promise<GroupData> {
         });
 }
 
-export function updateGroupDataWithNewUsers(groupId: number, payload: Array<Object>): Promise<Response> {
+export function updateGroupDataWithNewUsers(groupId: number, payload: Array<number>): Promise<Response> {
 	return fetch('http://127.0.0.1:8080/groups/' + groupId.toString() + '/add-users', {
 		method: 'PUT',
         body: JSON.stringify(payload),
