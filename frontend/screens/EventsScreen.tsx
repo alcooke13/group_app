@@ -95,7 +95,7 @@ export default function EventsScreen(props: Props) {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
           {eventList}  
         </ScrollView></View> : ""}
-
+        
         </SafeAreaView>
     )    
 }

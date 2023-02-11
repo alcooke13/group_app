@@ -18,6 +18,7 @@ import { DatePollData, getDatePollDataByGroupId } from '../services/DatePollServ
 import { getLocationPollDataByGroupId, LocationPollData } from '../services/LocationPollServices';
 import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
 import DatePollButton from '../components/DatePollButton';
+import NewEvent from './NewEvent/NewEvent';
 
 interface Props {
   user: number
@@ -174,6 +175,7 @@ export default function AllGroupsScreen(props: Props) {
         <SafeAreaView style={styles.container}>
           {groupView === "allgroups" ? <AllGroupView/> : ""}
           {groupView==="singlegroup"? <SingleGroupView/>: ""}
+          
         </SafeAreaView>
     )
     }

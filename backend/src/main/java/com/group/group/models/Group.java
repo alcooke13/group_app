@@ -82,11 +82,4 @@ public class Group {
         this.events.add(event);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

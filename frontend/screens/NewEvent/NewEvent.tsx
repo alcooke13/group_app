@@ -4,16 +4,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getEventData, EventData } from '../../services/EventServices';
 import { useEffect, useState } from 'react';
-import CalendarMonth from '../../components/Calendar';
-import InfoBox from '../../components/InfoBox';
-import TextHeader from '../../components/TextHeader';
 
 import BackArrow from '../../components/BackArrow';
 import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
-import Questions from './Questions';
-import EventServices from '../../services/EventServices'
+// import EventServices from '../../services/EventServices'
 
 
 const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
@@ -70,10 +66,16 @@ export default function NewEvent() {
     }
     
     const UpdateCounter = () => {
-        let newCounter = counter;
-        newCounter += 1
-        setCounter(newCounter)
-        setActiveQuestion(questionOrder[counter])
+        if (questionOrder.length -1 > counter){
+            let newCounter = counter;
+            newCounter += 1
+            setCounter(newCounter)
+            setActiveQuestion(questionOrder[counter])
+        }
+
+       
+
+
     }
     
     // asks user for title of event
@@ -157,6 +159,7 @@ export default function NewEvent() {
 
         }
 
+
         if (showQuestions && eventNameKnown && activeQuestion === "date") {
             let dateAnswer: string;
             const onDateEnd = () => {
@@ -224,7 +227,6 @@ export default function NewEvent() {
             let locationAnswer: string;
             const onLocationEnd = () => {
                 setLocation(locationAnswer)
-                console.log(locationProvided)
             }
 
             return (
@@ -274,17 +276,18 @@ export default function NewEvent() {
                 </View>
             )
         }
-
-        if (unknownEvent) {
-
+        
+        if (unknownEvent && eventNameKnown) {
+            
             return (
-                <Text>Unknown Event</Text>
-            )
-        }
-
-
-        if (!knownEvent && !unknownEvent) {
-
+                <Text>Please fill out 3 polls lol</Text>
+                )
+            }
+            
+            
+            // Ask user if they know details or not
+            if (!knownEvent && !unknownEvent && eventNameKnown) {
+                
 
             return (
 
@@ -316,28 +319,19 @@ export default function NewEvent() {
     }
 
    
-    // starts from group page, creates a new event for that group
-    // asks user for title of event
+
     return (
         <>
             <View>
                
                     {!eventNameKnown ? <EventName /> : <></>}
                     <NewEventQuestions></NewEventQuestions>
+
             </View>
 
         </>
     )
-    // create new event to post to database. Request event name and make post
-
-
-    // Ask user if they know details or not
-
-    // if details are known, show tickboxes
-
-    // from tickboxes show relevant questions, be able to go back and change response
-
-    // if details are not known goes to event page 
+   
 
 
 
