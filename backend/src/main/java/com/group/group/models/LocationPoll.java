@@ -15,7 +15,7 @@ public class LocationPoll extends Poll {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Column(name = "location_type")
+    @Column(name = "poll_type")
     private String type;
 
     public LocationPoll(LocalDateTime timeout, Event event) {

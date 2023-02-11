@@ -15,7 +15,7 @@ public class DatePoll extends Poll {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Column(name = "date_type")
+    @Column(name = "poll_type")
     private String type;
 
     public DatePoll(LocalDateTime timeout, Event event) {
