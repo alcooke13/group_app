@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import InfoBox from '../components/InfoBox';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TextHeader from '../components/TextHeader';
 import BigButton from '../components/BigButton';
 import LineBreak from '../components/LineBreak';
@@ -9,6 +9,7 @@ import { useIsFocused } from "@react-navigation/native";
 import BackgroundBox from '../components/BackgroundBox';
 import { getFriendsByUserId, UserData } from '../services/UserServices';
 import DatePollButton from '../components/DatePollButton';
+import { postGroup, updateGroupDataWithNewUsers } from '../services/GroupServices';
 
 interface Props {
     user: number
@@ -21,7 +22,8 @@ export default function AddGroupScreen(props: Props) {
     const { user } = props;
 
     const [friends, setFriends] = useState<UserData[]>();
-
+    const [groupName, setGroupName] = useState<String>();
+    const friendsAdded = useRef<Array<number>>([]);
 
     useEffect(() => {
         if (isFocused) {
@@ -32,11 +34,31 @@ export default function AddGroupScreen(props: Props) {
         }
     }, [isFocused]);
 
+    function createGroup() {
+        const groupDetails: Object = {"groupName": groupName};
+
+        postGroup(groupDetails)
+        .then((group) => {
+            updateGroupDataWithNewUsers(group.id, friendsAdded.current);
+        });
+    }
 
     const memberItems = friends?.map((friend, index) => {
 
         return(
-            <DatePollButton dateOption={friend.userName} onPress={() => {}} votedOn={false} key={index}></DatePollButton>
+            <DatePollButton dateOption={friend.userName} 
+                            onPress={() => {
+                                if (!friendsAdded.current.includes(friend.id)) {
+                                    friendsAdded.current.push(friend.id);
+                                } else {
+                                    const index = friendsAdded.current.indexOf(friend.id);
+                                    if (index !== -1) {
+                                        friendsAdded.current.splice(index, 1);
+                                    }
+                                }
+                            }} 
+                            votedOn={friendsAdded.current.includes(friend.id)}
+                            key={index}></DatePollButton>
         )
     });
 
@@ -45,7 +67,11 @@ export default function AddGroupScreen(props: Props) {
             <BackgroundBox>
                 <View style={styles.groupName}>
                     <Text style={styles.groupHeader}>Group name</Text>
-                    <TextInput style={styles.groupInput}></TextInput>
+                    <TextInput 
+                        style={styles.groupInput}
+                        placeholder="Type your new group nam here"
+                        onChangeText={groupName => setGroupName(groupName)}>
+                    </TextInput>
                 </View>
             </BackgroundBox>
             
@@ -57,7 +83,11 @@ export default function AddGroupScreen(props: Props) {
                 </ScrollView>
             </InfoBox>
             <View style={styles.doneButton}>
-                <BigButton title='Done' onPress={() => {}}></BigButton>
+                <BigButton 
+                    title='Done' 
+                    onPress={() => {
+                        createGroup();
+                    }}></BigButton>
             </View>
         </SafeAreaView>
     );
