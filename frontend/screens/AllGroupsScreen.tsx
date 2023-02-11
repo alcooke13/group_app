@@ -136,28 +136,24 @@ export default function AllGroupsScreen(props: Props) {
 
      function SingleGroupPollDetails(){
       let availableOptions = []
-      let voteCount = []
+      let voteCount = new Map()
       for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
           availableOptions.push(option)
-          user_ids.map(user =>{
-            voteCount.push(user)}
-            )
+          voteCount.set(option, user_ids)
         }
           var getOptions = availableOptions.map(function(val, index){
-          return <><DatePollButton key={index} dateOption={val} onPress={()=>captureChosenVote(val)}></DatePollButton> <Text>{voteCount.length}</Text></>
+          return <><DatePollButton key={index} dateOption={val} onPress={()=>captureChosenVote(val)}></DatePollButton><Text style={styles.voteCounter}>{voteCount.size}</Text></>
         })
+
+        function captureChosenVote(val: string){
+          for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
+            if (val == option){
+              console.log(val)
+            }
+          }
+            }
         return getOptions
         }
-
-
-     function captureChosenVote(val){
-        for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
-          if (val == option){
-            user_ids.push(user)
-          }
-          return user_ids.length
-        }
-          }
      
 
      function AllGroupView(){
@@ -219,5 +215,10 @@ const styles = StyleSheet.create({
         width:"100%",
       justifyContent: 'space-around',
 
-      }
+      },
+      voteCounter: {
+        color: "#FF914D",
+        fontSize: 36,
+        alignItems:'center'
+    }
   });
