@@ -7,7 +7,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AllGroups from '../screens/AllGroupsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import EventsScreen from '../screens/EventsScreen';
-import NewEvent from '../screens/NewEvent/NewEvent';
+
+
+
 const Tab = createBottomTabNavigator();
 
 interface Props {
@@ -58,7 +60,6 @@ export default function Navigation(props: Props) {
                 <Tab.Screen
                     name="Home"
                     children={()=><HomeScreen user={user}/>}
-                    
                 />
                 <Tab.Screen
                     name="Groups"

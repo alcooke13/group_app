@@ -1,6 +1,8 @@
 package com.group.group.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cascade;
 
@@ -26,7 +28,7 @@ public class User {
     private String address;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonIgnoreProperties("users")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinTable(
             name = "users_groups",
@@ -42,7 +44,7 @@ public class User {
             })
     private List<Group> groups;
 
-    @JsonBackReference
+    @JsonBackReference("friends-friendOf")
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="table_friends",
 
@@ -51,8 +53,9 @@ public class User {
     )
     private List<User> friends;
 
-    @JsonManagedReference
+    @JsonManagedReference("friends-friendOf")
     @ManyToMany(cascade=CascadeType.ALL)
+    @JsonIgnore
     @JoinTable(name="table_friends",
             joinColumns=@JoinColumn(name="friend_id"),
             inverseJoinColumns=@JoinColumn(name="user_id")
@@ -116,11 +119,24 @@ public class User {
         return friends;
     }
 
+    @JsonIgnore
     public List<User> getFriendOf() {
         return friendOf;
     }
 
     public void addFriend(User user){
         this.friends.add(user);
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
+
+    public void setFriendOf(List<User> friendOf) {
+        this.friendOf = friendOf;
     }
 }

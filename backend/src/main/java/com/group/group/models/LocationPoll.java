@@ -10,7 +10,7 @@ import java.util.Date;
 @Table(name = "location_polls")
 public class LocationPoll extends Poll {
 
-    @JsonManagedReference
+    @JsonManagedReference("event-locationPoll")
     @OneToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "event_id")
     private Event event;

@@ -1,51 +1,58 @@
 import { Calendar } from 'react-native-calendars';
 import { View, StyleSheet, Text } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { EventData } from '../services/EventServices';
+import { setDate } from 'date-fns';
 
 interface Props {
     onPress: () => void;
-    calenderEvents?: Array<EventData>;
+    calendarEvents?: Array<EventData>;
+    chooseDate: () => void;
+    setDate: any;
+    resultDates: any;
+    
 }
 
 const CalendarMonth = (props: Props) => {
-    const {onPress, calenderEvents} = props
-
+    const {onPress, calendarEvents, chooseDate, setDate, resultDates} = props
+    ;
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
         });
+ 
 
-    const datesToMark = calendarEvents?.map((date) => {
-        let dateObj: any = {};
-        dateObj[date.date.toString()] = {marked: true} 
-        return dateObj
-    });
-   
-    let resultDates = datesToMark?.reduce(function(result, currentObject) {
-        for(var key in currentObject) {
-            if (currentObject.hasOwnProperty(key)) {
-                result[key] = currentObject[key];
-            }
-        }
-        return result;
-    }, {});
-    
+    function formatDate(year:number, month:number, day:number) {
+        const date = new Date(year, month - 1, day)
+        const result = date.toLocaleDateString("fr-CA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })
+
+          return result;
+      
+}
     return (
         <View style={styles.calendar}>
             <Calendar
+               
                 markedDates={resultDates}   
-                // markedDates={datesToMark}
                 current={today}
                 minDate={today}
                 // Handler which gets executed on day press. Default = undefined
 
                 onDayPress={day => {
-                    console.log(datesToMark);
+                    let newDate = (formatDate(day.year, day.month, day.day))
+                    setDate(newDate)
+                    chooseDate()
                 }}
 
+                // onDayPress={day => {
+                //     console.log('selected day', day);
+                //   }}
                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
                 monthFormat={'MMMM  yyyy'}
                 // Handler which gets executed when visible month changes in calendar. Default = undefined
