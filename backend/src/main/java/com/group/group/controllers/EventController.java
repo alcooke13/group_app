@@ -31,18 +31,18 @@ public class EventController {
         return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/events",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Group> createGroup(@RequestBody Group newGroup) throws ServerException {
-
-        Group group = groupRepository.save(newGroup);
-        if (group != null) {
-            return new ResponseEntity<>(group, HttpStatus.CREATED);
-        } else {
-            throw new ServerException("error: could not create group");
-        }
-    }
+//    @PostMapping(path = "/events",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Event> createGroup(@RequestBody Event newGroup) throws ServerException {
+//
+//        Group group = groupRepository.save(newGroup);
+//        if (group != null) {
+//            return new ResponseEntity<>(group, HttpStatus.CREATED);
+//        } else {
+//            throw new ServerException("error: could not create group");
+//        }
+//    }
 
 
 
