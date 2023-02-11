@@ -15,13 +15,25 @@ public class ActivityPoll extends Poll {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    @Column(name = "poll_type")
+    private String type;
+
     public ActivityPoll(LocalDateTime timeout, Event event) {
         super(timeout);
         this.event = event;
+        this.type= "Activity";
     }
 
     public ActivityPoll() {
 
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Event getEvent() {
