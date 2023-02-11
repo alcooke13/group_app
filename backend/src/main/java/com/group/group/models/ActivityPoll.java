@@ -28,6 +28,14 @@ public class ActivityPoll extends Poll {
 
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Event getEvent() {
         return event;
     }
