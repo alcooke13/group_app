@@ -11,6 +11,7 @@ import SmallButton from '../components/SmallButton';
 import LineBreak from '../components/LineBreak';
 import { useIsFocused } from "@react-navigation/native";
 
+
 interface Props {
     user: number
 }
@@ -140,6 +141,7 @@ export default function HomeScreen(props: Props) {
                     {pollItems}
                 </ScrollView>
             </InfoBox>
+
         </SafeAreaView>
     );
 }

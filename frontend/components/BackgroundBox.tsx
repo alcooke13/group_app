@@ -1,27 +1,27 @@
 import { StyleSheet, View } from 'react-native'
 
 interface Props {
-    children: JSX.Element;
+    children: JSX.Element,
+    width?: number | string,
 }
 
 const BackgroundBox = (props: Props) => {
 
-    const {children} = props;
+    const {children, width} = props;
     
     return (
-        <View style={styles.boxContainer}>
+        <View style={{
+            width: "90%" || width,
+            minHeight: 250,
+            backgroundColor: "#E0E1F0",
+            borderRadius: 15,   
+
+        }}>
             {children}
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    boxContainer: {
-        width: "90%",
-        minHeight: 250,
-        backgroundColor: "#E0E1F0",
-        borderRadius: 15,   
-    },
-});
+
 
 export default BackgroundBox;

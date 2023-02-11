@@ -3,16 +3,17 @@ import React from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface Props {
-    value: boolean;
-    onPress: () => void;
-    size?: number;
+    value: boolean,
+    onPress: ()=> {} | void,
+    size?: number,
     backgroundColor?: string;
     }
    
     const TickBox = (props: Props) => {
-    const { value, onPress, size, backgroundColor } = props;
+    const { value, onPress, size, backgroundColor} = props;
    return (
    <TouchableOpacity
+  
      activeOpacity={0.7}
      style={[
        styles.checkBoxContainer,
