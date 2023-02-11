@@ -53,9 +53,7 @@ export default function EventsScreen(props: Props) {
     };
 
     const chooseDate = () => {
-      // console.log(date)
       setView("singleDay");
-      
       
     }
     //Step 1
@@ -72,7 +70,7 @@ export default function EventsScreen(props: Props) {
   
   //Step 2
   // Calender doesn't accept the array this converts datesToMark to a single object with multiple key value pairs inside to mark dates in the calender
-  let resultDates = datesToMark?.reduce(function(result, currentObject) {
+  let resultDates: Object = datesToMark?.reduce(function(result, currentObject) {
       for(let key in currentObject) {
           if (currentObject.hasOwnProperty(key)) {
               result[key] = currentObject[key];
@@ -82,9 +80,7 @@ export default function EventsScreen(props: Props) {
   }, {});
 
    function FilteredEvents(){
-    const date = "2023-02-01"
-    console.log(date)
-    let matchedDates = [];
+    let matchedDates: Array<EventData> = [];
     for(let group of groups){
       for(let event of group.events){
         if(new Date(event.date).toLocaleDateString("fr-CA", {
@@ -96,7 +92,7 @@ export default function EventsScreen(props: Props) {
             }
       }
     }
-      const finalEvents = matchedDates.map((event, index) => {
+      const finalEvents: JSX.Element[] = matchedDates.map((event, index) => {
         return <InfoBox header={event.eventName} key={index}>
         <View style={styles.filteredBox}>
           <Text>Activity: {event.activity}</Text>
@@ -115,7 +111,7 @@ export default function EventsScreen(props: Props) {
 
 
 
-  const eventList = groups?.map((group)=>  {
+  const eventList: JSX.Element[][] | undefined = groups?.map((group)=>  {
       return group.events.map((event, index) => {
         return <InfoBox header={group.groupName} key={index}>
         <View style={styles.textBox}>
@@ -132,7 +128,6 @@ export default function EventsScreen(props: Props) {
       })
     })
 
-    
     return (
       <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
         {/* LIST VIEW */}
@@ -151,7 +146,7 @@ export default function EventsScreen(props: Props) {
           </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
-              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates} date={date}/>
+              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates}/>
             </InfoBox>
             </View>
             </View>: ""}   
