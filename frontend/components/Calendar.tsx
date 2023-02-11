@@ -10,11 +10,11 @@ interface Props {
     chooseDate: () => void;
     setDate: any;
     resultDates: any;
-    date: any;
+    
 }
 
 const CalendarMonth = (props: Props) => {
-    const {onPress, calendarEvents, chooseDate, setDate, resultDates, date} = props
+    const {onPress, calendarEvents, chooseDate, setDate, resultDates} = props
     ;
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -22,8 +22,19 @@ const CalendarMonth = (props: Props) => {
         month: "2-digit",
         day: "2-digit",
         });
+ 
 
-    
+    function formatDate(year:number, month:number, day:number) {
+        const date = new Date(year, month - 1, day)
+        const result = date.toLocaleDateString("fr-CA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })
+
+          return result;
+      
+}
     return (
         <View style={styles.calendar}>
             <Calendar
@@ -34,7 +45,7 @@ const CalendarMonth = (props: Props) => {
                 // Handler which gets executed on day press. Default = undefined
 
                 onDayPress={day => {
-                    let newDate = (`${day.year}-${day.month}-${day.day}`)
+                    let newDate = (formatDate(day.year, day.month, day.day))
                     setDate(newDate)
                     chooseDate()
                 }}

@@ -39,6 +39,7 @@ export default function AddGroupScreen(props: Props) {
 
         postGroup(groupDetails)
         .then((group) => {
+            friendsAdded.current.push(user);
             updateGroupDataWithNewUsers(group.id, friendsAdded.current);
         });
     }
