@@ -53,7 +53,7 @@ export default function EventsScreen(props: Props) {
     };
 
     const chooseDate = () => {
-      console.log(date)
+      // console.log(date)
       setView("singleDay");
       
       
@@ -81,55 +81,48 @@ export default function EventsScreen(props: Props) {
       return result;
   }, {});
 
-  // const filteredEvents = events?.map((event, index) => {
-  //   if(new Date(event.date).toLocaleDateString("fr-CA", {
-  //     year: "numeric",
-  //     month: "2-digit",
-  //     day: "2-digit",
-  //   }) === date){
-  //     console.log("WORKS")
-  //     return <>
-  //     <View>
-  //       <Text>TESTING 123</Text>
-  //     </View>
-  //       </>
-  //   }
-  // })
-
    function FilteredEvents(){
-    const date = Date.parse("2023-03-02").toString()
+    const date = "2023-02-01"
+    console.log(date)
+    let matchedDates = [];
     for(let group of groups){
       for(let event of group.events){
-        if(Date.parse(event.date).toString() === date){
-          console.log("workjs")
-          
-        }
-        return <InfoBox header={group.groupName} key={Math.random()}>
+        if(new Date(event.date).toLocaleDateString("fr-CA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            }) === date){
+              matchedDates.push(event)
+            }
+      }
+    }
+      const finalEvents = matchedDates.map((event, index) => {
+        return <InfoBox header={event.eventName} key={index}>
         <View style={styles.filteredBox}>
           <Text>Activity: {event.activity}</Text>
           <Text>Location: {event.eventLocation}</Text>
           <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
-            // year: "numeric",
+            year: "numeric",
             month: "short",
             day: "2-digit",
             weekday: "long"
             })}</Text>
         </View>
       </InfoBox>
-      }
-      
+      })
+    return finalEvents
     }
-    
-  }
 
-    const eventList = groups?.map((group)=>  {
+
+
+  const eventList = groups?.map((group)=>  {
       return group.events.map((event, index) => {
         return <InfoBox header={group.groupName} key={index}>
         <View style={styles.textBox}>
           <Text>Activity: {event.activity}</Text>
           <Text>Location: {event.eventLocation}</Text>
           <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
-            // year: "numeric",
+            year: "numeric",
             month: "short",
             day: "2-digit",
             weekday: "long"
