@@ -70,7 +70,7 @@ export default function AddGroupScreen(props: Props) {
                     <Text style={styles.groupHeader}>Group name</Text>
                     <TextInput 
                         style={styles.groupInput}
-                        placeholder="Type your new group nam here"
+                        placeholder="Type your new group name here"
                         onChangeText={groupName => setGroupName(groupName)}>
                     </TextInput>
                 </View>

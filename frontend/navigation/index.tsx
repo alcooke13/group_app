@@ -8,8 +8,6 @@ import AllGroups from '../screens/AllGroupsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import EventsScreen from '../screens/EventsScreen';
 
-
-
 const Tab = createBottomTabNavigator();
 
 interface Props {
