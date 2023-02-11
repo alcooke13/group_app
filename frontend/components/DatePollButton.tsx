@@ -4,7 +4,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 
 interface Props {
     dateOption: string;
-    onPress: () => void;
+    onPress: Function;
     votedOn: boolean;
 }
 
