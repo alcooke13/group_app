@@ -32,3 +32,17 @@ export function getEventDataByUserId(id: number): Promise<EventData[]> {
 			return response as EventData[];
 		});
 }
+
+
+export function postNewEvent(payload: Object): Promise<EventData>{
+	return fetch("http://127.0.0.1:8080/events", {
+		method: 'POST',
+		body: JSON.stringify(payload),
+		headers: {
+			 'Accept': 'application/json',
+			 'Content-Type': 'application/json'
+			}
+	})
+	.then(response => response.json())
+	
+}

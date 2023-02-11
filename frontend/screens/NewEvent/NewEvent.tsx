@@ -13,6 +13,7 @@ import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
 import Questions from './Questions';
+import EventServices from '../../services/EventServices'
 
 
 const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
@@ -25,7 +26,7 @@ export default function NewEvent() {
     const [showQuestions, setShowQuestions] = useState<boolean>(false);
 
     const [eventTitle, setEventTitle] = useState('');
-    const [questionOrder, setQuestions] = useState<string []>([]);
+    const [questionOrder, setQuestions] = useState<string[]>([]);
 
     const [dateKnown, setDateKnown] = useState<boolean>(false);
     const [activityKnown, setActivityKnown] = useState<boolean>(false);
@@ -44,8 +45,20 @@ export default function NewEvent() {
 
 
     // set up useStates for logic flow
-
-
+    // starts from group page, creates a new event for that group
+    
+    
+    let locationAnswer: string;
+    let activityAnswer: string;
+    
+    
+    const onLocationEnd = () => {
+        setLocation(locationAnswer)
+    }
+    const onActivity = () => {
+        setActivity(activityAnswer)
+    }
+    
     
     const onPressYes = () => {
         setKnownEvent(true)
@@ -55,13 +68,22 @@ export default function NewEvent() {
         setUnknownEvent(true)
         console.log("You pressed no!")
     }
-
+    
+    const UpdateCounter = () => {
+        let newCounter = counter;
+        newCounter += 1
+        setCounter(newCounter)
+        setActiveQuestion(questionOrder[counter])
+    }
+    
+    // asks user for title of event
     const EventName = () => {
         let titleValue: string;
 
 
         const onTitleEnd = () => {
             setEventTitle(titleValue)
+
         }
 
         return (
@@ -91,7 +113,7 @@ export default function NewEvent() {
 
     };
 
-    const CheckDetailsKnown = () => {
+    const NewEventQuestions = () => {
 
         const onDateTickBoxPress = () => {
             detailsKnownCheck.date = !detailsKnownCheck.date
@@ -135,6 +157,102 @@ export default function NewEvent() {
 
         }
 
+        if (showQuestions && eventNameKnown && activeQuestion === "date") {
+            let dateAnswer: string;
+            const onDateEnd = () => {
+                setDate(dateAnswer)
+            }
+
+
+            return (
+
+                <View style={styles.container}>
+                    <BackgroundBox >
+                        <View>
+                            <Text>"What is the date of your event?"</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => {
+                                    dateAnswer = text;
+                                }}
+                                onEndEditing={onDateEnd}
+                            />
+                        </View>
+                    </BackgroundBox>
+
+                    <SmallButton title={"Submit"} onPress={() => {
+                        UpdateCounter();
+                    }} ></SmallButton>
+                </View>
+            )
+
+        }
+        if (showQuestions && eventNameKnown && activeQuestion === "activity") {
+            let activityAnswer: string;
+            const onActivityEnd = () => {
+                setActivity(activityAnswer)
+            }
+
+            return (
+
+                <View style={styles.container}>
+                    <BackgroundBox >
+                        <View>
+                            <Text>"What is the activity of your event?"</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => {
+                                    activityAnswer = text;
+                                }}
+                                onEndEditing={onActivityEnd}
+                            />
+                        </View>
+
+                    </BackgroundBox>
+                    <SmallButton title={"Submit"} onPress={() => {
+                        UpdateCounter();
+                    }} ></SmallButton>
+                </View>
+
+
+            )
+
+
+
+        }
+        if (showQuestions && eventNameKnown && activeQuestion === "location") {
+            let locationAnswer: string;
+            const onLocationEnd = () => {
+                setLocation(locationAnswer)
+                console.log(locationProvided)
+            }
+
+            return (
+
+                <View style={styles.container}>
+                    <BackgroundBox >
+                        <View>
+                            <Text>"What is the location of your event?"</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => {
+                                    locationAnswer = text;
+                                }}
+                                onEndEditing={onLocationEnd}
+                            />
+                            <SmallButton title={"Submit"} onPress={() => {
+                                UpdateCounter();
+                            }} ></SmallButton>
+                        </View>
+
+                    </BackgroundBox>
+                    <SmallButton title={"Submit"} onPress={() => {
+                        UpdateCounter();
+                    }} ></SmallButton>
+                </View>
+            )
+
+        }
 
         if (knownEvent) {
 
@@ -165,149 +283,47 @@ export default function NewEvent() {
         }
 
 
-        return (
-
-            <BackgroundBox width={'90%'}>
+        if (!knownEvent && !unknownEvent) {
 
 
-                <View style={styles.container}>
-                    <Text style={styles.title}>Do you know the event details?</Text>
-                    <View style={styles.buttonsParent}>
-                        <View style={styles.buttons} >
-                            <SmallButton title={"Yes"} onPress={onPressYes} ></SmallButton>
+            return (
+
+                <BackgroundBox width={'90%'}>
+
+
+                    <View style={styles.container}>
+                        <Text style={styles.title}>Do you know the event details?</Text>
+                        <View style={styles.buttonsParent}>
+                            <View style={styles.buttons} >
+                                <SmallButton title={"Yes"} onPress={onPressYes} ></SmallButton>
+                            </View>
+                            <View style={styles.buttons}>
+                                <SmallButton title={"No"} onPress={onPressNo} ></SmallButton>
+                            </View>
                         </View>
-                        <View style={styles.buttons}>
-                            <SmallButton title={"No"} onPress={onPressNo} ></SmallButton>
-                        </View>
-                    </View>
-                </View>
-            </BackgroundBox>
-        )
-
-
-
-    }
-
-    const UpdateCounter = () => {
-        let newCounter = counter;
-        newCounter+=1
-        console.log(newCounter)
-        setCounter(newCounter)
-        console.log(activeQuestion)
-        setActiveQuestion(questionOrder[counter])
-        console.log()
-        
-        console.log(counter)
-        
-    }
-
-    
-    const DateQuestion = () => {
-        let dateAnswer: string;
-        const onDateEnd = () => {
-            setDate(dateAnswer)
-            console.log(dateProvided)
-        }
-
-
-        return (
-            <View style={styles.container}>
-                <BackgroundBox >
-                    <View>
-
-
-                    <Text>"What is the date of your event?"</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(text) => {
-                            dateAnswer = text;
-                        }}
-                        onEndEditing={onDateEnd}
-                    />
-
                     </View>
                 </BackgroundBox>
-
-                <SmallButton title={"Submit"} onPress={() => {
-                    UpdateCounter();
-                }} ></SmallButton>
-            </View>
-        )
-    }
-    const LocationQuestion = () => {
-        let locationAnswer: string;
-        const onLocationEnd = () => {
-            setLocation(locationAnswer)
-            console.log(locationProvided)
+            )
         }
-        
-       
-
 
         return (
-            <View>
-                <Text>"What is the location of your event?"</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => {
-                        locationAnswer = text;
-                    }}
-                    onEndEditing={onLocationEnd}
-                />
-                <SmallButton title={"Submit"} onPress={() => {
-                    UpdateCounter();
-                }} ></SmallButton>
-            </View>
+            <Text>Workflow Complete</Text>
         )
-    }
-    const ActivityQuestion = () => {
-        let activityAnswer: string;
-        const onActivityEnd = () => {
-            setActivity(activityAnswer)
-            console.log(activityProvided)
-        }
-        
 
-        return (
-            <View>
-                <Text>"What is the activity of your event?"</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => {
-                        activityAnswer = text;
-                    }}
-                    onEndEditing={onActivityEnd}
-                />
-                <SmallButton title={"Submit"} onPress={() => {
-                    UpdateCounter();
-                }} ></SmallButton>
-            </View>
-        )
+
+
+
     }
 
-    
-
    
-   
-    
-
-
-
-
-    // set up question database
     // starts from group page, creates a new event for that group
     // asks user for title of event
     return (
         <>
             <View>
-                <>
+               
                     {!eventNameKnown ? <EventName /> : <></>}
-                    {eventNameKnown && !showQuestions ? <CheckDetailsKnown /> : <></>}
-                    {showQuestions && eventNameKnown && dateKnown ? <DateQuestion/> : <></>}
-                    {showQuestions && eventNameKnown && activityKnown ? <ActivityQuestion/> : <></>}
-                    {showQuestions && eventNameKnown && locationKnown ? <LocationQuestion/> : <></>}
-
-                </>
+                    <NewEventQuestions></NewEventQuestions>
             </View>
 
         </>
