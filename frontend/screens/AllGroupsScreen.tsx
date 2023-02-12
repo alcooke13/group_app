@@ -19,6 +19,7 @@ import { getLocationPollDataByGroupId, LocationPollData } from '../services/Loca
 import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
 import DatePollButton from '../components/DatePollButton';
 import NewEvent from './NewEvent/NewEvent';
+import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
 
 interface Props {
@@ -174,13 +175,16 @@ export default function AllGroupsScreen(props: Props) {
       return(
         <AddGroupScreen user={user}/>
       )
-     }
+      }
+
     
     return (
         <SafeAreaView style={styles.container}>
           {groupView === "allgroups" ? <AllGroupView/> : ""}
           {groupView==="singlegroup"? <SingleGroupView/>: ""}
           {groupView === "addgroupview" ? <AddGroupView/>: ""}
+
+
         </SafeAreaView>
     )
     }
