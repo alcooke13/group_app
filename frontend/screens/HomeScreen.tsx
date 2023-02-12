@@ -130,7 +130,7 @@ export default function HomeScreen(props: Props) {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <InfoBox header='Upcoming Events'>
+            <InfoBox header='Upcoming Events'>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {eventItems}
                 </ScrollView>
@@ -140,8 +140,7 @@ export default function HomeScreen(props: Props) {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {pollItems}
                 </ScrollView>
-            </InfoBox> */}
-            <NewEvent></NewEvent>
+            </InfoBox>
             
 
         </SafeAreaView>
