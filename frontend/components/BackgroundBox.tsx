@@ -14,10 +14,10 @@ const BackgroundBox = (props: Props) => {
     
     return (
         <View style={{
-            width: boxWidth || '90%',
-            height: boxHeight || '10%',
+            width: boxWidth || "90%",
+            height: boxHeight || "10%",
             marginTop: boxMarginTop || "0%",
-            marginBottom:  boxMarginBottom || "0%",
+            marginBottom: boxMarginBottom|| "0%",
             backgroundColor: "#E0E1F0",
             borderRadius: 15, 
         }}>

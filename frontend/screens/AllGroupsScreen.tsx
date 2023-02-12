@@ -106,7 +106,7 @@ export default function AllGroupsScreen(props: Props) {
       const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
       setActiveGroupPoll(upcomingPoll)
      }
-
+     
 
      function SingleGroupDetails(){
         if (Date.parse(singleGroup.events[0].date) > Date.now()) {
