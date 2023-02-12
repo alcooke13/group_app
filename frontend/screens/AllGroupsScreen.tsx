@@ -3,7 +3,7 @@ import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } fr
 import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
 import route from "../navigation";
@@ -32,14 +32,6 @@ export default function AllGroupsScreen(props: Props) {
     const { user } = props;
 
     const isFocused = useIsFocused()
-    const route = useRoute();
-    let groupId: number;
-
-    try {
-      groupId = route.params.groupId;
-    } catch {
-      groupId = 0;
-    }
 
     const initialState = {
       id: "",
@@ -60,19 +52,26 @@ export default function AllGroupsScreen(props: Props) {
 
     const [groups, setGroup] = useState<GroupData[]>();
     const [singleGroup, setSingleGroup] = useState(initialState);
-    const [groupView, setGroupView] = useState("allgroups");
+    const [groupView, setGroupView] = useState("loading");
     const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
     const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
 
+
+    const route = useRoute();
+    let groupId: number;
+    
+    try {
+      groupId = route.params.groupId;
+    } catch {
+      groupId = 0;
+    }
+
     useEffect(() => {
       if (groupId != 0) {
-        getGroupDataByGroupId(groupId)
-        .then((group) => {
-          captureChosenGroup(group);
-        })
-      }
-
-      if (isFocused){
+        setGroupView("loading")
+        getSingleGroupData(groupId);
+        route.params.groupId = 0;
+      } else if (isFocused) {
         setSingleGroup(initialState);
         setGroupView("allgroups");
 
@@ -83,45 +82,56 @@ export default function AllGroupsScreen(props: Props) {
       }
     }, [isFocused]);
 
-  useEffect(()=>{
-    const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
+    useEffect(() => {
 
-    Promise.all([
-        getDatePollDataByGroupId(singleGroup.id),
-        getActivityPollDataByGroupId(singleGroup.id),
-        getLocationPollDataByGroupId(singleGroup.id)
-    ]).then((polls) => {
-        polls.flat().forEach((poll) => {
-            if (Date.parse(poll.timeout) > Date.now()) {
-              allGroupsPolls.push(poll);
-                    }                        
-                })
-            })
-            .then(()=>{
-              findActivePoll(allGroupsPolls)
-            }).then(() => setGroupView("singlegroup"))
+    }, [activeGroupPoll])
 
-  }, [singleGroup]);
+
+    function getSingleGroupData(groupId: number) {
+      getGroupDataByGroupId(groupId)
+      .then((group) => {
+          setSingleGroup(group);
+
+          const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
+
+          Promise.all([
+              getDatePollDataByGroupId(group.id),
+              getActivityPollDataByGroupId(group.id),
+              getLocationPollDataByGroupId(group.id)
+          ])
+          .then((polls) => {
+              polls.flat().forEach((poll) => {
+                if (Date.parse(poll.timeout) > Date.now()) {
+                  allGroupsPolls.push(poll);
+                }})
+              })
+              .then(() => findActivePoll(allGroupsPolls))
+              .then(() => setGroupView("singlegroup"))
+            });
+    }
+
   
-    const allUsersGroupsByName = groups?.flatMap(function(val, index){
-      return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
+    const allUsersGroupsByName = groups?.flatMap(function(group, index){
+      return <GroupNameButton 
+                  key={index} 
+                  title={group.groupName} 
+                  status={false} 
+                  onPress={() => getSingleGroupData(group.id)
+                  }/>
     })
 
-    function captureChosenGroup(group:GroupData){
-      setSingleGroup(group);
-    }
+    // function captureChosenGroup(group:GroupData){
+    //   setSingleGroup(group);
+    // }
 
     function addNewEvent(){
     setGroupView("newEvent")
-
-
     }
 
     function findActivePoll(allGroupPolls){
-    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
-    setActiveGroupPoll(upcomingPoll)
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+      setActiveGroupPoll(upcomingPoll);
     }
-
 
     function SingleGroupDetails(){
       if (Date.parse(singleGroup.events[0].date) > Date.now()) {
@@ -226,6 +236,7 @@ export default function AllGroupsScreen(props: Props) {
         {groupView==="singlegroup"? <SingleGroupView/>: ""}
         {groupView === "addgroupview" ? <AddGroupView/>: ""}
         {groupView === "newEvent" ? <AddEventView/>: ""}
+        {groupView === "loading" ? "" : ""}
         
       </SafeAreaView>
   )
