@@ -10,6 +10,7 @@ import InfoBox from '../components/InfoBox';
 import CalendarMonth from '../components/Calendar';
 import TimeOfDayButton from '../components/TimeOfDayButton';
 import CalendarOption from '../components/CalenderOption';
+import { updateDatePollDataWithNewOption, DatePollData } from '../services/DatePollServices';
 
 
 interface Props {
@@ -25,6 +26,8 @@ export default function(props: Props){
     const [datePollData, setDatePollData] = useState<Date>();
     const [savedDate, setSavedDated] = useState<string>("");
     const [savedTime, setSavedTime] = useState<string>("");
+    const [bundle, setBundle] = useState<DatePollData>()
+
     
     // Change state functions
     const changeViewToLocation = () => {
@@ -41,6 +44,10 @@ export default function(props: Props){
 
     const changeViewToDay = () => {
         setPollView("dayOption")
+    }
+
+    const changeConfirmationScreen = () => {
+        setPollView("confirmation")
     }
 
     const ActivityPollInput = () => {
@@ -96,6 +103,26 @@ export default function(props: Props){
             </>
     )};
 
+    const ConfirmationScreen = () => {
+        function prepareBundle(){
+            let dateStringKey : string = savedDate + savedTime;
+            const newBundle: {[key: string]: [] }  = {}
+                
+            newBundle[dateStringKey]  = []
+            
+            updateDatePollDataWithNewOption(1, newBundle).then((data)=> {
+                setBundle(data)
+                console.log(bundle)
+            })
+        }
+        return (
+            <BackgroundBox>
+                <><SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
+                <SmallButton title='Go Back' onPress={changeViewToDay}></SmallButton></>
+            </BackgroundBox>
+        )
+    }
+
 
     
     return (
@@ -129,19 +156,24 @@ export default function(props: Props){
             <MenuText>Date Poll</MenuText>
         </View>
         <View>
-            <TimeOfDayButton timeOfDayOption='Morning' onPress={()=> console.log("pressed Morning")}/>
-            <TimeOfDayButton timeOfDayOption='Afternoon' onPress={()=> console.log("pressed Afternoon")}/>
-            <TimeOfDayButton timeOfDayOption='Evening' onPress={()=> console.log("pressed Evening")}/>
+            <TimeOfDayButton timeOfDayOption='Morning' onPress={() => setSavedTime("T09:00")}/>
+            <TimeOfDayButton timeOfDayOption='Afternoon' onPress={() => setSavedTime("T12:00")}/>
+            <TimeOfDayButton timeOfDayOption='Evening' onPress={() => setSavedTime("T18:00")}/>
         </View>
         <View>
-        <SmallButton title="Done" onPress={changeViewToActivity}/>
+        <SmallButton title="Done" onPress={() => changeConfirmationScreen()}/>
         </View>
+        </> : ""}
+
+
+        {pollView === "confirmation" ? <>
+        <ConfirmationScreen />
         </> : ""}
 
 
         </SafeAreaView>
 
-    
+
     )};
 
 
