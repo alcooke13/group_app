@@ -20,6 +20,8 @@ import { ActivityPollData, getActivityPollDataByGroupId } from '../services/Acti
 import DatePollButton from '../components/DatePollButton';
 import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
+import AddGroupScreen from './AddGroupScreen';
+
 
 interface Props {
   user: number
@@ -161,7 +163,7 @@ export default function AllGroupsScreen(props: Props) {
       <>
       <Image source={require('../assets/GroupLogo1.png')}/>
       <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
-      <BigPlus onPress={() => addNewGroup()}/>
+      <BigPlus onPress={() => (setGroupView('addgroupview'))}/>
       </>
       ) 
     }
@@ -180,12 +182,19 @@ export default function AllGroupsScreen(props: Props) {
         )
      }
 
+     function AddGroupView(){
+      return(
+        <AddGroupScreen user={user}/>
+      )
+      }
+
 
     
     return (
         <SafeAreaView style={styles.container}>
           {groupView === "allgroups" ? <AllGroupView/> : ""}
           {groupView==="singlegroup"? <SingleGroupView/>: ""}
+          {groupView === "addgroupview" ? <AddGroupView/>: ""}
           
         </SafeAreaView>
     )
