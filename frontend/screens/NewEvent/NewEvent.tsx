@@ -9,33 +9,39 @@ import BackArrow from '../../components/BackArrow';
 import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
-// import EventServices from '../../services/EventServices'
+import LineBreak from '../../components/LineBreak';
+import {postEvent} from '../../services/EventServices'
 
 
 // const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
+interface Props {
+    // group_id: number
 
 
-export default function NewEvent() {
-    const [eventNameKnown, setEventNameKnown] = useState<boolean>(false);
 
+
+}
+
+
+
+
+
+export default function NewEvent(props: Props) {
+    
+    const { } = props;
 
     const [eventTitle, setEventTitle] = useState('');
-    const [knownEvent, setKnownEvent] = useState<boolean>(false);
-    const [unknownEvent, setUnknownEvent] = useState<boolean>(false);
-    const [counter, setCounter] = useState<number>(0);
     const [detailsKnown, updateDetailsKnown] = useState<{ [key: string]: boolean }>({ 'date': false, 'activity': false, 'location': false })
-    const [questionOrder, setQuestions] = useState<string[]>([]);
-    const [activeQuestion, setActiveQuestion] = useState<string>("");
-    const [showQuestions, setShowQuestions] = useState<boolean>(false);
     const [dateProvided, setDate] = useState<string>("")
     const [activityProvided, setActivity] = useState<string>("")
     const [locationProvided, setLocation] = useState<string>("")
     const [review, setReview] = useState<boolean>(false)
     const [currentStage, updateStage] = useState<string>("Event Name")
+    const [bundle, setBundle] = useState<EventData>()
 
     useEffect(() => {
-        
+
     }, []);
 
 
@@ -56,10 +62,10 @@ export default function NewEvent() {
                 updateStage("Details Known");
                 break;
             case "Details Known": case "Date Input": case "Activity Input": case "Location Input":
+                console.log(eventTitle)
                 if (detailsKnown.date) {
                     updateStage("Date Input");
                     onDetailTickBoxPress("date");
-                    console.log(detailsKnown)
                     break;
                 } else if (detailsKnown.location) {
                     updateStage("Location Input");
@@ -74,55 +80,69 @@ export default function NewEvent() {
                     break;
                 }
 
-            case "Review":
+            case "Review": 
                 if (!review) {
-                    updateStage("Event name");
                     setDate("");
                     setActivity("");
                     setLocation("");
+                    updateStage("Event name");
                     break;
-                } else {
+                } 
+                else{
+                   
                     // go to group
                 }
+         
 
+
+                
+                
+           
         }
 
-
-
     }
-
 
     // Step 1: Ask user for the Events name
     const EventName = () => {
         let titleValue: string;
-
-
-        const onTitleEnd = () => {
+        const onEventTitleEnd = () => {
             setEventTitle(titleValue)
-
         }
 
         return (
-            <>
-
+            <View style={styles.container}>
                 <BackgroundBox>
                     <View>
                         <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
                             What is your events name?
                         </Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => {
-                                titleValue = text;
-                            }}
-                            onEndEditing={onTitleEnd}
-                        />
-                        <SmallButton title={"Submit"} onPress={() => {
-                            StageController()
-                        }} ></SmallButton>
+                        <View>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(eventTitleText: string) => {
+                                    titleValue = eventTitleText;
+                                }}
+                                onEndEditing={onEventTitleEnd}
+                            />
+
+
+                        </View>
                     </View>
                 </BackgroundBox>
-            </>
+                <View style={styles.buttonParent}>
+
+                    <SmallButton title={"Submit"} onPress={() => {
+                        if (!titleValue) {
+                            alert('Please enter an event name');
+                        }
+                        else {
+                            setEventTitle(titleValue)
+                            StageController()
+                        }
+                    }} ></SmallButton>
+
+                </View>
+            </View>
         );
 
 
@@ -133,20 +153,26 @@ export default function NewEvent() {
     // Step 2: Get the known details of the event
     function KnownDetails() {
         return (
-            <>
+            <View style={styles.container}>
                 <BackgroundBox>
                     <View>
                         <View>
-                            <Text style={{ fontSize: 24, alignSelf: 'center', width: '80%', padding: 15 }} >Select what you know:</Text>
+                            <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30}} >Select what you know</Text>
                         </View>
 
                         <View style={styles.checkBoxParent}>
                             <Text style={styles.checkboxText}>Date</Text>
                             <TickBox value={detailsKnown.date} onPress={() => { onDetailTickBoxPress("date") }}></TickBox>
                         </View>
+                        <View style={{width: '90%', alignSelf: 'center'}}>
+                        <LineBreak></LineBreak>
+                        </View>
                         <View style={styles.checkBoxParent}>
                             <Text style={styles.checkboxText} >Activity</Text>
                             <TickBox value={detailsKnown.activity} onPress={() => onDetailTickBoxPress("activity")}></TickBox>
+                        </View>
+                        <View style={{width: '90%', alignSelf: 'center'}}>
+                        <LineBreak></LineBreak>
                         </View>
                         <View style={styles.checkBoxParent} >
                             <Text style={styles.checkboxText} >Location</Text>
@@ -155,18 +181,20 @@ export default function NewEvent() {
 
                     </View>
                 </BackgroundBox>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-end"
-                }}>
+                <View style={styles.buttonParent}>
                     <SmallButton title={"Next"} onPress={() => {
+                        setActivity("")
+                        setLocation("")
+                        setDate("")
+
+
                         StageController();
 
 
                     }} ></SmallButton>
                 </View>
 
-            </>
+            </View>
         )
     }
 
@@ -177,25 +205,37 @@ export default function NewEvent() {
             setDate(dateAnswer)
         }
 
-
         return (
 
-            <View>
-                <BackgroundBox >
-                    <View>
-                        <Text style={styles.questionTitle} >What is the date of your event?</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => {
-                                dateAnswer = text;
-                            }}
-                            onEndEditing={onDateEnd}
-                        />
-                    </View>
-                </BackgroundBox>
+            <View style={styles.container}>
                 <View>
-                    <SmallButton title={"Submit"} onPress={() => {
-                        StageController()
+
+                    <BackgroundBox >
+                        <View>
+                            <Text style={styles.questionTitle} >What is the date of your event?</Text>
+                            <View style={{ width: '90%' }} >
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={(text) => {
+                                        dateAnswer = text;
+                                    }}
+                                    onEndEditing={()=>{
+                                        onDateEnd()
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </BackgroundBox>
+                </View>
+                <View style={styles.buttonParent}>
+                    <SmallButton title={"Next"} onPress={() => {
+                        if (!dateAnswer) {
+                            alert('Please enter a date');
+                        }
+                        else {
+                            setDate(dateAnswer)
+                            StageController()
+                        }
                     }} ></SmallButton>
 
                 </View>
@@ -212,25 +252,43 @@ export default function NewEvent() {
             setActivity(activityAnswer)
         }
 
+
         return (
 
             <View style={styles.container}>
                 <BackgroundBox >
-                    <View>
-                        <Text style={{ padding: 15 }}>What is the activity of your event?</Text>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.questionTitle} > What is the activity for your event?</Text>
+
                         <TextInput
                             style={styles.input}
                             onChangeText={(text) => {
                                 activityAnswer = text;
                             }}
-                            onEndEditing={onActivityEnd}
+                            onEndEditing={() => {
+                                onActivityEnd();
+                            }}
                         />
+
+
+
                     </View>
 
                 </BackgroundBox>
-                <SmallButton title={"Submit"} onPress={() => {
-                    StageController()
+                <View style={styles.buttonParent}>
+                <SmallButton title={"Next"} onPress={() => {
+                    if (!activityAnswer) {
+                        alert('Please enter an activity');
+                    }
+                    else {
+                        setActivity(activityAnswer)
+                        StageController()
+                    }
+
                 }} ></SmallButton>
+
+
+                </View>
             </View>
         )
 
@@ -244,40 +302,145 @@ export default function NewEvent() {
             setLocation(locationAnswer)
         }
 
+
         return (
 
             <View style={styles.container}>
                 <BackgroundBox >
-                    <View>
-                        <Text > What is the location of your event?</Text>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.questionTitle} > What is the location of your event?</Text>
+
                         <TextInput
                             style={styles.input}
                             onChangeText={(text) => {
                                 locationAnswer = text;
                             }}
-                            onEndEditing={onLocationEnd}
+                            onEndEditing={()=>{
+                                onLocationEnd();
+                            }}
                         />
+
+
 
                     </View>
 
                 </BackgroundBox>
-                <SmallButton title={"Submit"} onPress={() => {
+                <View style={styles.buttonParent}>
+                <SmallButton title={"Next"} onPress={() => {
+                    setLocation(locationAnswer)
                     StageController()
                 }} ></SmallButton>
+
+                </View>
             </View>
         )
 
     }
 
+    function prepareBundle(){
+        const newBundle: any = { ...bundle}
+        newBundle.eventName = eventTitle
+        
+        newBundle.group = {id: 1, title: "Avengers"};
+
+        // test purposes
+        
+
+        if(activityProvided){
+            newBundle.activity=activityProvided;
+
+        }
+        if(dateProvided){
+            newBundle.date = "2020-10-08T13:30";
+        }
+        if(locationProvided){
+            newBundle.eventLocation = locationProvided; 
+        }
+        if(!activityProvided){
+            newBundle.activity=null;
+
+        }
+        if(!dateProvided){
+            newBundle.date = null;
+        }
+        if(!locationProvided){
+            newBundle.eventLocation = null; 
+        }
+
+
+        postEvent(newBundle).then((data)=> {
+            setBundle(data)
+            console.log(data)
+        })
+
+        
+        
+
+
+        
+
+        
+
+
+    }
+
+    
+
 
     function Review() {
 
         return (
-            <BackgroundBox>
+            <View style={styles.container}>
 
-                <Text>Review</Text>
+                <BackgroundBox>
+                    <View>
+                        <Text style={styles.questionTitle}> Are you happy with the below details? </Text>
+                        <Text style={styles.reviewText} >Event Title: {eventTitle}</Text> 
+                        {dateProvided != "" ? <Text style={styles.reviewText} >Date: {dateProvided}</Text> : ""}
+                        {activityProvided != "" ? <Text style={styles.reviewText}>Activity: {activityProvided}</Text> : ""}
+                        {locationProvided != "" ? <Text style={styles.reviewText}>Location {locationProvided}</Text> : ""}
 
-            </BackgroundBox>
+                    </View>
+
+                </BackgroundBox>
+                <View style={{flexDirection: 'row', padding: 15 }}>
+                    <View style={{padding: 15}}>
+
+                    <SmallButton title={"Yes"} onPress={() => { 
+                        prepareBundle();
+                        console.log(dateProvided)
+                        console.log(activityProvided)
+                        console.log(locationProvided)
+
+                    }} ></SmallButton>
+                    </View>
+                    <View style={{padding: 15}}>
+
+                <SmallButton title={"No"} onPress={() => {
+                    console.log(currentStage)
+                    updateStage("Details Known")
+                }} ></SmallButton>
+
+                    </View>
+
+
+
+                </View>
+            </View>
+        )
+    }
+
+
+    function Reviewed(){
+        return (
+            <View>
+                <BackgroundBox>
+                    <View>
+                        <Text> Dummy area for going back to individial group view</Text>
+                    </View>
+                </BackgroundBox>
+            
+            </View>
         )
     }
 
@@ -288,6 +451,7 @@ export default function NewEvent() {
             {currentStage === "Details Known" ? <KnownDetails></KnownDetails> : ""}
             {currentStage === "Date Input" ? <DateQuestion></DateQuestion> : ""}
             {currentStage === "Activity Input" ? <ActivityQuestion></ActivityQuestion> : ""}
+            {currentStage === "Reviewed" ? <Reviewed></Reviewed> : ""}
             {currentStage === "Location Input" ? <LocationQuestion></LocationQuestion> : ""}
             {currentStage === "Review" ? <Review></Review> : ""}
         </>
@@ -306,9 +470,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+        flex: 1, alignItems: 'center', justifyContent: 'center', width: '80%'
     },
     title: {
         fontSize: 24,
@@ -337,6 +499,20 @@ const styles = StyleSheet.create({
     questionTitle: {
         fontSize: 24,
         padding: 15,
+        textAlign: 'center'
+    },
+    reviewText: {
+        fontSize: 24,
+        padding: 10,
+    },
+    buttonParent: {
+        width: '100%',
+        height: 50,
+        padding: '10%',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        position: 'absolute',
+        bottom: 0,
     }
 
 });
