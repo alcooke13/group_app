@@ -9,6 +9,8 @@ import SmallButton from '../components/SmallButton';
 import InfoBox from '../components/InfoBox';
 import CalendarMonth from '../components/Calendar';
 import TimeOfDayButton from '../components/TimeOfDayButton';
+import CalendarOption from '../components/CalenderOption';
+
 
 interface Props {
     user: number
@@ -17,7 +19,12 @@ interface Props {
 export default function(props: Props){
     const {user} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
-    const [pollView, setPollView] = useState<string>("activityOption")
+    const [pollView, setPollView] = useState<string>("activityOption");
+    const [activityPollData, setActivityPollData] = useState<string>("");
+    const [locationPollData, setLocationPollData] = useState<string>("");
+    const [datePollData, setDatePollData] = useState<Date>();
+    const [savedDate, setSavedDated] = useState<string>("");
+    const [savedTime, setSavedTime] = useState<string>("");
     
     // Change state functions
     const changeViewToLocation = () => {
@@ -36,13 +43,13 @@ export default function(props: Props){
         setPollView("dayOption")
     }
 
-    return (
-        // container
-        <SafeAreaView style={styles.container}> 
-            
-            {/* ACTIVITY */}
-           
-            {pollView === "activityOption" ? <>
+    const ActivityPollInput = () => {
+        let activityValue: string;
+        const onActivityInputEnd = () => {
+            setActivityPollData(activityValue)
+        }
+        return (
+        <>
                 <View style ={styles.backButtonHeaderContainer}>
                 <BackArrow onPress={() => console.log("back")}/>
                 <MenuText>Activity Poll</MenuText>
@@ -52,30 +59,56 @@ export default function(props: Props){
             <BackgroundBox  boxHeight='35%' >
                 <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
-                    <TextInput style={styles.inputBox}/>
+                    <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
+                                    activityValue = inputText;;
+                                }}
+                                onEndEditing={onActivityInputEnd}/>
                 </View>
             </BackgroundBox>
-
             <SmallButton title="Add Option" onPress={changeViewToLocation}/></View>
-            </> : ""} 
-            
-            {/* LOCATION */}
+            </>
+    )}
 
-            {pollView === "locationOption" ? <>
+    const LocationPollInput = () => {
+        let locationValue: string;
+        const onLocationInputEnd = () => {
+            setActivityPollData(locationValue)
+        }
+        return (
+        <>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={changeViewToActivity}/>
+                <BackArrow onPress={() => console.log("back")}/>
                 <MenuText>Location Poll</MenuText>
                 </View>
+           
             <View style={styles.innerContainer}>
-            <BackgroundBox boxHeight='35%'>
-            <View style={styles.textBox}>
+            <BackgroundBox  boxHeight='35%' >
+                <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
-                    <TextInput style={styles.inputBox}/>
+                    <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
+                                    locationValue = inputText;;
+                                }}
+                                onEndEditing={onLocationInputEnd}/>
                 </View>
             </BackgroundBox>
 
             <SmallButton title="Add Option" onPress={changeViewToCalender}/></View>
-            </> : ""} 
+            </>
+    )};
+
+
+    
+    return (
+        // container
+        <SafeAreaView style={styles.container}> 
+            
+            {/* ACTIVITY */}
+           
+            {pollView === "activityOption" ? <ActivityPollInput></ActivityPollInput> : ""} 
+            
+            {/* LOCATION */}
+
+            {pollView === "locationOption" ? <LocationPollInput></LocationPollInput> : ""} 
 
             {/* DATEPOLL CALENDER */}
 
@@ -83,7 +116,7 @@ export default function(props: Props){
             <View style={styles.outer}>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
-            <CalendarMonth onPress={changeViewToDay} changeViewToDay={changeViewToDay}/>
+            <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>
             </InfoBox>
             </View>
             </View>: ""}
@@ -96,9 +129,9 @@ export default function(props: Props){
             <MenuText>Date Poll</MenuText>
         </View>
         <View>
-        <TimeOfDayButton timeOfDayOption='Morning' onPress={()=> console.log("pressed Morning")}/>
-                <TimeOfDayButton timeOfDayOption='Afternoon' onPress={()=> console.log("pressed Afternoon")}/>
-                <TimeOfDayButton timeOfDayOption='Evening' onPress={()=> console.log("pressed Evening")}/>
+            <TimeOfDayButton timeOfDayOption='Morning' onPress={()=> console.log("pressed Morning")}/>
+            <TimeOfDayButton timeOfDayOption='Afternoon' onPress={()=> console.log("pressed Afternoon")}/>
+            <TimeOfDayButton timeOfDayOption='Evening' onPress={()=> console.log("pressed Evening")}/>
         </View>
         <View>
         <SmallButton title="Done" onPress={changeViewToActivity}/>
