@@ -69,6 +69,11 @@ export default function AllGroupsScreen(props: Props) {
         setGroupView("loading")
         getSingleGroupData(groupId);
         route.params.groupId = 0;
+
+        getGroupData()
+        .then((userGroups) => {
+          setGroup(userGroups);
+        })
       } else if (isFocused) {
         setSingleGroup(initialState);
         setGroupView("allgroups");

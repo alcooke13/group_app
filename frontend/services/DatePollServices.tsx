@@ -12,6 +12,9 @@ export interface DatePollData {
         eventName: string
         eventLocation: string
         Date: string
+        group: {
+            id: number
+        }
     }
 }
 
