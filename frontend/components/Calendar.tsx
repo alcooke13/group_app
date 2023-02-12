@@ -7,14 +7,15 @@ import { setDate } from 'date-fns';
 interface Props {
     onPress: () => void;
     calendarEvents?: Array<EventData>;
-    chooseDate: () => void;
-    setDate: any;
-    resultDates: any;
+    chooseDate?: () => void;
+    setDate?: any;
+    resultDates?: any;
+    changeViewToDay?: any
     
 }
 
 const CalendarMonth = (props: Props) => {
-    const {onPress, calendarEvents, chooseDate, setDate, resultDates} = props
+    const {onPress, calendarEvents, chooseDate, setDate, resultDates, changeViewToDay} = props
     ;
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -46,10 +47,10 @@ const CalendarMonth = (props: Props) => {
 
                 onDayPress={day => {
                     let newDate = (formatDate(day.year, day.month, day.day))
-                    setDate(newDate)
-                    chooseDate()
+                    // setDate(newDate) // uncomment to get calender view events working
+                    // chooseDate() // uncomment to get calender view events working
+                    changeViewToDay("dayOption") // For Testing Add Options
                 }}
-
                 // onDayPress={day => {
                 //     console.log('selected day', day);
                 //   }}
