@@ -22,6 +22,7 @@ import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
 
+
 interface Props {
   user: number
 }
@@ -54,8 +55,6 @@ export default function AllGroupsScreen(props: Props) {
     const [groupView, setGroupView] = useState("allgroups");
     const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
     const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
-
-
 
     useEffect(() => {
       if (isFocused){
@@ -98,8 +97,6 @@ export default function AllGroupsScreen(props: Props) {
      }
 
      function addNewGroup(){}
-     function captureChosenVote (){}
-
 
      function findActivePoll(allGroupPolls){
       const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
@@ -109,11 +106,17 @@ export default function AllGroupsScreen(props: Props) {
 
      function SingleGroupDetails(){
         if (Date.parse(singleGroup.events[0].date) > Date.now()) {
+
+          const eventDate = new Date(singleGroup.events[0].date).toLocaleString('en-GB', { 
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+        });
           return (
             <>
             <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
             <>
-            <Text>Date:         {singleGroup.events[0].date}</Text>
+            <Text>Date:         {eventDate}</Text>
             <Text>Time:         TBC</Text>
             <Text>Location:   {singleGroup.events[0].eventLocation}</Text>
             </>
@@ -129,23 +132,31 @@ export default function AllGroupsScreen(props: Props) {
                     <Text>Location:   </Text>
                     </>
                     )
-                }    
-     }
+                } 
+              }   
+     
 
-    //  var allUsersGroupsByName = groups?.flatMap(function(val, index){
-    //   return <GroupNameButton key={index} title={val.groupName} status={false} onPress={()=>captureChosenGroup(val)}/>
-    //  })
+     function SingleGroupPollDetails(){
+      let availableOptions = []
+      let voteCount = new Map()
+      for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+          availableOptions.push(option)
+          voteCount.set(option, user_ids)
+        }
+          var getOptions = availableOptions.map(function(val, index){
+          return <><DatePollButton key={index} dateOption={val} onPress={()=>captureChosenVote(val)}></DatePollButton><Text style={styles.voteCounter}>2</Text></>
+        })
 
-     function GroupPollDetails(){
-      for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
-        return(
-        <DatePollButton dateOption={option} onPress={()=>captureChosenVote()} votedOn ></DatePollButton>
-        )
-      }
-     }
-
-
-
+        function captureChosenVote(val: string){
+          for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
+            if (val == option){
+              console.log(user_ids.length)
+            }
+          }
+            }
+        return getOptions
+        }
+     
 
      function AllGroupView(){
       return(
@@ -166,7 +177,7 @@ export default function AllGroupsScreen(props: Props) {
           <BurgerIcon></BurgerIcon>
         </View>
             <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>
-            <InfoBox header={activeGroupPoll.event.eventName}><View>{GroupPollDetails()}</View></InfoBox>
+            <InfoBox header={activeGroupPoll.event.eventName}><View><SingleGroupPollDetails/></View></InfoBox>
           </>
         )
      }
@@ -177,14 +188,14 @@ export default function AllGroupsScreen(props: Props) {
       )
       }
 
+
     
     return (
         <SafeAreaView style={styles.container}>
           {groupView === "allgroups" ? <AllGroupView/> : ""}
           {groupView==="singlegroup"? <SingleGroupView/>: ""}
           {groupView === "addgroupview" ? <AddGroupView/>: ""}
-
-
+          
         </SafeAreaView>
     )
     }
@@ -213,5 +224,10 @@ const styles = StyleSheet.create({
         width:"100%",
       justifyContent: 'space-around',
 
-      }
+      },
+      voteCounter: {
+        color: "#FF914D",
+        fontSize: 36,
+        alignItems:'center'
+    }
   });
