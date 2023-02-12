@@ -39,6 +39,7 @@ export default function AddGroupScreen(props: Props) {
 
         postGroup(groupDetails)
         .then((group) => {
+            friendsAdded.current.push(user);
             updateGroupDataWithNewUsers(group.id, friendsAdded.current);
         });
     }
@@ -69,7 +70,7 @@ export default function AddGroupScreen(props: Props) {
                     <Text style={styles.groupHeader}>Group name</Text>
                     <TextInput 
                         style={styles.groupInput}
-                        placeholder="Type your new group nam here"
+                        placeholder="Type your new group name here"
                         onChangeText={groupName => setGroupName(groupName)}>
                     </TextInput>
                 </View>

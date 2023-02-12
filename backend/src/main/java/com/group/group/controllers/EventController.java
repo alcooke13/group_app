@@ -31,6 +31,7 @@ public class EventController {
         return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
     }
 
+
     @PostMapping(path = "/events",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,6 +44,7 @@ public class EventController {
             throw new ServerException("error: could not create event");
         }
     }
+
 
 
 
