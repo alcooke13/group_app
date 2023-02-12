@@ -49,7 +49,7 @@ export default function(props: Props){
                 </View>
            
             <View style={styles.innerContainer}>
-            <BackgroundBox >
+            <BackgroundBox  boxHeight='35%' >
                 <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
                     <TextInput style={styles.inputBox}/>
@@ -67,7 +67,7 @@ export default function(props: Props){
                 <MenuText>Location Poll</MenuText>
                 </View>
             <View style={styles.innerContainer}>
-            <BackgroundBox>
+            <BackgroundBox boxHeight='35%'>
             <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
                     <TextInput style={styles.inputBox}/>

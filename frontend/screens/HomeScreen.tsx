@@ -11,6 +11,7 @@ import SmallButton from '../components/SmallButton';
 import LineBreak from '../components/LineBreak';
 import { useIsFocused } from "@react-navigation/native";
 import NewEvent from './NewEvent/NewEvent';
+import NewOptionScreen from './NewOptionScreen';
 
 interface Props {
     user: number
@@ -152,8 +153,8 @@ export default function HomeScreen(props: Props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+        // alignItems: 'center',
+        // justifyContent: 'space-evenly',
         backgroundColor: '#25242B'
       },
       title: {
