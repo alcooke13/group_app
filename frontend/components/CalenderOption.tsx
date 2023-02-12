@@ -2,20 +2,20 @@ import { Calendar } from 'react-native-calendars';
 import { View, StyleSheet, Text } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { EventData } from '../services/EventServices';
-import { setDate } from 'date-fns';
+
 
 interface Props {
     onPress: () => void;
     calendarEvents?: Array<EventData>;
     chooseDate?: () => void;
-    setDate?: any;
+    setSavedDate?: any;
     resultDates?: any;
     changeViewToDay?: any
     
 }
 
-const CalendarMonth = (props: Props) => {
-    const {onPress, calendarEvents, chooseDate, setDate, resultDates, changeViewToDay} = props
+const CalendarOption = (props: Props) => {
+    const {onPress, resultDates, changeViewToDay, setSavedDate} = props
     ;
     const currentDate: Date = new Date();
     const today = currentDate.toLocaleDateString("fr-CA", {
@@ -47,8 +47,9 @@ const CalendarMonth = (props: Props) => {
 
                 onDayPress={day => {
                     let newDate = (formatDate(day.year, day.month, day.day))
-                    setDate(newDate) // uncomment to get calender view events working
-                    chooseDate() // uncomment to get calender view events working
+                    console.log(newDate)
+                    setSavedDate(newDate)
+                    changeViewToDay()
                 }}
                 // onDayPress={day => {
                 //     console.log('selected day', day);
@@ -115,4 +116,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CalendarMonth;
+export default CalendarOption;

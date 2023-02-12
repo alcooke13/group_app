@@ -1,6 +1,8 @@
 package com.group.group.controllers;
 
 import com.group.group.models.DatePoll;
+import com.group.group.models.Group;
+import com.group.group.models.User;
 import com.group.group.repositories.DatePollRepository;
 import com.group.group.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,23 @@ public class DatePollController {
         datePollRepository.save(updatePoll);
 
         return ResponseEntity.ok(updatePoll);
+    }
+
+    @PutMapping("/date-polls/{id}/add-option")
+    public ResponseEntity<DatePoll> addOptionToDatePoll(
+            @PathVariable long id,
+            @RequestBody HashMap<String, ArrayList<Long>> body ) {
+
+        DatePoll updatePollOptions = datePollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+
+        for(String key : body.keySet()){
+        updatePollOptions.addOption(key);
+        };
+        datePollRepository.save(updatePollOptions);
+        return ResponseEntity.ok(updatePollOptions);
     }
 
 
