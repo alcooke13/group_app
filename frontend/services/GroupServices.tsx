@@ -16,38 +16,50 @@ export interface GroupData {
 }
 
 export function getGroupData(): Promise<GroupData[]> {
-	return fetch('http://127.0.0.1:8080/groups?user_id=1', {
-		method: 'GET',
-		// headers: {
-		// },
-	})
-		.then((response) => response.json())
-		.then((response) => {
-			return response as GroupData[];
-		});
+    return fetch('http://127.0.0.1:8080/groups?user_id=1', {
+        method: 'GET',
+        // headers: {
+        // },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as GroupData[];
+        });
+}
+
+export function getGroupDataByGroupId(groupId: number): Promise<GroupData> {
+    return fetch('http://127.0.0.1:8080/groups/' + groupId.toString(), {
+        method: 'GET',
+        // headers: {
+        // },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as GroupData;
+        });
 }
 
 export function postGroup(payload: Object): Promise<GroupData> {
-	return fetch('http://127.0.0.1:8080/groups', {
+    return fetch('http://127.0.0.1:8080/groups', {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: { 
             "Accept":"application/json",
             "Content-Type":"application/json",
          }
-	})
-		.then((response) => response.json())
+    })
+        .then((response) => response.json())
         .then((response) => {
             return response as GroupData;
         });
 }
 
 export function updateGroupDataWithNewUsers(groupId: number, payload: Array<number>): Promise<Response> {
-	return fetch('http://127.0.0.1:8080/groups/' + groupId.toString() + '/add-users', {
-		method: 'PUT',
+    return fetch('http://127.0.0.1:8080/groups/' + groupId.toString() + '/add-users', {
+        method: 'PUT',
         body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' }
-	})
+    })
 }
 
 export function deleteGroup(groupId: number): Promise<Response> {

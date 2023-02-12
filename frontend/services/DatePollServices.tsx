@@ -1,16 +1,21 @@
-export interface DatePollData {
-  id: number;
-  options: {
-    date: [userId: number];
-  };
-  timeout: string;
-  event: {
-    id: number;
-    date: string;
-    eventName: string;
-    eventLocation: string;
-    Date: string;
-  };
+export interface DatePollData {    
+    id: number
+    options: {
+        date: [
+            userId: number
+        ]
+    }
+    timeout: string
+    event: {
+        id: number
+        date: string
+        eventName: string
+        eventLocation: string
+        Date: string
+        group: {
+            id: number
+        }
+    }
 }
 
 export function getDatePollData(): Promise<DatePollData[]> {

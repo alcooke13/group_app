@@ -12,6 +12,9 @@ export interface ActivityPollData {
         eventName: string
         eventLocation: string
         activity: string
+        group: {
+            id: number
+        }
     }
 }
 

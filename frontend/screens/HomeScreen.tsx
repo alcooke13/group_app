@@ -9,9 +9,13 @@ import { useEffect, useState } from 'react';
 import TextHeader from '../components/TextHeader';
 import SmallButton from '../components/SmallButton';
 import LineBreak from '../components/LineBreak';
-import { useIsFocused } from "@react-navigation/native";
+import { ParamListBase, TabActions, useIsFocused, useNavigation } from "@react-navigation/native";
 import NewEvent from './NewEvent/NewEvent';
+import AllGroupsScreen from './AllGroupsScreen';
+import navigation from '../navigation';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import NewOptionScreen from './NewOptionScreen';
+
 
 interface Props {
     user: number
@@ -20,6 +24,7 @@ interface Props {
 export default function HomeScreen(props: Props) {
 
     const isFocused = useIsFocused();
+    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
     const { user } = props;
 
@@ -78,7 +83,6 @@ export default function HomeScreen(props: Props) {
             });
         }
     }, [isFocused]);
-    
 
     const eventItems = events?.map((event, index) => {
 
@@ -94,7 +98,11 @@ export default function HomeScreen(props: Props) {
         });
 
         return(
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Groups', {
+                    groupId: event.group.id
+                })
+            }}>
                 <View style={styles.eventItem} key={index}>
                     <View style={styles.eventHeader}>
                         <TextHeader>{event.eventName}</TextHeader>
@@ -119,7 +127,11 @@ export default function HomeScreen(props: Props) {
             <>
                 <View style={styles.pollItem} key={index}>
                     <TextHeader>{poll.event.eventName}</TextHeader>
-                    <SmallButton title='Vote'></SmallButton>
+                    <SmallButton title='Vote' onPress={() => {
+                        navigation.navigate('Groups', {
+                            groupId: poll.event.group.id
+                        })
+                    }}></SmallButton>
                 </View>
                 {index !== polls?.length - 1 ?  
                     <LineBreak/>
@@ -132,9 +144,7 @@ export default function HomeScreen(props: Props) {
 
     return (
         <SafeAreaView style={styles.container}>
-
             <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
-
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {eventItems}
                 </ScrollView>
