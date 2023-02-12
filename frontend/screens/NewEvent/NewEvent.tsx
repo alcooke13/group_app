@@ -10,7 +10,9 @@ import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
 import LineBreak from '../../components/LineBreak';
-import {postEvent} from '../../services/EventServices'
+import {postEvent} from '../../services/EventServices';
+import CalendarNewEvent from '../../components/CalendarNewEvent';
+import InfoBox from '../../components/InfoBox';
 
 
 // const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
@@ -206,24 +208,63 @@ export default function NewEvent(props: GroupInfoProps) {
 
         return (
 
+            // onPress: () => void;
+            // calendarEvents?: Array<EventData>;
+            // chooseDate?: () => void;
+            // setSavedDate?: any;
+            // resultDates?: any;
+            // changeViewToDay?: any
+
             <View style={styles.container}>
 
-                    <BackgroundBox boxHeight={250}   >
-                        <View style={{margin: 30}}>
-                            <Text style={styles.questionTitle} >What is the date of your event?</Text>
-                            <View style={{ width: '90%' }} >
-                                <TextInput
+                    {/* <BackgroundBox boxHeight={'75%'} boxWidth={'100%'}  > */}
+                        {/* <View style={{margin: 30}}> */}
+
+                        {/* <View style={styles.containerCalendar}>
+            <InfoBox header='Calendar'>
+            <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>
+            </InfoBox> */}  
+                            <View style={{marginTop: '20%', marginBottom: 0, paddingBottom: 0}}>
+
+                            <Text style={{
+                                fontSize: 24,
+                                padding: 15,
+                                textAlign: 'center',
+                                color: '#FF914D'
+                            }} 
+                            >What is the date of your event?</Text>
+
+                            </View>
+                            <InfoBox header={"Calendar"} >
+                                <CalendarNewEvent 
+                                onPress={()=>{
+                                    
+                                }}
+                                // calendarEvents={}
+                                chooseDate={()=> {
+                                    
+                                }}
+                                setSavedDate={()=>{
+                                    
+                                }}
+                                changeViewToDay={()=>{
+                                    
+                                }}
+                                
+                                
+                                
+                                ></CalendarNewEvent>
+                                {/* <TextInput
                                     style={styles.input}
                                     onChangeText={(text) => {
                                         dateAnswer = text;
                                     }}
                                     onEndEditing={()=>{
                                         onDateEnd()
-                                    }}
-                                />
-                            </View>
-                        </View>
-                    </BackgroundBox>
+                                    }} */}
+                                {/* /> */}
+                           
+                                    </InfoBox>
                 <View style={styles.buttonParent}>
                     <SmallButton title={"Next"} onPress={() => {
                         if (!dateAnswer) {
@@ -231,7 +272,7 @@ export default function NewEvent(props: GroupInfoProps) {
                         }
                         else {
                             setDate(dateAnswer)
-                            StageController()
+                            // StageController()
                         }
                     }} ></SmallButton>
 
@@ -316,8 +357,6 @@ export default function NewEvent(props: GroupInfoProps) {
                                 onLocationEnd();
                             }}
                         />
-
-
 
                     </View>
 
@@ -515,8 +554,14 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         position: 'absolute',
         bottom: 0,
-    }
+    },
+  
+    containerCalendar: {
+      backgroundColor: "#25242B",
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
 
-});
+}})
 
 
