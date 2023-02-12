@@ -125,7 +125,11 @@ export default function HomeScreen(props: Props) {
             <>
                 <View style={styles.pollItem} key={index}>
                     <TextHeader>{poll.event.eventName}</TextHeader>
-                    <SmallButton title='Vote'></SmallButton>
+                    <SmallButton title='Vote' onPress={() => {
+                        navigation.navigate('Groups', {
+                            groupId: poll.event.group.id
+                        })
+                    }}></SmallButton>
                 </View>
                 {index !== polls?.length - 1 ?  
                     <LineBreak/>

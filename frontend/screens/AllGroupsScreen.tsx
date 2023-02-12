@@ -30,7 +30,6 @@ interface Props {
 export default function AllGroupsScreen(props: Props) {
 
     const { user } = props;
-
     const isFocused = useIsFocused()
 
     const initialState = {
@@ -56,10 +55,9 @@ export default function AllGroupsScreen(props: Props) {
     const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
     const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
 
-
     const route = useRoute();
     let groupId: number;
-    
+
     try {
       groupId = route.params.groupId;
     } catch {
@@ -81,10 +79,6 @@ export default function AllGroupsScreen(props: Props) {
         })
       }
     }, [isFocused]);
-
-    useEffect(() => {
-
-    }, [activeGroupPoll])
 
 
     function getSingleGroupData(groupId: number) {
@@ -110,7 +104,6 @@ export default function AllGroupsScreen(props: Props) {
             });
     }
 
-  
     const allUsersGroupsByName = groups?.flatMap(function(group, index){
       return <GroupNameButton 
                   key={index} 
@@ -120,12 +113,8 @@ export default function AllGroupsScreen(props: Props) {
                   }/>
     })
 
-    // function captureChosenGroup(group:GroupData){
-    //   setSingleGroup(group);
-    // }
-
     function addNewEvent(){
-    setGroupView("newEvent")
+      setGroupView("newEvent")
     }
 
     function findActivePoll(allGroupPolls){
@@ -140,84 +129,101 @@ export default function AllGroupsScreen(props: Props) {
           weekday: 'long',
           day: 'numeric',
           month: 'long',
-      });
+        });
+
         return (
           <>
-          <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
-          <>
-          <Text>Date:         {eventDate}</Text>
-          <Text>Time:         TBC</Text>
-          <Text>Location:   {singleGroup.events[0].eventLocation}</Text>
-          </>
+            <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
+            <>
+              <Text>Date:         {eventDate}</Text>
+              <Text>Time:         TBC</Text>
+              <Text>Location:   {singleGroup.events[0].eventLocation}</Text>
+            </>
           </>
           )
-              } else
-              {
-                return (
-                  <>
-                  <TextHeader> No upcoming event </TextHeader>
-                  <Text>Date:        </Text>
-                  <Text>Time:        </Text>
-                  <Text>Location:   </Text>
-                  </>
-                  )
-              } 
-            }   
+
+        } else {
+          return (
+            <>
+              <TextHeader> No upcoming event </TextHeader>
+              <Text>Date:        </Text>
+              <Text>Time:        </Text>
+              <Text>Location:   </Text>
+            </>
+            )
+        } 
+    }   
     
-
     function SingleGroupPollDetails(){
-    let availableOptions = []
-    let voteCount = new Map()
-    for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
-        availableOptions.push(option)
-        voteCount.set(option, user_ids)
-      }
-        var getOptions = availableOptions.map(function(val, index){
-        return <><DatePollButton key={index} dateOption={val} onPress={()=>captureChosenVote(val)}></DatePollButton><Text style={styles.voteCounter}>2</Text></>
-      })
+        let availableOptions = []
+        let voteCount = new Map()
+        for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+            availableOptions.push(option)
+            voteCount.set(option, user_ids)
+        }
 
-      function captureChosenVote(val: string){
-        for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
-          if (val == option){
-            console.log(user_ids.length)
+        const getOptions = availableOptions.map(function(val, index){
+          return (
+            <>
+              <DatePollButton 
+                  key={index} 
+                  dateOption={val} 
+                  onPress={()=>captureChosenVote(val)}>
+              </DatePollButton>
+              <Text style={styles.voteCounter}>
+                2
+              </Text>
+            </>
+          )
+        })
+
+        function captureChosenVote(val: string){
+          for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
+            if (val == option){
+              console.log(user_ids.length)
+            }
           }
         }
-          }
-      return getOptions
-      }
+      
+        return getOptions
+    }
     
 
     function AllGroupView(){
-    return(
-    <>
-    <Image source={require('../assets/GroupLogo1.png')}/>
-    <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
-    <BigPlus onPress={() => (setGroupView('addgroupview'))}/>
-    </>
-    ) 
-  }
+      return(
+        <>
+          <Image source={require('../assets/GroupLogo1.png')}/>
+          <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView> 
+          <BigPlus onPress={() => (setGroupView('addgroupview'))}/>
+        </>
+      ) 
+    }
 
 
-  function AddEventView(){
-
-    return (
-      <>
-        <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}></NewEvent>
-      </>
-    )
-
-  }
+    function AddEventView(){
+      return (
+        <>
+          <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}></NewEvent>
+        </>
+      )
+    }
     
     function SingleGroupView(){
-    return(
-    <>
-    <View style={styles.header}>
-        <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
-        <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
-        <BurgerIcon></BurgerIcon>
-      </View>
-          <InfoBox header='Next Event' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />} ><SingleGroupDetails/></InfoBox>
-          <InfoBox header={activeGroupPoll.event.eventName}><View><SingleGroupPollDetails/></View></InfoBox>
+      return(
+        <>
+          <View style={styles.header}>
+            <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
+            <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
+            <BurgerIcon></BurgerIcon>
+          </View>
+          <InfoBox header='Next Event' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
+            <SingleGroupDetails/>
+          </InfoBox>
+          <InfoBox header={activeGroupPoll.event.eventName}>
+            <View>
+              <SingleGroupPollDetails/>
+            </View>
+          </InfoBox>
         </>
       )
     }
@@ -228,18 +234,15 @@ export default function AllGroupsScreen(props: Props) {
     )
     }
 
-
-  
-  return (
-      <SafeAreaView style={styles.container}>
-        {groupView === "allgroups" ? <AllGroupView/> : ""}
-        {groupView==="singlegroup"? <SingleGroupView/>: ""}
-        {groupView === "addgroupview" ? <AddGroupView/>: ""}
-        {groupView === "newEvent" ? <AddEventView/>: ""}
-        {groupView === "loading" ? "" : ""}
-        
-      </SafeAreaView>
-  )
+    return (
+        <SafeAreaView style={styles.container}>
+          {groupView === "allgroups" ? <AllGroupView/> : ""}
+          {groupView==="singlegroup"? <SingleGroupView/>: ""}
+          {groupView === "addgroupview" ? <AddGroupView/>: ""}
+          {groupView === "newEvent" ? <AddEventView/>: ""}
+          {groupView === "loading" ? "" : ""}
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
