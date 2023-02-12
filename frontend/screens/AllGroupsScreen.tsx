@@ -21,7 +21,7 @@ import DatePollButton from '../components/DatePollButton';
 import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
-
+import SmallPlus from '../components/SmallPlus';
 
 interface Props {
   user: number
@@ -96,7 +96,11 @@ export default function AllGroupsScreen(props: Props) {
       setGroupView("singlegroup")
      }
 
-     function addNewGroup(){}
+     function addNewEvent(){
+      setGroupView("newEvent")
+
+
+     }
 
      function findActivePoll(allGroupPolls){
       const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
@@ -167,6 +171,17 @@ export default function AllGroupsScreen(props: Props) {
       </>
       ) 
     }
+
+
+    function AddEventView(){
+
+      return (
+        <>
+          <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}></NewEvent>
+        </>
+      )
+
+    }
      
      function SingleGroupView(){
       return(
@@ -176,7 +191,7 @@ export default function AllGroupsScreen(props: Props) {
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
           <BurgerIcon></BurgerIcon>
         </View>
-            <InfoBox header='Next Event'><SingleGroupDetails/></InfoBox>
+            <InfoBox header='Next Event' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />} ><SingleGroupDetails/></InfoBox>
             <InfoBox header={activeGroupPoll.event.eventName}><View><SingleGroupPollDetails/></View></InfoBox>
           </>
         )
@@ -195,6 +210,7 @@ export default function AllGroupsScreen(props: Props) {
           {groupView === "allgroups" ? <AllGroupView/> : ""}
           {groupView==="singlegroup"? <SingleGroupView/>: ""}
           {groupView === "addgroupview" ? <AddGroupView/>: ""}
+          {groupView === "newEvent" ? <AddEventView/>: ""}
           
         </SafeAreaView>
     )

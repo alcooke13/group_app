@@ -77,6 +77,7 @@ export default function HomeScreen(props: Props) {
             });
         }
     }, [isFocused]);
+    
 
     const eventItems = events?.map((event, index) => {
 
@@ -143,7 +144,7 @@ export default function HomeScreen(props: Props) {
                     {pollItems}
                 </ScrollView>
             </InfoBox>
-
+           
         </SafeAreaView>
     );
 }

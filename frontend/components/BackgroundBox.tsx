@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 interface Props {
     children: JSX.Element,
     boxWidth?: number | string,
-    boxHeight?: string;
+    boxHeight?: string | number;
     boxMarginTop?: string;
     boxMarginBottom?: string;
 }
@@ -14,10 +14,10 @@ const BackgroundBox = (props: Props) => {
     
     return (
         <View style={{
-            width: "90%" || boxWidth,
-            height: "10%" || boxHeight,
-            marginTop: "0%" || boxMarginTop,
-            marginBottom: "0%" || boxMarginBottom,
+            width: boxWidth || '90%',
+            height: boxHeight || '10%',
+            marginTop: boxMarginTop || "0%",
+            marginBottom:  boxMarginBottom || "0%",
             backgroundColor: "#E0E1F0",
             borderRadius: 15, 
         }}>
