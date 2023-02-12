@@ -3,7 +3,6 @@ package com.group.group.models;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 @MappedSuperclass
@@ -47,7 +46,7 @@ public abstract class Poll {
         this.options.put(option, new ArrayList<Long>());
     }
 
-    public void addUserToOption(String option, Long user_id) {
+    public void addUserToOption(Object option, Long user_id) {
         this.options.get(option).add(user_id);
     }
 

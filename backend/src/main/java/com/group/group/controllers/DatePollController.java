@@ -1,7 +1,6 @@
 package com.group.group.controllers;
 
 import com.group.group.models.DatePoll;
-import com.group.group.models.User;
 import com.group.group.repositories.DatePollRepository;
 import com.group.group.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class DatePollController {
@@ -44,20 +43,17 @@ public class DatePollController {
     @PutMapping("/date-polls/{id}/add-vote")
     public ResponseEntity<DatePoll> addVoteToPoll(
             @PathVariable long id,
-            @RequestBody List<Long> userIds, String option) {
+            @RequestBody DatePoll body ){
 
         DatePoll updatePoll = datePollRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("Poll Not Found: " + id));
 
-        for (Long userId : userIds) {
-            User voter = userRepository
-                    .findById(userId)
-                    .orElseThrow(() -> new RuntimeException("Voter Not Found: " + userId));
-            if (voter != null) {
-                updatePoll.addUserToOption(option, voter.getId());
-            }
-        }
+        HashMap<String, ArrayList<Long>> options  = updatePoll.getOptions();
+
+        List optionToUpdate = options.get("hello");
+
+        updatePoll.addUserToOption(optionToUpdate, 30L);
 
         datePollRepository.save(updatePoll);
 
