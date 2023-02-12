@@ -10,15 +10,26 @@ import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
 import LineBreak from '../../components/LineBreak';
-// import EventServices from '../../services/EventServices'
+import {postEvent} from '../../services/EventServices'
 
 
 // const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
+interface Props {
+    // group_id: number
 
 
-export default function NewEvent() {
 
+
+}
+
+
+
+
+
+export default function NewEvent(props: Props) {
+    
+    const { } = props;
 
     const [eventTitle, setEventTitle] = useState('');
     const [detailsKnown, updateDetailsKnown] = useState<{ [key: string]: boolean }>({ 'date': false, 'activity': false, 'location': false })
@@ -27,6 +38,7 @@ export default function NewEvent() {
     const [locationProvided, setLocation] = useState<string>("")
     const [review, setReview] = useState<boolean>(false)
     const [currentStage, updateStage] = useState<string>("Event Name")
+    const [bundle, setBundle] = useState<any>()
 
     useEffect(() => {
 
@@ -67,16 +79,24 @@ export default function NewEvent() {
                     break;
                 }
 
-            case "Review":
+            case "Review": 
                 if (!review) {
                     updateStage("Event name");
                     setDate("");
                     setActivity("");
                     setLocation("");
                     break;
-                } else {
+                } 
+                else{
+                   
                     // go to group
                 }
+         
+
+
+                
+                
+           
         }
 
     }
@@ -179,7 +199,7 @@ export default function NewEvent() {
 
         return (
 
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={styles.container}>
                 <View>
 
                     <BackgroundBox >
@@ -205,8 +225,8 @@ export default function NewEvent() {
                             alert('Please enter a date');
                         }
                         else {
-                            StageController()
                             setDate(dateAnswer)
+                            StageController()
                         }
                     }} ></SmallButton>
 
@@ -249,8 +269,8 @@ export default function NewEvent() {
                         alert('Please enter an activity');
                     }
                     else {
-                        StageController()
                         setActivity(activityAnswer)
+                        StageController()
                     }
 
                 }} ></SmallButton>
@@ -290,8 +310,8 @@ export default function NewEvent() {
                 </BackgroundBox>
                 <View style={styles.buttonParent}>
                 <SmallButton title={"Next"} onPress={() => {
-                    StageController()
                     setLocation(locationAnswer)
+                    StageController()
                 }} ></SmallButton>
 
                 </View>
@@ -299,6 +319,55 @@ export default function NewEvent() {
         )
 
     }
+
+    function prepareBundle(){
+        const newBundle: any = { ...bundle}
+        newBundle.eventName = eventTitle
+        
+        newBundle.group.id = 1;
+        newBundle.group.title = "Avengers";
+
+        // test purposes
+        
+
+        if(activityProvided){
+            newBundle.activity=activityProvided;
+
+        }
+        if(dateProvided){
+            newBundle.date = dateProvided;
+        }
+        if(locationProvided){
+            newBundle.eventLocation = locationProvided; 
+        }
+        if(!activityProvided){
+            newBundle.activity=null;
+
+        }
+        if(!dateProvided){
+            newBundle.date = null;
+        }
+        if(!locationProvided){
+            newBundle.eventLocation = null; 
+        }
+
+        postEvent(newBundle).then((data)=> {
+            setBundle(data)
+            console.log(data)
+        })
+
+        
+        
+
+
+        
+
+        
+
+
+    }
+
+    
 
 
     function Review() {
@@ -319,11 +388,18 @@ export default function NewEvent() {
                 <View style={{flexDirection: 'row', padding: 15 }}>
                     <View style={{padding: 15}}>
 
-                    <SmallButton title={"Yes"} onPress={() => { }} ></SmallButton>
+                    <SmallButton title={"Yes"} onPress={() => { 
+                        prepareBundle();
+                        console.log(dateProvided)
+                        console.log(activityProvided)
+                        console.log(locationProvided)
+
+                    }} ></SmallButton>
                     </View>
                     <View style={{padding: 15}}>
 
                 <SmallButton title={"No"} onPress={() => {
+                    console.log(currentStage)
                     updateStage("Details Known")
                 }} ></SmallButton>
 
@@ -337,12 +413,27 @@ export default function NewEvent() {
     }
 
 
+    function Reviewed(){
+        return (
+            <View>
+                <BackgroundBox>
+                    <View>
+                        <Text> Dummy area for going back to individial group view</Text>
+                    </View>
+                </BackgroundBox>
+            
+            </View>
+        )
+    }
+
+
     return (
         <>
             {currentStage === "Event Name" ? <EventName></EventName> : ""}
             {currentStage === "Details Known" ? <KnownDetails></KnownDetails> : ""}
             {currentStage === "Date Input" ? <DateQuestion></DateQuestion> : ""}
             {currentStage === "Activity Input" ? <ActivityQuestion></ActivityQuestion> : ""}
+            {currentStage === "Reviewed" ? <Reviewed></Reviewed> : ""}
             {currentStage === "Location Input" ? <LocationQuestion></LocationQuestion> : ""}
             {currentStage === "Review" ? <Review></Review> : ""}
         </>

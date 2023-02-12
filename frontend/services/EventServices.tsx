@@ -1,12 +1,16 @@
 export interface EventData {    
         id: number
-        date: string
-        eventName: string
-        eventLocation: string
-        activity: string
+        date: string | null
+        eventName: string 
+        eventLocation: string | null
+        activity: string | null
         activityPoll?: string
         locationPoll?: string
         datePoll?: string
+		group: {
+			id: number,
+		title: string
+		}
 }
 
 export function getEventData(): Promise<EventData[]> {
@@ -34,7 +38,7 @@ export function getEventDataByUserId(id: number): Promise<EventData[]> {
 }
 
 
-export function postEvent(payload: Object): Promise<EventData>{
+export function postEvent(payload: EventData): Promise<EventData>{
 	return fetch("http://127.0.0.1:8080/events", {
 		method: 'POST',
 		body: JSON.stringify(payload),
