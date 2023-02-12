@@ -9,6 +9,7 @@ import InfoBox from '../components/InfoBox';
 import SmallButton from '../components/SmallButton';
 import BackArrow from '../components/BackArrow';
 import { useIsFocused } from "@react-navigation/native";
+import BigButton from '../components/BigButton';
 
 
 interface Props {
@@ -53,9 +54,7 @@ export default function EventsScreen(props: Props) {
     };
 
     const chooseDate = () => {
-      // console.log(date)
       setView("singleDay");
-      
       
     }
     //Step 1
@@ -72,7 +71,7 @@ export default function EventsScreen(props: Props) {
   
   //Step 2
   // Calender doesn't accept the array this converts datesToMark to a single object with multiple key value pairs inside to mark dates in the calender
-  let resultDates = datesToMark?.reduce(function(result, currentObject) {
+  let resultDates: Object = datesToMark?.reduce(function(result, currentObject) {
       for(let key in currentObject) {
           if (currentObject.hasOwnProperty(key)) {
               result[key] = currentObject[key];
@@ -82,9 +81,7 @@ export default function EventsScreen(props: Props) {
   }, {});
 
    function FilteredEvents(){
-    const date = "2023-02-01"
-    console.log(date)
-    let matchedDates = [];
+    let matchedDates: Array<EventData> = [];
     for(let group of groups){
       for(let event of group.events){
         if(new Date(event.date).toLocaleDateString("fr-CA", {
@@ -96,7 +93,7 @@ export default function EventsScreen(props: Props) {
             }
       }
     }
-      const finalEvents = matchedDates.map((event, index) => {
+      const finalEvents: JSX.Element[] = matchedDates.map((event, index) => {
         return <InfoBox header={event.eventName} key={index}>
         <View style={styles.filteredBox}>
           <Text>Activity: {event.activity}</Text>
@@ -115,29 +112,29 @@ export default function EventsScreen(props: Props) {
 
 
 
-  const eventList = groups?.map((group)=>  {
+  const eventList: JSX.Element[][] | undefined = groups?.map((group)=>  {
       return group.events.map((event, index) => {
-        return <InfoBox header={group.groupName} key={index}>
-        <View style={styles.textBox}>
-          <Text>Activity: {event.activity}</Text>
-          <Text>Location: {event.eventLocation}</Text>
-          <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
-            year: "numeric",
-            month: "short",
-            day: "2-digit",
-            weekday: "long"
-            })}</Text>
-        </View>
-      </InfoBox>
-      })
+        return (
+          <InfoBox header={group.groupName} key={index} boxHeight="80%" boxMarginBottom='7%' boxMarginTop='7%'>
+          <View style={styles.textBox}>
+            <Text>Activity: {event.activity}</Text>
+            <Text>Location: {event.eventLocation}</Text>
+            <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+              weekday: "long"
+              })}</Text>
+          </View>
+        </InfoBox>
+      )})
     })
 
-    
     return (
       <SafeAreaView style={[styles.containerList, view === "calendar" ? styles.containerCalendar: styles.containerList]}>
         {/* LIST VIEW */}
           {view === "list" ? <><View style={styles.calendarButtonBox}> 
-            <SmallButton title="Calendar View" onPress={toggleCalendarView} style={styles.button}/>
+            <BigButton title="Calendar" onPress={toggleCalendarView} style={styles.button}/>
           </View>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'space-evenly'}}>
            {eventList}
@@ -147,11 +144,11 @@ export default function EventsScreen(props: Props) {
 
           {view === "calendar" ? <View style={styles.outer}>
             <View style={styles.calendarButtonBox}> 
-            <SmallButton title="List View" onPress={toggleListView} style={styles.button}/>
+            <BigButton title="List View" onPress={toggleListView} style={styles.button}/>
           </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
-              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates} date={date}/>
+              <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates}/>
             </InfoBox>
             </View>
             </View>: ""}   
@@ -198,10 +195,9 @@ const styles = StyleSheet.create({
       marginTop: '5%'
     },
     textBox: {
-      
       justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: '15%'
+      paddingTop: '5%'
     },
     outer: {
       width: "100%",
