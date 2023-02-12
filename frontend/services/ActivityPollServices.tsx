@@ -53,3 +53,12 @@ export function getActivityPollDataByUserId(id: number): Promise<ActivityPollDat
             return response as ActivityPollData[];
         });
 }
+
+export function updatePollWithNewVote(pollId: number, payload:{[key: string]: number} ): Promise<Response> {
+    console.log(JSON.stringify(payload))
+	return fetch('http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/add-vote', {
+		method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+	})
+}

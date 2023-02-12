@@ -22,6 +22,8 @@ import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
 import SmallPlus from '../components/SmallPlus';
+import { updatePollWithNewVote } from '../services/ActivityPollServices';
+
 
 interface Props {
   user: number
@@ -183,9 +185,11 @@ export default function AllGroupsScreen(props: Props) {
         })
 
         function captureChosenVote(val: string){
+          let newData: Record<string, number> = {}; 
           for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
             if (val == option){
-              console.log(user_ids.length)
+              newData[option] = user
+            updatePollWithNewVote(activeGroupPoll?.id, newData)
             }
           }
         }

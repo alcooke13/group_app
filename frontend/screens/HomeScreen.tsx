@@ -97,6 +97,7 @@ export default function HomeScreen(props: Props) {
             minute:'2-digit'
         });
 
+
         return(
             <TouchableOpacity onPress={() => {
                 navigation.navigate('Groups', {
@@ -121,6 +122,11 @@ export default function HomeScreen(props: Props) {
             </TouchableOpacity>
         )
     });
+
+    function singleGroupView(){
+        setGroupView('singleGroupView')
+        return<AllGroupsScreen user={user} />
+        }
 
     const pollItems = polls?.map((poll, index) => {
         return(
