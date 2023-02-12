@@ -111,7 +111,7 @@ export default function NewEvent(props: Props) {
 
         return (
             <View style={styles.container}>
-                <BackgroundBox>
+                <BackgroundBox boxHeight={250} >
                     <View>
                         <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
                             What is your events name?
@@ -122,7 +122,7 @@ export default function NewEvent(props: Props) {
                                 onChangeText={(eventTitleText: string) => {
                                     titleValue = eventTitleText;
                                 }}
-                                onEndEditing={onEventTitleEnd}
+                                onEndEditing={()=>{onEventTitleEnd()}}
                             />
 
 
@@ -154,7 +154,7 @@ export default function NewEvent(props: Props) {
     function KnownDetails() {
         return (
             <View style={styles.container}>
-                <BackgroundBox>
+                <BackgroundBox boxHeight='70%' >
                     <View>
                         <View>
                             <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30}} >Select what you know</Text>
@@ -208,10 +208,9 @@ export default function NewEvent(props: Props) {
         return (
 
             <View style={styles.container}>
-                <View>
 
-                    <BackgroundBox >
-                        <View>
+                    <BackgroundBox boxHeight={250}   >
+                        <View style={{margin: 30}}>
                             <Text style={styles.questionTitle} >What is the date of your event?</Text>
                             <View style={{ width: '90%' }} >
                                 <TextInput
@@ -226,7 +225,6 @@ export default function NewEvent(props: Props) {
                             </View>
                         </View>
                     </BackgroundBox>
-                </View>
                 <View style={styles.buttonParent}>
                     <SmallButton title={"Next"} onPress={() => {
                         if (!dateAnswer) {
@@ -256,8 +254,8 @@ export default function NewEvent(props: Props) {
         return (
 
             <View style={styles.container}>
-                <BackgroundBox >
-                    <View style={{ flex: 1 }}>
+                <BackgroundBox boxHeight={250}  >
+                    <View style={{ margin: 30 }}>
                         <Text style={styles.questionTitle} > What is the activity for your event?</Text>
 
                         <TextInput
@@ -306,8 +304,8 @@ export default function NewEvent(props: Props) {
         return (
 
             <View style={styles.container}>
-                <BackgroundBox >
-                    <View style={{ flex: 1 }}>
+                <BackgroundBox boxHeight={250}  >
+                    <View style={{ margin: 30 }}>
                         <Text style={styles.questionTitle} > What is the location of your event?</Text>
 
                         <TextInput
@@ -370,7 +368,6 @@ export default function NewEvent(props: Props) {
 
         postEvent(newBundle).then((data)=> {
             setBundle(data)
-            console.log(data)
         })
 
         
@@ -392,8 +389,8 @@ export default function NewEvent(props: Props) {
         return (
             <View style={styles.container}>
 
-                <BackgroundBox>
-                    <View>
+                <BackgroundBox boxHeight='70%' >
+                    <View style={{margin: 20}}>
                         <Text style={styles.questionTitle}> Are you happy with the below details? </Text>
                         <Text style={styles.reviewText} >Event Title: {eventTitle}</Text> 
                         {dateProvided != "" ? <Text style={styles.reviewText} >Date: {dateProvided}</Text> : ""}
@@ -403,7 +400,9 @@ export default function NewEvent(props: Props) {
                     </View>
 
                 </BackgroundBox>
-                <View style={{flexDirection: 'row', padding: 15 }}>
+                <View style={styles.buttonParent}>
+
+                <View style={{flexDirection: 'row', padding: 15, marginBottom: '30%' }}>
                     <View style={{padding: 15}}>
 
                     <SmallButton title={"Yes"} onPress={() => { 
@@ -411,7 +410,7 @@ export default function NewEvent(props: Props) {
                         console.log(dateProvided)
                         console.log(activityProvided)
                         console.log(locationProvided)
-
+                        
                     }} ></SmallButton>
                     </View>
                     <View style={{padding: 15}}>
@@ -422,6 +421,7 @@ export default function NewEvent(props: Props) {
                 }} ></SmallButton>
 
                     </View>
+                </View>
 
 
 
