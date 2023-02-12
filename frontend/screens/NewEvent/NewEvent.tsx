@@ -38,7 +38,7 @@ export default function NewEvent(props: Props) {
     const [locationProvided, setLocation] = useState<string>("")
     const [review, setReview] = useState<boolean>(false)
     const [currentStage, updateStage] = useState<string>("Event Name")
-    const [bundle, setBundle] = useState<any>()
+    const [bundle, setBundle] = useState<EventData>()
 
     useEffect(() => {
 
@@ -62,6 +62,7 @@ export default function NewEvent(props: Props) {
                 updateStage("Details Known");
                 break;
             case "Details Known": case "Date Input": case "Activity Input": case "Location Input":
+                console.log(eventTitle)
                 if (detailsKnown.date) {
                     updateStage("Date Input");
                     onDetailTickBoxPress("date");
@@ -81,10 +82,10 @@ export default function NewEvent(props: Props) {
 
             case "Review": 
                 if (!review) {
-                    updateStage("Event name");
                     setDate("");
                     setActivity("");
                     setLocation("");
+                    updateStage("Event name");
                     break;
                 } 
                 else{
@@ -104,9 +105,7 @@ export default function NewEvent(props: Props) {
     // Step 1: Ask user for the Events name
     const EventName = () => {
         let titleValue: string;
-
-
-        const onTitleEnd = () => {
+        const onEventTitleEnd = () => {
             setEventTitle(titleValue)
         }
 
@@ -120,10 +119,10 @@ export default function NewEvent(props: Props) {
                         <View>
                             <TextInput
                                 style={styles.input}
-                                onChangeText={(text) => {
-                                    titleValue = text;
+                                onChangeText={(eventTitleText: string) => {
+                                    titleValue = eventTitleText;
                                 }}
-                                onEndEditing={onTitleEnd}
+                                onEndEditing={onEventTitleEnd}
                             />
 
 
@@ -137,6 +136,7 @@ export default function NewEvent(props: Props) {
                             alert('Please enter an event name');
                         }
                         else {
+                            setEventTitle(titleValue)
                             StageController()
                         }
                     }} ></SmallButton>
@@ -183,6 +183,11 @@ export default function NewEvent(props: Props) {
                 </BackgroundBox>
                 <View style={styles.buttonParent}>
                     <SmallButton title={"Next"} onPress={() => {
+                        setActivity("")
+                        setLocation("")
+                        setDate("")
+
+
                         StageController();
 
 
@@ -196,6 +201,9 @@ export default function NewEvent(props: Props) {
 
     function DateQuestion() {
         let dateAnswer: string;
+        const onDateEnd = () => {
+            setDate(dateAnswer)
+        }
 
         return (
 
@@ -211,8 +219,8 @@ export default function NewEvent(props: Props) {
                                     onChangeText={(text) => {
                                         dateAnswer = text;
                                     }}
-                                    onEndEditing={() => {
-                                        // setDate(dateAnswer)
+                                    onEndEditing={()=>{
+                                        onDateEnd()
                                     }}
                                 />
                             </View>
@@ -240,6 +248,9 @@ export default function NewEvent(props: Props) {
 
     function ActivityQuestion() {
         let activityAnswer: string;
+        const onActivityEnd = () => {
+            setActivity(activityAnswer)
+        }
 
 
         return (
@@ -255,6 +266,7 @@ export default function NewEvent(props: Props) {
                                 activityAnswer = text;
                             }}
                             onEndEditing={() => {
+                                onActivityEnd();
                             }}
                         />
 
@@ -286,6 +298,10 @@ export default function NewEvent(props: Props) {
 
     function LocationQuestion() {
         let locationAnswer: string;
+        const onLocationEnd = () => {
+            setLocation(locationAnswer)
+        }
+
 
         return (
 
@@ -299,7 +315,8 @@ export default function NewEvent(props: Props) {
                             onChangeText={(text) => {
                                 locationAnswer = text;
                             }}
-                            onEndEditing={() => {
+                            onEndEditing={()=>{
+                                onLocationEnd();
                             }}
                         />
 
@@ -324,8 +341,7 @@ export default function NewEvent(props: Props) {
         const newBundle: any = { ...bundle}
         newBundle.eventName = eventTitle
         
-        newBundle.group.id = 1;
-        newBundle.group.title = "Avengers";
+        newBundle.group = {id: 1, title: "Avengers"};
 
         // test purposes
         
@@ -335,7 +351,7 @@ export default function NewEvent(props: Props) {
 
         }
         if(dateProvided){
-            newBundle.date = dateProvided;
+            newBundle.date = "2020-10-08T13:30";
         }
         if(locationProvided){
             newBundle.eventLocation = locationProvided; 
@@ -350,6 +366,7 @@ export default function NewEvent(props: Props) {
         if(!locationProvided){
             newBundle.eventLocation = null; 
         }
+
 
         postEvent(newBundle).then((data)=> {
             setBundle(data)
@@ -378,6 +395,7 @@ export default function NewEvent(props: Props) {
                 <BackgroundBox>
                     <View>
                         <Text style={styles.questionTitle}> Are you happy with the below details? </Text>
+                        <Text style={styles.reviewText} >Event Title: {eventTitle}</Text> 
                         {dateProvided != "" ? <Text style={styles.reviewText} >Date: {dateProvided}</Text> : ""}
                         {activityProvided != "" ? <Text style={styles.reviewText}>Activity: {activityProvided}</Text> : ""}
                         {locationProvided != "" ? <Text style={styles.reviewText}>Location {locationProvided}</Text> : ""}
