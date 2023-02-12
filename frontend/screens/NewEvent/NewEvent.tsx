@@ -15,21 +15,20 @@ import {postEvent} from '../../services/EventServices'
 
 // const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
-interface Props {
-    // group_id: number
-
-
-
-
+export interface GroupInfoProps {
+    singleGroupId: string;
+    singleGroupName: string;
+    setState: React.Dispatch<React.SetStateAction<string>>;
+    
 }
 
 
 
 
 
-export default function NewEvent(props: Props) {
+export default function NewEvent(props: GroupInfoProps) {
     
-    const { } = props;
+    
 
     const [eventTitle, setEventTitle] = useState('');
     const [detailsKnown, updateDetailsKnown] = useState<{ [key: string]: boolean }>({ 'date': false, 'activity': false, 'location': false })
@@ -336,10 +335,11 @@ export default function NewEvent(props: Props) {
     }
 
     function prepareBundle(){
+        const {singleGroupId, singleGroupName, setState } = props;
         const newBundle: any = { ...bundle}
         newBundle.eventName = eventTitle
         
-        newBundle.group = {id: 1, title: "Avengers"};
+        newBundle.group = {id: props.singleGroupId, title: props.singleGroupName};
 
         // test purposes
         
@@ -349,7 +349,7 @@ export default function NewEvent(props: Props) {
 
         }
         if(dateProvided){
-            newBundle.date = "2020-10-08T13:30";
+            newBundle.date = "2023-10-08T13:30";
         }
         if(locationProvided){
             newBundle.eventLocation = locationProvided; 
@@ -369,6 +369,8 @@ export default function NewEvent(props: Props) {
         postEvent(newBundle).then((data)=> {
             setBundle(data)
         })
+
+        setState("singlegroup")
 
         
         

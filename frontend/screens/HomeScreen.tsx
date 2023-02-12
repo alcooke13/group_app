@@ -77,6 +77,7 @@ export default function HomeScreen(props: Props) {
             });
         }
     }, [isFocused]);
+    
 
     const eventItems = events?.map((event, index) => {
 
@@ -131,7 +132,7 @@ export default function HomeScreen(props: Props) {
     return (
         <SafeAreaView style={styles.container}>
 
-            {/* <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
+            <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
 
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {eventItems}
@@ -142,8 +143,8 @@ export default function HomeScreen(props: Props) {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {pollItems}
                 </ScrollView>
-            </InfoBox> */}
-            <NewEvent></NewEvent>
+            </InfoBox>
+           
         </SafeAreaView>
     );
 }
