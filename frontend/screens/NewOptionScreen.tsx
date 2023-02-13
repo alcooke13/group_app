@@ -65,7 +65,7 @@ export default function(props: Props){
         return (
         <>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => console.log("back")}/>
+                <BackArrow onPress={() => setState("singlegroup")}/>
                 <MenuText>Activity Poll</MenuText>
                 </View>
            
@@ -91,7 +91,7 @@ export default function(props: Props){
         return (
         <>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => console.log("back")}/>
+                <BackArrow onPress={() => setState("singlegroup")}/>
                 <MenuText>Location Poll</MenuText>
                 </View>
            
@@ -119,6 +119,24 @@ export default function(props: Props){
         hour: '2-digit',
         minute: '2-digit'
     });
+
+    const detailsReset = () => {
+        if(pollType === "Activity"){
+            setSavedActivityPoll("");
+            setPollView("activityOption");
+        }
+
+        if(pollType === "Location"){
+            setSavedLocationPoll("");
+            setPollView("locationOption");
+        }
+        if(pollType === "Date"){
+            setSavedDated("");
+            setSavedTime("");
+            setPollView("calenderOption")
+
+        }
+    }
 
     const ConfirmationScreen = () => {
         function prepareBundle(){
@@ -184,7 +202,7 @@ export default function(props: Props){
             <View style={styles.backButtonHeaderContainer}>
                 <View style={styles.buttonContainer}>
              <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
-             <SmallButton title='Go Back' onPress={changeViewToDay}></SmallButton>
+             <SmallButton title='Go Back' onPress={() => detailsReset()}></SmallButton>
              </View>
              </View>
            </View>  
@@ -206,6 +224,7 @@ export default function(props: Props){
 
             {pollView === "calenderOption" ? 
             <View style={styles.outer}>
+            <BackArrow onPress={() => setState("singlegroup")}/>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
             <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>
@@ -217,7 +236,7 @@ export default function(props: Props){
 
         {pollView === "dayOption" ? <>
         <View style={styles.backButtonHeaderContainer}>
-            <BackArrow onPress={() => console.log("back")}/>
+            <BackArrow onPress={() => changeViewToCalender()}/>
             <MenuText>Date Poll</MenuText>
         </View>
         <View>
