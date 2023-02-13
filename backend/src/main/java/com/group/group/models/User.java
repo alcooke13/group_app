@@ -128,6 +128,10 @@ public class User {
         this.friends.add(user);
     }
 
+    public void removeFriend(User user){
+        this.friends.remove(user);
+    }
+
     public void setGroups(List<Group> groups) {
         this.groups = groups;
     }

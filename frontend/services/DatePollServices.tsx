@@ -68,7 +68,6 @@ export function updateDatePollDataWithNewOption(
     }
   ).then((response) => response.json())
   .then((response) => {
-    console.log(response)
     return response as DatePollData;
   })
 }

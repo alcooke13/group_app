@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,4 +52,22 @@ public class LocationPollController {
         locationPollRepository.save(updatePollVoters);
         return ResponseEntity.ok(updatePollVoters);
     }
+
+    @PutMapping("/location-polls/{id}/add-option")
+    public ResponseEntity<LocationPoll> addOptionToLocationPoll(
+            @PathVariable long id,
+            @RequestBody HashMap<String, ArrayList<Long>> body ) {
+
+        LocationPoll updatePollOptions = locationPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+
+        for(String key : body.keySet()){
+            updatePollOptions.addOption(key);
+        };
+        locationPollRepository.save(updatePollOptions);
+        return ResponseEntity.ok(updatePollOptions);
+    }
+
 }

@@ -72,3 +72,20 @@ export function updateActivityPollWithNewVote(
         return response as ActivityPollData
     })
 }
+
+export function updateActivityPollDataWithNewOption(
+    activityPollId: number,
+    payload: { [key: string]: [] }
+  ): Promise<ActivityPollData> {
+    return fetch(
+      "http://127.0.0.1:8080/activity-polls/" + activityPollId.toString() + "/add-option",
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((response) => response.json())
+    .then((response) => {
+      return response as ActivityPollData;
+    });
+}

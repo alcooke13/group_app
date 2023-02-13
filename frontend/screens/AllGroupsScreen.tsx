@@ -17,7 +17,7 @@ import BurgerIcon from '../components/BurgerIcon';
 import { DatePollData, getDatePollDataByGroupId } from '../services/DatePollServices';
 import { getLocationPollDataByGroupId, LocationPollData } from '../services/LocationPollServices';
 import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
-import DatePollButton from '../components/DatePollButton';
+import ButtonSelector from '../components/ButtonSelector';
 import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
@@ -25,8 +25,7 @@ import SmallPlus from '../components/SmallPlus';
 import { updateActivityPollWithNewVote } from '../services/ActivityPollServices';
 import { updateDatePollWithNewVote } from '../services/DatePollServices';
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices';
-
-
+import NewOptionScreen from './NewOptionScreen';
 
 interface Props {
   user: number
@@ -130,9 +129,14 @@ export default function AllGroupsScreen(props: Props) {
     
     // const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
 
-    function findActivePoll(groupPolls){
-    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = groupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
-    setActiveGroupPoll(upcomingPoll);
+
+    function addNewOption(){
+      setGroupView("addOption")
+    }
+
+    function findActivePoll(allGroupPolls){
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+      setActiveGroupPoll(upcomingPoll);
     }
 
     function SingleGroupDetails(){
@@ -177,16 +181,16 @@ export default function AllGroupsScreen(props: Props) {
 
         const getOptions = availableOptions.map(function(val, index){
           return (
-            <>
-              <DatePollButton 
-                  key={index} 
-                  dateOption={val} 
-                  onPress={()=>captureChosenVote(val)}>
-              </DatePollButton>
+            <View style={styles.pollOption}>
+              <ButtonSelector 
+                key={index}
+                option={val}
+                onPress={() => captureChosenVote(val)} 
+                selected={false}></ButtonSelector>
               <Text style={styles.voteCounter}>
                 2
               </Text>
-            </>
+            </View>
           )
         })
 
@@ -247,6 +251,13 @@ export default function AllGroupsScreen(props: Props) {
       ) 
     }
 
+    function AddNewOptionPollView(){
+      return (
+        <>
+          <NewOptionScreen user={user} singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/>
+        </>
+      )
+    }
 
     function AddEventView(){
       return (
@@ -264,10 +275,10 @@ export default function AllGroupsScreen(props: Props) {
             <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
             <BurgerIcon></BurgerIcon>
           </View>
-          <InfoBox header='Next Event' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
+          <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
             <SingleGroupDetails/>
           </InfoBox>
-          <InfoBox header={activeGroupPoll.event.eventName}>
+          <InfoBox header={activeGroupPoll.event.eventName} smallPlus={<SmallPlus onPress={() => addNewOption()}/>}>
             <View>
               <SingleGroupPollDetails/>
             </View>
@@ -289,38 +300,46 @@ export default function AllGroupsScreen(props: Props) {
           {groupView === "addgroupview" ? <AddGroupView/>: ""}
           {groupView === "newEvent" ? <AddEventView/>: ""}
           {groupView === "loading" ? "" : ""}
+          {groupView === "addOption" ? <AddNewOptionPollView/> : ""}
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#25242B',
+  container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#25242B',
 
-      },
-      title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'white'
-      },
-      scroll: {
-        flex: 1,
-        width:'90%',
-      },
-      header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignContent:'space-between',
-        width:"100%",
-      justifyContent: 'space-around',
-
-      },
-      voteCounter: {
-        color: "#FF914D",
-        fontSize: 36,
-        alignItems:'center'
-    }
-  });
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white'
+  },
+  scroll: {
+    flex: 1,
+    width:'90%',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent:'space-between',
+    width:"100%",
+  justifyContent: 'space-around',
+  },
+  voteCounter: {
+    color: "#FF914D",
+    fontSize: 36,
+    alignItems:'center',
+    marginLeft: 15,
+  },
+  pollOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 30,
+    paddingTop: 5
+  }
+});
