@@ -232,6 +232,13 @@ export default function AllGroupsScreen (props: Props) {
 
     for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
       allOptionsMap.set(option, user_ids)
+
+    function AddNewOptionPollView(){
+      return (
+        <View>
+          <NewOptionScreen user={user} setState={setGroupView}/>
+        </View>
+      )
     }
 
     
@@ -324,6 +331,16 @@ export default function AllGroupsScreen (props: Props) {
           </View>
         </InfoBox>
       </>
+      
+        <SafeAreaView style={styles.container}>
+          {groupView === "allgroups" ? <AllGroupView/> : ""}
+          {groupView==="singlegroup"? <SingleGroupView/>: ""}
+          {groupView === "addgroupview" ? <AddGroupView/>: ""}
+          {groupView === "newEvent" ? <AddEventView/>: ""}
+          {groupView === "loading" ? "" : ""}
+          {groupView === "addOption" ? <AddNewOptionPollView /> : ""}
+        </SafeAreaView>
+
     )
   }
 

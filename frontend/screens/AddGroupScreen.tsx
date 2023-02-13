@@ -26,7 +26,7 @@ export default function AddGroupScreen(props: Props) {
     const friendsAdded = useRef<Array<number>>([]);
 
     useEffect(() => {
-        if (isFocused) {
+        if (!isFocused) {
             getFriendsByUserId(user)
             .then((userFriends) => {
                 setFriends(userFriends);
