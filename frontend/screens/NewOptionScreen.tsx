@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput} from 'react-native';
+import { View, StyleSheet, SafeAreaView, TextInput, Text} from 'react-native';
 import { useState } from 'react';
 import BackArrow from '../components/BackArrow';
 import TextHeader from '../components/TextHeader';
@@ -22,7 +22,7 @@ interface Props {
 export default function(props: Props){
     const {user, polltype} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
-    const [pollView, setPollView] = useState<string>("activityOption");
+    const [pollView, setPollView] = useState<string>("confirmation"); // This will need to change depending on the polltype
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
     const [savedDate, setSavedDated] = useState<string>("");
@@ -30,17 +30,21 @@ export default function(props: Props){
     const [dateBundle, setDateBundle] = useState<DatePollData>();
     const [locationBundle, setLocationBundle] = useState<LocationPollData>();
     const [activityBundle, setActivityBundle] = useState<ActivityPollData>();
+    const [pollType, setPollType] = useState("Activity");
 
     // Change state functions
-    const changeViewToLocation = () => {
-        setPollView("locationOption")
+    const changeFromActivityToConfirmation = () => {
+        if(pollType === "Activity")
+        setPollView("confirmation")
     }
 
-    const changeViewToActivity = () => {
-        setPollView("activityOption")
+    const changeFromLocationToConfirmation = () => {
+        if(pollType === "Location")
+        setPollView("confirmation")
     }
 
     const changeViewToCalender = () => {
+        if(pollType === "Date")
         setPollView("calenderOption")
     }
 
@@ -67,14 +71,14 @@ export default function(props: Props){
             <View style={styles.innerContainer}>
             <BackgroundBox  boxHeight='35%' >
                 <View style={styles.textBox}>
-                    <TextHeader>Option Input</TextHeader>
+                    <TextHeader>Add Activity Option</TextHeader>
                     <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
                                     activityValue = inputText;
                                 }}
                                 onEndEditing={onActivityInputEnd}/>
                 </View>
             </BackgroundBox>
-            <SmallButton title="Add Option" onPress={changeViewToLocation}/></View>
+            <SmallButton title="Add Option" onPress={changeFromActivityToConfirmation}/></View>
             </>
     )}
 
@@ -101,7 +105,7 @@ export default function(props: Props){
                 </View>
             </BackgroundBox>
 
-            <SmallButton title="Add Option" onPress={changeViewToCalender}/></View>
+            <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/></View>
             </>
     )};
 
@@ -143,27 +147,46 @@ export default function(props: Props){
            
             })
             } 
+
+            // setSavedActivityPoll("");
+            // setSavedLocationPoll("");
+            // setSavedDated("");
+            // setSavedTime("");
         
         }
         return (
-            <BackgroundBox>
-                <><SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
-                <SmallButton title='Go Back' onPress={changeViewToDay}></SmallButton></>
+            <View>
+            <BackgroundBox boxHeight={250} boxWidth={250}>
+               <>
+                <Text style={styles.title}>Check Details</Text>
+                {savedActivityPoll !== "" ? <Text style={styles.reviewText}>Activity: {savedActivityPoll}</Text> : ""}
+                {savedLocationPoll !== "" ? <Text style={styles.reviewText}>Location: {savedLocationPoll}</Text> : ""}
+                {savedTime !== "" && savedDate ? <>
+                <Text style={styles.reviewText}>Time: {savedTime}</Text>
+                <Text style={styles.reviewText}>Date: {savedDate}</Text>
+                </> : ""}
+                </>
             </BackgroundBox>
+            <View style={styles.backButtonHeaderContainer}>
+                <View style={styles.buttonContainer}>
+             <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
+             <SmallButton title='Go Back' onPress={changeViewToDay}></SmallButton>
+             </View>
+             </View>
+           </View>  
         )
     }
     
     return (
         // container
-        <SafeAreaView style={styles.container}> 
-            
+        <>  
             {/* ACTIVITY */}
            
-            {pollView === "activityOption" ? <ActivityPollInput></ActivityPollInput> : ""} 
+            {pollView === "activityOption" ? <ActivityPollInput></ActivityPollInput>: ""} 
             
             {/* LOCATION */}
 
-            {pollView === "locationOption" ? <LocationPollInput></LocationPollInput> : ""} 
+            {pollView === "locationOption" ? <><LocationPollInput></LocationPollInput></>: ""} 
 
             {/* DATEPOLL CALENDER */}
 
@@ -184,31 +207,25 @@ export default function(props: Props){
             <MenuText>Date Poll</MenuText>
         </View>
         <View>
-            <TimeOfDayButton timeOfDayOption='Morning' onPress={() => setSavedTime("T09:00")}/>
-            <TimeOfDayButton timeOfDayOption='Afternoon' onPress={() => setSavedTime("T12:00")}/>
-            <TimeOfDayButton timeOfDayOption='Evening' onPress={() => setSavedTime("T18:00")}/>
+            <TimeOfDayButton timeOfDayOption='Morning' selected={savedTime === "T09:00" ? true : false} onPress={() => setSavedTime("T09:00")}/>
+            <TimeOfDayButton timeOfDayOption='Afternoon' selected={savedTime === "T12:00" ? true : false} onPress={() => setSavedTime("T12:00")}/>
+            <TimeOfDayButton timeOfDayOption='Evening' selected={savedTime === "T09:00" ? true : false} onPress={() => setSavedTime("T18:00")}/>
         </View>
         <View>
         <SmallButton title="Done" onPress={() => changeConfirmationScreen()}/>
         </View>
         </> : ""}
-
-
         {pollView === "confirmation" ? <>
         <ConfirmationScreen />
         </> : ""}
 
-
-        </SafeAreaView>
-
-
+        </>
     )};
 
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#25242B",
-        flex:1,
     },
 
     backButtonHeaderContainer: {
@@ -241,22 +258,37 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
       },
-      button: {
-        backgroundColor: 'red'
-      },
       filteredBox: {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '10%',
-      
+ 
       },
+
       inputBox: {
-        backgroundColor: "#fff",
-        padding: 30,
-        width: "80%",
-        marginTop: '5%',
-        color: "#000",
-      }
+        marginTop: "10%",
+        height: 40,
+        borderWidth: 1,
+        padding: 10,
+        width: '80%',
+        backgroundColor: 'white',
+        alignSelf: 'center'
+      },
+      title: {
+        fontSize: 24,
+        padding: 15,
+        textAlign: 'center'
+    },
+    reviewText: {
+        fontSize: 24,
+        padding: 10,
+        marginTop: '5%'
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        padding: 20,
+    }
+    
 
 
     })
