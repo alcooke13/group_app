@@ -19,6 +19,18 @@ return fetch('http://127.0.0.1:8080/users', {
     });
 }
 
+export function getUserDataByUserId(id: number): Promise<UserData> {
+    return fetch('http://127.0.0.1:8080/users/'  + id.toString(), {
+        method: 'GET',
+        // headers: {
+        // },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as UserData;
+        });
+    }
+
 export function getFriendsByUserId(id: number): Promise<UserData[]> {
     return fetch('http://127.0.0.1:8080/users?friends_of_user_id=' + id.toString(), {
         method: 'GET',
