@@ -20,7 +20,7 @@ import SmallPlus from '../components/SmallPlus';
 import { updateActivityPollWithNewVote } from '../services/ActivityPollServices';
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices';
 import NewOptionScreen from './NewOptionScreen';
-import { EventData } from '../services/EventServices';
+import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices';
 
 interface Props {
   user: number
@@ -77,33 +77,45 @@ export default function AllGroupsScreen(props: Props) {
       const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
       const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
 
+
+      // function mostPollVotes(poll: DatePollData | ActivityPollData | LocationPollData) {
+      //   let winningOption;
+
+      //   for (const [option, user_ids] of Object.entries(poll?.options)) {
+      //   }
+
+      // }
+
       if (pastPolls.length != 0) {
         pastPolls.forEach((poll) => {
           if (poll?.type === "Date" && !upcomingEvent.date) {
-            
-          } 
+            updateEventDate(upcomingEvent.id, {'new': "2023-02-03T17:00:00"})
+          } else if (poll?.type === "Activity" && !upcomingEvent.activity) {
+            updateEventActivity(upcomingEvent.id, {'new': "cycling"})
+          } else if (poll?.type === "Location" && !upcomingEvent.eventLocation) {
+            updateEventLocation(upcomingEvent.id, {'new': "bristol"})
+          }
         })
       }
-
 
       console.log("date: ", upcomingEvent?.date)
       console.log("type: ", upcomingPoll?.type)
 
       if (upcomingPoll) {
         setActiveGroupPoll(upcomingPoll);
-      } else if (!upcomingEvent?.date && upcomingPoll?.type !== "Date") {
+      } else if (!upcomingEvent?.date) {
         postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
         .then((datePoll) => {
           console.log("date poll: ", datePoll)
           setActiveGroupPoll(datePoll);
         });
-      } else if (!upcomingEvent?.activity && upcomingPoll?.type !== "Activity") {
+      } else if (!upcomingEvent?.activity) {
         postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
         .then((activityPoll) => {
           console.log("activity poll: ", activityPoll)
           setActiveGroupPoll(activityPoll);
         });
-      } else if (!upcomingEvent?.eventLocation && upcomingPoll?.type !== "Location") {
+      } else if (!upcomingEvent?.eventLocation) {
         postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
         .then((locationPoll) => {
           console.log("location poll: ", locationPoll)
