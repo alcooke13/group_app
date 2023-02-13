@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ActivityPollController {
@@ -22,43 +23,35 @@ public class ActivityPollController {
 
     @GetMapping(value = "/activity-polls")
     public ResponseEntity<List<ActivityPoll>> getAllActivityPolls(
-            @RequestParam(name="user_id", required = false) Long user_id,
-            @RequestParam(name="group_id", required = false) Long group_id)
-    {
+            @RequestParam(name = "user_id", required = false) Long user_id,
+            @RequestParam(name = "group_id", required = false) Long group_id) {
         if (user_id != null & group_id == null) {
             return new ResponseEntity<>(activityPollRepository.findActivityPollByEventGroupUsersId(user_id), HttpStatus.OK);
         } else if (user_id == null & group_id != null) {
             return new ResponseEntity<>(activityPollRepository.findActivityPollByEventGroupId(group_id), HttpStatus.OK);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(activityPollRepository.findAll(), HttpStatus.OK);
         }
     }
 
     @GetMapping(value = "/activity-polls/{id}")
-    public ResponseEntity getActivityPoll(@PathVariable Long id){
+    public ResponseEntity getActivityPoll(@PathVariable Long id) {
         return new ResponseEntity<>(activityPollRepository.findById(id), HttpStatus.OK);
     }
 
+
     @PutMapping("/activity-polls/{id}/add-vote")
-    public ResponseEntity<ActivityPoll> addVoteToPoll(
+    public ResponseEntity<ActivityPoll> addVoterToActivityOption(
             @PathVariable long id,
-            @RequestBody ActivityPoll body ){
+            @RequestBody HashMap<String, Long> body ) {
 
-        ActivityPoll updatePoll = activityPollRepository
+        ActivityPoll updatePollVoters = activityPollRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Poll Not Found: " + id));
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
 
-//        HashMap<String, ArrayList<Long>> options  = updatePoll.getOptions();
-
-        updatePoll.addOption("walk");
-        updatePoll.addUserToOption("walk", 30L);
-
-
-        activityPollRepository.save(updatePoll);
-
-        return ResponseEntity.ok(updatePoll);
+        updatePollVoters.addUserToOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+        activityPollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
     }
 
     @PutMapping("/activity-polls/{id}/add-option")
@@ -80,4 +73,5 @@ public class ActivityPollController {
 
 
 }
+
 

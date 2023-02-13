@@ -16,6 +16,7 @@ export interface DatePollData {
             id: number
         }
     }
+    type:string
 }
 
 export function getDatePollData(): Promise<DatePollData[]> {
@@ -68,5 +69,23 @@ export function updateDatePollDataWithNewOption(
   ).then((response) => response.json())
   .then((response) => {
     return response as DatePollData;
-  });
+  })
+}
+
+export function updateDatePollWithNewVote(
+  pollId: number, 
+  payload:{[key: string]: number} 
+  ): Promise <DatePollData> {
+return fetch(
+      'http://127.0.0.1:8080/date-polls/' + pollId.toString() + '/add-vote', 
+  {
+  method: 'PUT',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' }
+}
+  ).then ((response) => response.json())
+  .then ((response) => {
+      console.log(response)
+      return response as DatePollData
+  })
 }

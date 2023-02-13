@@ -46,7 +46,7 @@ public abstract class Poll {
         this.options.put(option, new ArrayList<Long>());
     }
 
-    public void addUserToOption(Object option, Long user_id) {
+    public void addUserToOption(String option, Long user_id) {
         this.options.get(option).add(user_id);
     }
 

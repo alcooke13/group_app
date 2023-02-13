@@ -1,5 +1,6 @@
 package com.group.group.controllers;
 
+import com.group.group.models.ActivityPoll;
 import com.group.group.models.DatePoll;
 import com.group.group.models.Group;
 import com.group.group.models.User;
@@ -42,26 +43,6 @@ public class DatePollController {
     }
 
 
-    @PutMapping("/date-polls/{id}/add-vote")
-    public ResponseEntity<DatePoll> addVoteToPoll(
-            @PathVariable long id,
-            @RequestBody DatePoll body ){
-
-        DatePoll updatePoll = datePollRepository
-                .findById(id)
-                .orElseThrow(() -> new RuntimeException("Poll Not Found: " + id));
-
-        HashMap<String, ArrayList<Long>> options  = updatePoll.getOptions();
-
-        List optionToUpdate = options.get("hello");
-
-        updatePoll.addUserToOption(optionToUpdate, 30L);
-
-        datePollRepository.save(updatePoll);
-
-        return ResponseEntity.ok(updatePoll);
-    }
-
     @PutMapping("/date-polls/{id}/add-option")
     public ResponseEntity<DatePoll> addOptionToDatePoll(
             @PathVariable long id,
@@ -79,5 +60,20 @@ public class DatePollController {
         return ResponseEntity.ok(updatePollOptions);
     }
 
+    @PutMapping("/date-polls/{id}/add-vote")
+    public ResponseEntity<DatePoll> addVoterToDateOption(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
 
+        DatePoll updatePollVoters = datePollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+        updatePollVoters.addUserToOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+        datePollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
+    }
 }
+
+
+

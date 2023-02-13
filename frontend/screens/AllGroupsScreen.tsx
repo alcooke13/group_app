@@ -22,6 +22,9 @@ import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
 import SmallPlus from '../components/SmallPlus';
+import { updateActivityPollWithNewVote } from '../services/ActivityPollServices';
+import { updateDatePollWithNewVote } from '../services/DatePollServices';
+import { updateLocationPollWithNewVote } from '../services/LocationPollServices';
 import NewOptionScreen from './NewOptionScreen';
 
 interface Props {
@@ -50,7 +53,7 @@ export default function AllGroupsScreen(props: Props) {
       ],
     }; 
 
-    const [groups, setGroup] = useState<GroupData[]>();
+    const [groups, setGroups] = useState<GroupData[]>();
     const [singleGroup, setSingleGroup] = useState(initialState);
     const [groupView, setGroupView] = useState("loading");
     const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
@@ -81,7 +84,8 @@ export default function AllGroupsScreen(props: Props) {
 
         getGroupData()
         .then((userGroups) => {
-          setGroup(userGroups);
+          setGroups(userGroups);
+          console.log(groups)
         })
       }
     }, [isFocused]);
@@ -122,6 +126,9 @@ export default function AllGroupsScreen(props: Props) {
     function addNewEvent(){
       setGroupView("newEvent")
     }
+    
+    // const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+
 
     function addNewOption(){
       setGroupView("addOption")
@@ -188,15 +195,50 @@ export default function AllGroupsScreen(props: Props) {
         })
 
         function captureChosenVote(val: string){
-          for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){
+          let chosenOption : string = val;
+          let voter : number = user;
+          let newData: {[key: string]: number }  = {} 
+        
+          for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){ 
             if (val == option){
-              console.log(user_ids.length)
+              chosenOption= val
             }
           }
-        }
-      
+
+          if (activeGroupPoll.type == "Location") {
+            newData[chosenOption]  = voter;
+          updateLocationPollWithNewVote(activeGroupPoll?.id, newData)
+        } else if (activeGroupPoll.type == "Activity"){
+          newData[chosenOption]  = voter;
+          updateActivityPollWithNewVote(activeGroupPoll?.id, newData)
+        } else if(activeGroupPoll.type == "Date") {
+          let dateoption = chosenOption.toString();
+          newData[chosenOption] = voter;
+        };
+      }
         return getOptions
-    }
+      }
+
+    //   function captureChosenVote(val: string){
+    //     let chosenOption : string = val;
+    //     let voters : number[] = []
+    //     for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)){
+    //       user_ids.forEach(id => {
+    //         voters.push(id)
+    //       });
+    //     for (const [option, user_ids] of Object.entries(activeGroupPoll.options)){ 
+    //       if (val == option){
+    //         chosenOption= val
+    //       }
+    //     }
+    //     let newData: {[key: string]: [value: number] }  = {} 
+    //     newData[chosenOption]  = voters;
+    //     updatePollWithNewVote(activeGroupPoll?.id, newData)
+    //     console.log(newData)
+    //   }
+    // }
+      
+  
     
 
     function AllGroupView(){

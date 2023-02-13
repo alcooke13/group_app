@@ -16,6 +16,7 @@ export interface ActivityPollData {
             id: number
         }
     }
+    type:string
 }
 
 export function getActivityPollData(): Promise<ActivityPollData[]> {
@@ -52,6 +53,24 @@ export function getActivityPollDataByUserId(id: number): Promise<ActivityPollDat
         .then((response) => {
             return response as ActivityPollData[];
         });
+}
+
+export function updateActivityPollWithNewVote(
+    pollId: number, 
+    payload:{[key: string]: number} 
+    ): Promise <ActivityPollData> {
+	return fetch(
+        'http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/add-vote', 
+    {
+		method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+	}
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as ActivityPollData
+    })
 }
 
 export function updateActivityPollDataWithNewOption(

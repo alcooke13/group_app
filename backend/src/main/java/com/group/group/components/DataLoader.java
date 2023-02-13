@@ -129,7 +129,7 @@ import java.time.LocalDateTime;
             eventRepository.save(girlsNightJan);
             eventRepository.save(avengersassemble);
 
-            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023,3,5,17,0), tonysBirthday);
+            DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023,9,5,17,0), tonysBirthday);
             DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
             DatePoll datePoll3 = new DatePoll(LocalDateTime.of(2023,3,2,17,0), girlsNightFeb);
             
@@ -137,7 +137,7 @@ import java.time.LocalDateTime;
             datePollRepository.save(datePoll2);
             datePollRepository.save(datePoll3);
 
-            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023,3,5,17,0), tonysBirthday);
+            ActivityPoll activityPoll1 = new ActivityPoll(LocalDateTime.of(2023,2,19,17,0), tonysBirthday);
             ActivityPoll activityPoll2 = new ActivityPoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
             ActivityPoll activityPoll3 = new ActivityPoll(LocalDateTime.of(2023,3,2,17,0), girlsNightFeb);
 
@@ -180,8 +180,14 @@ import java.time.LocalDateTime;
             activityPoll1.addUserToOption("hike",2L);
             activityPoll1.addUserToOption("hike",3L);
 
+            activityPoll3.addOption("pub");
+            activityPoll3.addOption("walk");
+            activityPoll3.addUserToOption("pub",4L);
+            activityPoll3.addUserToOption("walk",5L);
+            activityPoll3.addUserToOption("walk",6L);
+
             activityPollRepository.save(activityPoll1);
-            activityPollRepository.save(activityPoll1);
+            activityPollRepository.save(activityPoll3);
 
             locationPoll1.addOption("Edinburgh");
             locationPoll1.addUserToOption("Edinburgh", 1L);
