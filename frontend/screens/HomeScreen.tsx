@@ -14,8 +14,6 @@ import NewEvent from './NewEvent/NewEvent';
 import AllGroupsScreen from './AllGroupsScreen';
 import navigation from '../navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import NewOptionScreen from './NewOptionScreen';
-
 
 interface Props {
     user: number

@@ -11,22 +11,27 @@ import TimeOfDayButton from '../components/TimeOfDayButton';
 import CalendarOption from '../components/CalenderOption';
 import { updateDatePollDataWithNewOption, DatePollData } from '../services/DatePollServices';
 import { updateLocationPollDataWithNewOption, LocationPollData } from '../services/LocationPollServices';
+import { updateActivityPollDataWithNewOption, ActivityPollData } from '../services/ActivityPollServices';
 
 
 interface Props {
     user: number
+    singleGroupId: string;
+    singleGroupName: string;
+    setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function(props: Props){
-    const {user} = props;
+    const {user, singleGroupId, singleGroupName, setState} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
     const [pollView, setPollView] = useState<string>("activityOption");
-    const [activityPollData, setActivityPollData] = useState<string>("");
+    const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
     const [savedDate, setSavedDated] = useState<string>("");
     const [savedTime, setSavedTime] = useState<string>("");
-    const [dateBundle, setDateBundle] = useState<DatePollData>()
-    const [locationBundle, setLocationBundle] = useState<LocationPollData>()
+    const [dateBundle, setDateBundle] = useState<DatePollData>();
+    const [locationBundle, setLocationBundle] = useState<LocationPollData>();
+    const [activityBundle, setActivityBundle] = useState<ActivityPollData>();
 
     
     // Change state functions
@@ -53,7 +58,7 @@ export default function(props: Props){
     const ActivityPollInput = () => {
         let activityValue: string;
         const onActivityInputEnd = () => {
-            setActivityPollData(activityValue)
+            setSavedActivityPoll(activityValue)
         }
         return (
         <>
@@ -115,16 +120,33 @@ export default function(props: Props){
             const newLocationBundle: {[key: string]: [] }  = {}
             newLocationBundle[locationStringKey] = []
 
-            // Setup if statements for which one to run
-            // updateDatePollDataWithNewOption(user, newBundle).then((data) => {
-            //     setDateBundle(data)
-           
-            // })
+            //Activity Bundle
+            let activityStringKey: string = savedActivityPoll;
+            const newActivityBundle: {[key: string]: [] } = {}
+            newActivityBundle[activityStringKey] = []
 
-            updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
-                setLocationBundle(data)
+            // Making the put requests:
+           
+            // Activity Data
+            if(dateStringKey === "" && locationStringKey === "") {  
+            updateActivityPollDataWithNewOption(user, newActivityBundle).then((data) => {
+                setActivityBundle(data)
             })
 
+            //Location Data
+            } else if (dateStringKey === "" && activityStringKey === "") {
+                updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
+                        setLocationBundle(data)
+                    })
+            
+            // Date/Time        
+            } else if (activityStringKey === "" && locationStringKey === "") {
+                 updateDatePollDataWithNewOption(user, newBundle).then((data) => {
+                setDateBundle(data)
+           
+            })
+            } 
+        
         }
         return (
             <BackgroundBox>
@@ -133,8 +155,6 @@ export default function(props: Props){
             </BackgroundBox>
         )
     }
-
-
     
     return (
         // container
