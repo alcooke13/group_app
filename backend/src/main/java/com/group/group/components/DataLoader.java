@@ -161,8 +161,7 @@ import java.time.LocalDateTime;
             xMenReunion.setActivityPoll(activityPoll2);
             xMenReunion.setLocationPoll(locationPoll2);
 
-            girlsNightFeb.setActivityPoll(activityPoll3);
-            girlsNightFeb.setDatePoll(datePoll3);
+
             girlsNightFeb.setLocationPoll(locationPoll3);
 
             datePoll1.addOption("2023-02-18T18:00");
@@ -193,6 +192,17 @@ import java.time.LocalDateTime;
             locationPoll1.addUserToOption("Edinburgh", 1L);
 
             locationPollRepository.save(locationPoll1);
+
+            locationPoll3.addOption("Edinburgh");
+            locationPoll3.addOption("Glasgow");
+            locationPoll3.addUserToOption("Edinburgh", 1L);
+            locationPoll3.addUserToOption("Edinburgh", 2L);
+            locationPoll3.addUserToOption("Edinburgh", 2L);
+            locationPoll3.addUserToOption("Edinburgh", 3L);
+            locationPoll3.addUserToOption("Edinburgh", 4L);
+
+            locationPollRepository.save(locationPoll1);
+            locationPollRepository.save(locationPoll3);
 
             eventRepository.save(tonysBirthday);
             eventRepository.save(xMenReunion);
