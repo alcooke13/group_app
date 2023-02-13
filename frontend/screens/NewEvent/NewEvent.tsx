@@ -10,10 +10,11 @@ import BackgroundBox from '../../components/BackgroundBox';
 import TickBox from '../../components/TickBox';
 import SmallButton from '../../components/SmallButton';
 import LineBreak from '../../components/LineBreak';
-import {postEvent} from '../../services/EventServices';
+import { postEvent } from '../../services/EventServices';
 import CalendarNewEvent from '../../components/CalendarNewEvent';
 import InfoBox from '../../components/InfoBox';
-
+import MenuText from '../../components/MenuText';
+import TimeOfDayButton from '../../components/TimeOfDayButton';
 
 // const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
@@ -21,7 +22,7 @@ export interface GroupInfoProps {
     singleGroupId: string;
     singleGroupName: string;
     setState: React.Dispatch<React.SetStateAction<string>>;
-    
+
 }
 
 
@@ -29,12 +30,14 @@ export interface GroupInfoProps {
 
 
 export default function NewEvent(props: GroupInfoProps) {
-    
-    
 
+
+    const [dateQuestionStage, setDateQuestionStage] = useState('calendar');
     const [eventTitle, setEventTitle] = useState('');
     const [detailsKnown, updateDetailsKnown] = useState<{ [key: string]: boolean }>({ 'date': false, 'activity': false, 'location': false })
     const [dateProvided, setDate] = useState<string>("")
+    const [calendarDateProvided, setCalendarDate] = useState<string>("")
+    const [timeProvided, setTime] = useState<string>("")
     const [activityProvided, setActivity] = useState<string>("")
     const [locationProvided, setLocation] = useState<string>("")
     const [review, setReview] = useState<boolean>(false)
@@ -81,24 +84,24 @@ export default function NewEvent(props: GroupInfoProps) {
                     break;
                 }
 
-            case "Review": 
+            case "Review":
                 if (!review) {
                     setDate("");
                     setActivity("");
                     setLocation("");
                     updateStage("Event name");
                     break;
-                } 
-                else{
-                   
+                }
+                else {
+
                     // go to group
                 }
-         
 
 
-                
-                
-           
+
+
+
+
         }
 
     }
@@ -123,7 +126,7 @@ export default function NewEvent(props: GroupInfoProps) {
                                 onChangeText={(eventTitleText: string) => {
                                     titleValue = eventTitleText;
                                 }}
-                                onEndEditing={()=>{onEventTitleEnd()}}
+                                onEndEditing={() => { onEventTitleEnd() }}
                             />
 
 
@@ -158,22 +161,22 @@ export default function NewEvent(props: GroupInfoProps) {
                 <BackgroundBox boxHeight='70%' >
                     <View>
                         <View>
-                            <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30}} >Select what you know</Text>
+                            <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30 }} >Select what you know</Text>
                         </View>
 
                         <View style={styles.checkBoxParent}>
                             <Text style={styles.checkboxText}>Date</Text>
                             <TickBox value={detailsKnown.date} onPress={() => { onDetailTickBoxPress("date") }}></TickBox>
                         </View>
-                        <View style={{width: '90%', alignSelf: 'center'}}>
-                        <LineBreak></LineBreak>
+                        <View style={{ width: '90%', alignSelf: 'center' }}>
+                            <LineBreak></LineBreak>
                         </View>
                         <View style={styles.checkBoxParent}>
                             <Text style={styles.checkboxText} >Activity</Text>
                             <TickBox value={detailsKnown.activity} onPress={() => onDetailTickBoxPress("activity")}></TickBox>
                         </View>
-                        <View style={{width: '90%', alignSelf: 'center'}}>
-                        <LineBreak></LineBreak>
+                        <View style={{ width: '90%', alignSelf: 'center' }}>
+                            <LineBreak></LineBreak>
                         </View>
                         <View style={styles.checkBoxParent} >
                             <Text style={styles.checkboxText} >Location</Text>
@@ -200,11 +203,21 @@ export default function NewEvent(props: GroupInfoProps) {
     }
 
 
-    function DateQuestion() {
+    function CalendarViewDateQuestion() {
+
+
+
         let dateAnswer: string;
         const onDateEnd = () => {
-            setDate(dateAnswer)
+            // setDate(dateAnswer)
         }
+
+        const changeViewToDay = () => {
+            setDateQuestionStage("dayView")
+
+        }
+
+
 
         return (
 
@@ -216,69 +229,77 @@ export default function NewEvent(props: GroupInfoProps) {
             // changeViewToDay?: any
 
             <View style={styles.container}>
+                <View style={{ marginTop: '20%', marginBottom: 0, paddingBottom: 0 }}>
 
-                    {/* <BackgroundBox boxHeight={'75%'} boxWidth={'100%'}  > */}
-                        {/* <View style={{margin: 30}}> */}
+                    <Text style={{
+                        fontSize: 24,
+                        padding: 15,
+                        textAlign: 'center',
+                        color: '#FF914D'
+                    }}
+                    >What is the date of your event?</Text>
 
-                        {/* <View style={styles.containerCalendar}>
-            <InfoBox header='Calendar'>
-            <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>
-            </InfoBox> */}  
-                            <View style={{marginTop: '20%', marginBottom: 0, paddingBottom: 0}}>
+                </View>
+                <InfoBox header={"Calendar"} >
+                    <CalendarNewEvent
+                        onPress={changeViewToDay}
 
-                            <Text style={{
-                                fontSize: 24,
-                                padding: 15,
-                                textAlign: 'center',
-                                color: '#FF914D'
-                            }} 
-                            >What is the date of your event?</Text>
+                        setSavedDate={setCalendarDate}
+                        changeViewToDay={changeViewToDay}
 
-                            </View>
-                            <InfoBox header={"Calendar"} >
-                                <CalendarNewEvent 
-                                onPress={()=>{
-                                    
-                                }}
-                                // calendarEvents={}
-                                chooseDate={()=> {
-                                    
-                                }}
-                                setSavedDate={()=>{
-                                    
-                                }}
-                                changeViewToDay={()=>{
-                                    
-                                }}
-                                
-                                
-                                
-                                ></CalendarNewEvent>
-                                {/* <TextInput
-                                    style={styles.input}
-                                    onChangeText={(text) => {
-                                        dateAnswer = text;
-                                    }}
-                                    onEndEditing={()=>{
-                                        onDateEnd()
-                                    }} */}
-                                {/* /> */}
-                           
-                                    </InfoBox>
-                <View style={styles.buttonParent}>
+                    ></CalendarNewEvent>
+
+
+                </InfoBox>
+                {/* <View style={styles.buttonParent}>
                     <SmallButton title={"Next"} onPress={() => {
-                        if (!dateAnswer) {
-                            alert('Please enter a date');
+                        if (!calendarDateProvided) {
+                            alert('Please pick a date');
                         }
                         else {
-                            setDate(dateAnswer)
-                            // StageController()
+                            
                         }
                     }} ></SmallButton>
 
-                </View>
+                </View> */}
 
             </View>
+        )
+
+    }
+
+    function DayViewDateQuestion(){
+
+
+        return (
+            <View>
+
+            <View style={styles.container}>
+            <BackArrow onPress={() => console.log("back")}/>
+            <MenuText>Date Poll</MenuText>
+        </View>
+        <View>
+            <TimeOfDayButton timeOfDayOption='Morning' onPress={() => setTime("T09:00")}/>
+            <TimeOfDayButton timeOfDayOption='Afternoon' onPress={() => setTime("T12:00")}/>
+            <TimeOfDayButton timeOfDayOption='Evening' onPress={() => setTime("T18:00")}/>
+        </View>
+        <View>
+        <SmallButton title="Next" onPress={() => {}}/>
+        </View>
+            </View>
+        )
+    }
+
+    function DateQuestion(){
+
+        return(
+
+            <>
+                {dateQuestionStage==="calendar" ? <CalendarViewDateQuestion/> : ""}
+                {dateQuestionStage==="dayView" ? <DayViewDateQuestion/> : ""}
+            
+            
+            </>
         )
 
     }
@@ -314,16 +335,16 @@ export default function NewEvent(props: GroupInfoProps) {
 
                 </BackgroundBox>
                 <View style={styles.buttonParent}>
-                <SmallButton title={"Next"} onPress={() => {
-                    if (!activityAnswer) {
-                        alert('Please enter an activity');
-                    }
-                    else {
-                        setActivity(activityAnswer)
-                        StageController()
-                    }
+                    <SmallButton title={"Next"} onPress={() => {
+                        if (!activityAnswer) {
+                            alert('Please enter an activity');
+                        }
+                        else {
+                            setActivity(activityAnswer)
+                            StageController()
+                        }
 
-                }} ></SmallButton>
+                    }} ></SmallButton>
 
 
                 </View>
@@ -353,7 +374,7 @@ export default function NewEvent(props: GroupInfoProps) {
                             onChangeText={(text) => {
                                 locationAnswer = text;
                             }}
-                            onEndEditing={()=>{
+                            onEndEditing={() => {
                                 onLocationEnd();
                             }}
                         />
@@ -362,10 +383,10 @@ export default function NewEvent(props: GroupInfoProps) {
 
                 </BackgroundBox>
                 <View style={styles.buttonParent}>
-                <SmallButton title={"Next"} onPress={() => {
-                    setLocation(locationAnswer)
-                    StageController()
-                }} ></SmallButton>
+                    <SmallButton title={"Next"} onPress={() => {
+                        setLocation(locationAnswer)
+                        StageController()
+                    }} ></SmallButton>
 
                 </View>
             </View>
@@ -373,56 +394,56 @@ export default function NewEvent(props: GroupInfoProps) {
 
     }
 
-    function prepareBundle(){
-        const {singleGroupId, singleGroupName, setState } = props;
-        const newBundle: any = { ...bundle}
+    function prepareBundle() {
+        const { singleGroupId, singleGroupName, setState } = props;
+        const newBundle: any = { ...bundle }
         newBundle.eventName = eventTitle
-        
-        newBundle.group = {id: props.singleGroupId, title: props.singleGroupName};
+
+        newBundle.group = { id: props.singleGroupId, title: props.singleGroupName };
 
         // test purposes
-        
 
-        if(activityProvided){
-            newBundle.activity=activityProvided;
+
+        if (activityProvided) {
+            newBundle.activity = activityProvided;
 
         }
-        if(dateProvided){
+        if (dateProvided) {
             newBundle.date = "2023-10-08T13:30";
         }
-        if(locationProvided){
-            newBundle.eventLocation = locationProvided; 
+        if (locationProvided) {
+            newBundle.eventLocation = locationProvided;
         }
-        if(!activityProvided){
-            newBundle.activity=null;
+        if (!activityProvided) {
+            newBundle.activity = null;
 
         }
-        if(!dateProvided){
+        if (!dateProvided) {
             newBundle.date = null;
         }
-        if(!locationProvided){
-            newBundle.eventLocation = null; 
+        if (!locationProvided) {
+            newBundle.eventLocation = null;
         }
 
 
-        postEvent(newBundle).then((data)=> {
+        postEvent(newBundle).then((data) => {
             setBundle(data)
         })
 
         setState("singlegroup")
 
-        
-        
 
 
-        
 
-        
+
+
+
+
 
 
     }
 
-    
+
 
 
     function Review() {
@@ -431,9 +452,9 @@ export default function NewEvent(props: GroupInfoProps) {
             <View style={styles.container}>
 
                 <BackgroundBox boxHeight='70%' >
-                    <View style={{margin: 20}}>
+                    <View style={{ margin: 20 }}>
                         <Text style={styles.questionTitle}> Are you happy with the below details? </Text>
-                        <Text style={styles.reviewText} >Event Title: {eventTitle}</Text> 
+                        <Text style={styles.reviewText} >Event Title: {eventTitle}</Text>
                         {dateProvided != "" ? <Text style={styles.reviewText} >Date: {dateProvided}</Text> : ""}
                         {activityProvided != "" ? <Text style={styles.reviewText}>Activity: {activityProvided}</Text> : ""}
                         {locationProvided != "" ? <Text style={styles.reviewText}>Location {locationProvided}</Text> : ""}
@@ -443,26 +464,26 @@ export default function NewEvent(props: GroupInfoProps) {
                 </BackgroundBox>
                 <View style={styles.buttonParent}>
 
-                <View style={{flexDirection: 'row', padding: 15, marginBottom: '30%' }}>
-                    <View style={{padding: 15}}>
+                    <View style={{ flexDirection: 'row', padding: 15, marginBottom: '30%' }}>
+                        <View style={{ padding: 15 }}>
 
-                    <SmallButton title={"Yes"} onPress={() => { 
-                        prepareBundle();
-                        console.log(dateProvided)
-                        console.log(activityProvided)
-                        console.log(locationProvided)
-                        
-                    }} ></SmallButton>
+                            <SmallButton title={"Yes"} onPress={() => {
+                                prepareBundle();
+                                console.log(dateProvided)
+                                console.log(activityProvided)
+                                console.log(locationProvided)
+
+                            }} ></SmallButton>
+                        </View>
+                        <View style={{ padding: 15 }}>
+
+                            <SmallButton title={"No"} onPress={() => {
+                                console.log(currentStage)
+                                updateStage("Details Known")
+                            }} ></SmallButton>
+
+                        </View>
                     </View>
-                    <View style={{padding: 15}}>
-
-                <SmallButton title={"No"} onPress={() => {
-                    console.log(currentStage)
-                    updateStage("Details Known")
-                }} ></SmallButton>
-
-                    </View>
-                </View>
 
 
 
@@ -472,7 +493,7 @@ export default function NewEvent(props: GroupInfoProps) {
     }
 
 
-    function Reviewed(){
+    function Reviewed() {
         return (
             <View>
                 <BackgroundBox>
@@ -480,7 +501,7 @@ export default function NewEvent(props: GroupInfoProps) {
                         <Text> Dummy area for going back to individial group view</Text>
                     </View>
                 </BackgroundBox>
-            
+
             </View>
         )
     }
@@ -555,13 +576,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
     },
-  
-    containerCalendar: {
-      backgroundColor: "#25242B",
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
 
-}})
+    containerCalendar: {
+        backgroundColor: "#25242B",
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+    }
+})
 
 
