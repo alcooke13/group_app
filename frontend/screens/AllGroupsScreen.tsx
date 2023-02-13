@@ -1,13 +1,9 @@
 import * as React from 'react';
-import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native';
-import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text, View, Image, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices';
 import GroupNameButton from '../components/GroupNameButton';
-import route from "../navigation";
-import { TabView } from '@rneui/base';
 import InfoBox from '../components/InfoBox';
 import TextHeader from '../components/TextHeader';
 import ScreenHeaderText from '../components/ScreenHeaderText';
@@ -19,13 +15,12 @@ import { getLocationPollDataByGroupId, LocationPollData } from '../services/Loca
 import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
 import ButtonSelector from '../components/ButtonSelector';
 import NewEvent from './NewEvent/NewEvent';
-import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
 import SmallPlus from '../components/SmallPlus';
 import { updateActivityPollWithNewVote } from '../services/ActivityPollServices';
-import { updateDatePollWithNewVote } from '../services/DatePollServices';
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices';
 import NewOptionScreen from './NewOptionScreen';
+import { EventData } from '../services/EventServices';
 
 interface Props {
   user: number
@@ -36,26 +31,10 @@ export default function AllGroupsScreen(props: Props) {
     const { user } = props;
     const isFocused = useIsFocused()
 
-    const initialState = {
-      id: "",
-      groupName: "",
-      events: [
-        {
-        id:"",
-        date:"",
-        eventName:"",
-        eventLocation:"", 
-        activity:"", 
-        activityPoll:"",
-        locationPoll:"", 
-        datePoll:""
-        }
-      ],
-    }; 
-
     const [groups, setGroups] = useState<GroupData[]>();
-    const [singleGroup, setSingleGroup] = useState(initialState);
-    const [groupView, setGroupView] = useState("loading");
+    const [singleGroup, setSingleGroup] = useState<GroupData>();
+    const [groupView, setGroupView] = useState<string>("loading");
+    const [upcomingEvent, setUpcomingEvent] = useState<EventData>();
     const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
     const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
 
@@ -76,19 +55,33 @@ export default function AllGroupsScreen(props: Props) {
 
         getGroupData()
         .then((userGroups) => {
-          setGroup(userGroups);
+          setGroups(userGroups);
         })
       } else if (isFocused) {
-        setSingleGroup(initialState);
         setGroupView("allgroups");
 
         getGroupData()
         .then((userGroups) => {
           setGroups(userGroups);
-          console.log(groups)
         })
       }
     }, [isFocused]);
+
+    function pollController() {
+      if (!upcomingEvent?.datePoll) {
+        setActiveGroupPoll
+      }
+    }
+
+    function getUpcomingEvent() {
+      const sortedEvents = singleGroup?.events.sort(function compare(eventA, eventB) {
+            const dateA: number = Date.parse(eventA.date);
+            const dateB: number = Date.parse(eventB.date);
+            return dateA - dateB;
+        });
+
+        setUpcomingEvent(sortedEvents[0]);
+    }
 
 
     function getSingleGroupData(groupId: number) {
