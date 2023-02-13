@@ -41,6 +41,38 @@ public class GroupController {
         return new ResponseEntity<>(groupRepository.findById(id), HttpStatus.OK);
     }
 
+    @PutMapping("/groups/{id}/remove-members")
+    public ResponseEntity<Group> deleteMembers(
+            @PathVariable long id,
+            @RequestBody List<Long> userIds) {
+
+        Group updateUser = groupRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+        List<User> members = updateUser.getUsers();
+
+        for (Long userId : userIds) {
+            User member = userRepository
+                    .findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Group Not Found: " + userId));
+
+            if (members.contains(member)) {
+                updateUser.removeMember(member);
+            }
+        }
+
+        groupRepository.save(updateUser);
+
+        return ResponseEntity.ok(updateUser);
+    }
+
+//    @GetMapping(value = "/groups/{id}/members")
+//    public ResponseEntity getGroupMembers(@PathVariable Long id) {
+//        return new ResponseEntity<>(groupRepository.findByGroupId(id), HttpStatus.OK);
+//    }
+
+
     @PostMapping(path = "/groups",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

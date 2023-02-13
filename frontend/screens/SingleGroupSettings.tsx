@@ -8,253 +8,288 @@ import BigButton from '../components/BigButton';
 import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
-import { getFriendsByUserId, getUserDataByUserId, UserData } from '../services/UserServices';
-
+import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
+import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData } from '../services/GroupServices';
+import { EventData } from '../services/EventServices';
 interface Props {
-    user: number
+    user: number,
+    groupId: number;
+    groupName: string;
+
 }
+
+
 
 export default function SingleGroupSettings(props: Props) {
 
-  const { user } = props;
-  const isFocused = useIsFocused();
+    const { user, groupId, groupName } = props;
+    const isFocused = useIsFocused();
 
-  const [currentView, updateCurrentView] = useState<String>("Settings");
-  const [userDetails, setUserDetails] = useState<UserData>();
-  const [friends, setFriends] = useState<UserData[]>();
-  const [userName, updateUsername] = useState<string>();
-  const [address, updateAddress] = useState<string>();
-  const [friendsToRemove, updateFriendsToRemove] = useState<Array<number>>([]);
+    const [currentView, updateCurrentView] = useState<String>("Settings");
+    const [userDetails, setUserDetails] = useState<UserData>();
+    const [friends, setFriends] = useState<UserData[]>([]);
+    const [members, setGroupMembers] = useState<UserData[]>([]);
+    const [settingsUpdated, updateSettingsUpdated] = useState<boolean>(false);
+    const [membersToRemove, updateMembersToRemove] = useState<Array<number>>([]);
+    const [singleGroup, setSingleGroup] = useState<any>({})
+    const [refreshing, setRefreshing] = useState(false);
+    const [pastEvents, setPastEvents] = useState<EventData []>()
+    useEffect(() => {
+        if (isFocused || settingsUpdated) {
+            updateCurrentView("Settings");
+            getGroupDataByGroupId(groupId)
+                .then((group) => {
+                    setSingleGroup(group);
+                    setGroupMembers(group.users)
+                    const newPastEvents : EventData [];
+                    group.events.forEach(event => {
+                        if (Date.parse(event.date) < Date.now()) {
+                            newPastEvents.push(event);
+                          }})
+                    setPastEvents(newPastEvents)
+                    });
+                }
+                ).then(data => { console.log(data) })
+            getUserDataByUserId(user)
+                .then((user) => {
+                    setUserDetails(user);
+                })
 
-  useEffect(() => {
-    if (isFocused) {
-      updateCurrentView("Settings");
-      getFriendsByUserId(user)
-      .then((userFriends) => {
-          setFriends(userFriends);
-      })
+            updateSettingsUpdated(false);
+        }
+    }, [isFocused, settingsUpdated, refreshing]);
 
-      getUserDataByUserId(user)
-      .then((user) => {
-        setUserDetails(user);
-      })
+
+
+
+    function onPressAccountSetting() {
+        return console.log("Account settings pressed")
     }
-  }, [isFocused]);
+    function onPressContactsSetting() {
+        return console.log("Contacts settings pressed")
+    }
+    function onPressNotificationSetting() {
+        return console.log("Notification settings pressed")
+    }
 
 
-  function onPressAccountSetting(){
-    return console.log("Account settings pressed")
-  }
-  function onPressContactsSetting(){
-    return console.log("Contacts settings pressed")
-  }
-  function onPressNotificationSetting(){
-    return console.log("Notification settings pressed")
-  }
-
-
-  function SettingsView() {
-    return (
-      <View style={styles.settingsContainer}>
-        <View>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Account")}>
-            <Text style={styles.settingElements} >Account</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity activeOpacity={0.7}onPress={() => updateCurrentView("Contacts")}>
-            <Text style={styles.settingElements} >Contacts</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          {/* <TouchableOpacity activeOpacity={0.7} onPress={onPressNotificationSetting}>
-            <Text style={styles.settingElements}>Notifications</Text>
-          </TouchableOpacity> */}
-        </View>
-      </View>
-    )
-  }
-
-  function AccountView() {
-    let newUserNameValue: string;
-    let newAddressValue: string;
-
-    return (
-      <View style={styles.accountContainer}>
-        <BackgroundBox boxHeight={"20%"}>
-          <View style={styles.accountBox}>
-            <Text style={styles.accountHeader}>Username</Text>
-            <TextInput 
-                style={styles.accountNameInput}
-                placeholder={userDetails?.userName}
-                onChangeText={(text) => newUserNameValue = text}
-                onEndEditing={()=> updateUsername(newUserNameValue)}>
-            </TextInput>
-          </View>
-        </BackgroundBox>
-        <BackgroundBox boxHeight={"20%"}>
-          <View style={styles.accountBox}>
-            <Text style={styles.accountHeader}>Phone Number</Text>
-            <Text  style={styles.accountPhoneNumber}>{userDetails?.phoneNumber}</Text>
-          </View>
-        </BackgroundBox>
-        <BackgroundBox boxHeight={"30%"}>
-          <View style={styles.accountBox}>
-            <Text style={styles.accountHeader}>Address</Text>
-            <TextInput 
-                style={styles.accountAddress}
-                multiline={true}
-                placeholder={userDetails?.address}
-                onChangeText={(text) => newAddressValue = text}
-                onEndEditing={()=> updateAddress(newAddressValue)}>
-            </TextInput>
-          </View>
-        </BackgroundBox>
-        <View style={styles.accountButton}>
-          <BigButton 
-              title='Update' 
-              onPress={() => {
-                updateCurrentView("Settings")
-              }}></BigButton>
-        </View>
-      </View>
-    )
-  }
-
-  function ContactsView() {
-    const memberItems = friends?.map((friend, index) => {
-      return(
-          <ButtonSelector option={friend.userName} 
-                          onPress={() => {
-                              if (!friendsToRemove.includes(friend.id)) {
-                                  const newFriendsToRemove = [... friendsToRemove];
-                                  newFriendsToRemove.push(friend.id);
-                                  updateFriendsToRemove(newFriendsToRemove);
-                              } else {
-                                  const index = friendsToRemove.indexOf(friend.id);
-                                  if (index !== -1) {
-                                    const newFriendsToRemove = [... friendsToRemove];
-                                    newFriendsToRemove.splice(index, 1);
-                                    updateFriendsToRemove(newFriendsToRemove);
-                                  }
-                              }
-                          }} 
-                          selected={friendsToRemove.includes(friend.id)}
-                          key={index}></ButtonSelector>
-      )
-    });
-
-    return (
-      <View style={styles.contactContainer}>
-        <View style={styles.contactsHeader}>
-          <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
-        </View>
-        <InfoBox header='Contacts'
-                  boxHeight='80%'
-                  smallPlus={<SmallPlus onPress={() => {}} />} >
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.contactsMembers}>
-                    {memberItems}
+    function SettingsView() {
+        return (
+            <View style={styles.settingsContainer}>
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Group")}>
+                        <Text style={styles.settingElements} >Edit Group</Text>
+                    </TouchableOpacity>
                 </View>
-            </ScrollView>
-        </InfoBox>
-        <View style={styles.contactsButton}>
-          <BigButton 
-              title='Remove Selected' 
-              onPress={() => {
-                updateCurrentView("Settings")
-              }}></BigButton>
-        </View>
-      </View>
-    )
-  }
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
+                        <Text style={styles.settingElements} >Past Events</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Leave Group")}>
+                        <Text style={styles.settingElements} >Leave Group</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Event")}>
+                        <Text style={styles.settingElements} >Edit Event</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Archive Event")}>
+                        <Text style={styles.settingElements} >Archive Event</Text>
+                    </TouchableOpacity>
+                </View>
+            </View >
+        )
+    }
 
-  return (
-      <SafeAreaView style={styles.container}>
-        {currentView === "Settings" ? <SettingsView/> : ""}
-        {currentView === "Account"? <AccountView/>: ""}
-        {currentView === "Contacts"? <ContactsView/>: ""}
-        {currentView === "loading" ? "" : ""}
-      </SafeAreaView>
-  )
+    function EditGroupView() {
+        let newGroupName: string;
+        // let newAddressValue: string;
+        const memberItems = members?.map((member, index) => {
+            return (
+                <ButtonSelector option={member.userName}
+                    onPress={() => {
+                        if (!membersToRemove.includes(member.id)) {
+                            const newMembersToRemove = [...membersToRemove];
+                            newMembersToRemove.push(member.id);
+                            updateMembersToRemove(newMembersToRemove);
+                            console.log(newMembersToRemove)
+                        } else {
+                            const index = membersToRemove.indexOf(member.id);
+                            if (index !== -1) {
+                                const newMembersToRemove = [...membersToRemove];
+                                newMembersToRemove.splice(index, 1);
+                                updateMembersToRemove(newMembersToRemove);
+                            }
+                        }
+                    }}
+                    selected={membersToRemove.includes(member.id)}
+                    key={index}></ButtonSelector>
+            )
+        });
+        return (
+            <View style={{ flex: 1 }} >
+                <View style ={{flex: 0.1}}>
+                    <BackArrow onPress={()=>{
+                        updateCurrentView("Settings")
+                    }} />
+
+                </View>
+                <View style={{ width: 300, height: 400, flex: 0.2 }}>
+                    <BackgroundBox boxHeight={'100%'}>
+                        <View >
+                            <Text style={styles.accountHeader}>Group Name</Text>
+                            <TextInput
+                                style={styles.accountNameInput}
+                                placeholder={props.groupName}
+                                onChangeText={(text) => newGroupName = text}>
+                            </TextInput>
+                        </View>
+                    </BackgroundBox>
+
+                </View>
+
+                <View style={{ flex: 0.7 }}>
+
+                    <InfoBox header='Contacts'
+                        boxHeight='80%'
+                    // smallPlus={<SmallPlus onPress={() => { }} />} 
+                    >
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <View style={styles.contactsMembers}>
+                                <ScrollView>
+
+                                    {memberItems}
+                                </ScrollView>
+                            </View>
+                        </ScrollView>
+                    </InfoBox>
+                    <View style={styles.contactsButton}>
+                        <BigButton
+                            title='Remove Selected'
+                            onPress={() => {
+                                console.log(membersToRemove)
+                                deleteMembersByGroupId(groupId, membersToRemove)
+                                setRefreshing(true);
+                                setTimeout(() => {
+                                    setRefreshing(false);
+                                }, 500);
+
+                            }}></BigButton>
+                    </View>
+                </View>
+            </View>
+        )
+
+    }
+
+    function PastEvents(){
+
+
+
+        return (
+            <View style={{flex:1}}> 
+                <InfoBox header='Past Events' boxHeight='60%'>
+                    <View>
+
+                    </View>
+                </InfoBox>
+            </View>
+        )
+    }
+
+
+
+    return (
+        <SafeAreaView style={styles.container}>
+            {currentView === "Settings" ? <SettingsView /> : ""}
+            {currentView === "Edit Group" ? <EditGroupView /> : ""}
+            {currentView === "Past Events" ? <PastEvents /> : ""}
+            {currentView === "loading" ? "" : ""}
+        </SafeAreaView>
+    )
 }
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#25242B',
-  },
-  settingElements: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#FF914D',
-    paddingTop: '8%',
-    marginLeft: '7.5%'
-  },
-  contactsMembers: {
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  contactsHeader: {
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    paddingTop: '5%',
-    paddingLeft: '5%'
-  },
-  settingsContainer: {
-    paddingTop: '10%',
-    width: '100%',
-    height: '100%'
-  },
-  accountContainer: {
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    width: "100%",
-    height: "100%"
-  },
-  contactContainer: {
-    alignItems: 'center',
-    width: '100%',
-    height: '100%'
-  },
-  contactsButton: {
-    alignSelf: 'flex-end',
-    paddingBottom: '10%',
-    paddingRight: '5%'
-  },
-  accountBox: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  accountHeader: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    fontSize: 24
-  },
-  accountNameInput: {
-    padding: 10,
-    backgroundColor: 'white',
-    width: '70%',
-    fontSize: 20
-  },
-  accountPhoneNumber: {
-    padding: 10,
-    width: '70%',
-    fontSize: 20,
-    textAlign: 'center'
-  },
-  accountAddress: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: 'white',
-    width: '70%',
-    height: '50%',
-    fontSize: 20,
-  },
-  accountButton: {
-    alignSelf: 'flex-end',
-    paddingRight: '5%'
-  }
+    container: {
+        flex: 1,
+        backgroundColor: '#25242B',
+    },
+    settingElements: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#FF914D',
+        paddingTop: '8%',
+        textAlign: 'center'
+    },
+    contactsMembers: {
+        alignItems: 'center',
+        paddingTop: 10,
+        paddingBottom: 10
+    },
+    contactsHeader: {
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        paddingTop: '5%',
+        paddingLeft: '5%'
+    },
+    settingsContainer: {
+        paddingTop: '10%',
+        width: '100%',
+        height: '100%'
+    },
+    accountContainer: {
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        // width: "100%",
+        // height: "100%"
+    },
+    contactContainer: {
+        alignItems: 'center',
+        width: '100%',
+        height: '100%'
+    },
+    contactsButton: {
+        alignSelf: 'flex-end',
+        paddingBottom: '10%',
+        paddingRight: '5%'
+    },
+    accountBox: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    accountHeader: {
+        paddingTop: 20,
+        paddingBottom: 20,
+        fontSize: 24
+    },
+    accountNameInput: {
+        padding: 10,
+        backgroundColor: 'white',
+        width: '70%',
+        fontSize: 20,
+        color: 'black',
+    },
+    accountPhoneNumber: {
+        padding: 10,
+        width: '70%',
+        fontSize: 20,
+        textAlign: 'center'
+    },
+    accountAddress: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: 'white',
+        width: '70%',
+        height: '50%',
+        fontSize: 20,
+    },
+    accountButton: {
+        alignSelf: 'flex-end',
+        paddingRight: '5%'
+    }
 });
