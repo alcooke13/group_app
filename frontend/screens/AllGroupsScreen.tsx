@@ -232,6 +232,7 @@ export default function AllGroupsScreen (props: Props) {
 
     for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
       allOptionsMap.set(option, user_ids)
+    }
 
     function AddNewOptionPollView(){
       return (
@@ -251,7 +252,6 @@ export default function AllGroupsScreen (props: Props) {
           month: 'long'
         })
       }
-
       return (
         <View style={styles.pollOption}>
           <ButtonSelector
@@ -266,11 +266,9 @@ export default function AllGroupsScreen (props: Props) {
         </View>
       )
     })
-
     return returnStatement
   }
-
-  //
+    
 
   function AllGroupView () {
     return (
@@ -330,19 +328,10 @@ export default function AllGroupsScreen (props: Props) {
             <SingleGroupPollDetails />
           </View>
         </InfoBox>
-      </>
+        </>
+    )}
       
-        <SafeAreaView style={styles.container}>
-          {groupView === "allgroups" ? <AllGroupView/> : ""}
-          {groupView==="singlegroup"? <SingleGroupView/>: ""}
-          {groupView === "addgroupview" ? <AddGroupView/>: ""}
-          {groupView === "newEvent" ? <AddEventView/>: ""}
-          {groupView === "loading" ? "" : ""}
-          {groupView === "addOption" ? <AddNewOptionPollView /> : ""}
-        </SafeAreaView>
-
-    )
-  }
+  
 
   function AddGroupView () {
     return <AddGroupScreen user={user} />
