@@ -60,5 +60,24 @@ public class ActivityPollController {
 
         return ResponseEntity.ok(updatePoll);
     }
+
+    @PutMapping("/activity-polls/{id}/add-option")
+    public ResponseEntity<ActivityPoll> addOptionActivityPoll(
+            @PathVariable long id,
+            @RequestBody HashMap<String, ArrayList<Long>> body ) {
+
+        ActivityPoll updatePollOptions = activityPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+
+        for(String key : body.keySet()){
+            updatePollOptions.addOption(key);
+        };
+        activityPollRepository.save(updatePollOptions);
+        return ResponseEntity.ok(updatePollOptions);
+    }
+
+
 }
 

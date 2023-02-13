@@ -115,15 +115,18 @@ export default function(props: Props){
             const newLocationBundle: {[key: string]: [] }  = {}
             newLocationBundle[locationStringKey] = []
 
-            // Setup if statements for which one to run
+            // Date/Time
             // updateDatePollDataWithNewOption(user, newBundle).then((data) => {
             //     setDateBundle(data)
            
             // })
-
+            // Location Data
             updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
                 setLocationBundle(data)
             })
+
+            // Activity Data
+
 
         }
         return (
