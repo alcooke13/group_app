@@ -77,10 +77,14 @@ export function updateUserAddress(
     });
 }
 
-export function deleteFriendsByUserId(userId: number, payload: Array<number>): Promise<Response> {
-    return fetch('http://127.0.0.1:8080/users/' + userId.toString() + '/delete-users', {
+export function deleteFriendsByUserId(userId: number, payload: Array<number>): Promise<UserData> {
+    console.log(payload)
+    return fetch('http://127.0.0.1:8080/users/' + userId.toString() + '/remove-friends', {
         method: 'PUT',
         body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' }
-    })
+    }).then((response) => response.json())
+    .then((response) => {
+      return response as UserData;
+    });
 }

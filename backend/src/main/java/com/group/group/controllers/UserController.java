@@ -76,8 +76,8 @@ public class UserController {
 
             for (Long userId : userIds) {
                 User friend = userRepository
-                        .findById(id)
-                        .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+                        .findById(userId)
+                        .orElseThrow(() -> new RuntimeException("Group Not Found: " + userId));
 
                 if (friends.contains(friend)) {
                     updateUser.removeFriend(friend);

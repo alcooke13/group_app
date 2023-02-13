@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FF914D',
     paddingTop: '8%',
-    marginLeft: '7.5%'
+    textAlign: 'center'
   },
   contactsMembers: {
     alignItems: 'center',
