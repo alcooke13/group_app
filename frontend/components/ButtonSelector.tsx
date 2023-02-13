@@ -3,21 +3,20 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 interface Props {
-    dateOption: string;
-    onPress: Function;
-    votedOn: boolean;
+    option: string;
+    onPress: () => void;
+    selected: boolean;
 }
 
-const DatePollButton = (props: Props) => {
-    const {dateOption, onPress, votedOn} = props;
+const ButtonSelector = (props: Props) => {
+    const {option, onPress, selected} = props;
     return (
         <TouchableOpacity
         onPress={onPress}
-        style={[styles.container, votedOn ? styles.votedOn:styles.container]}
+        style={[styles.container, selected ? styles.selected:styles.container]}
         >
-        <Text style={styles.text }>{dateOption}
-            </Text>
-            </TouchableOpacity>
+            <Text style={styles.text }>{option}</Text>
+        </TouchableOpacity>
     );
     }
 
@@ -27,7 +26,7 @@ const DatePollButton = (props: Props) => {
             borderWidth: 1,
             borderRadius: 10,
             borderColor:'#25242B',
-            width: 262,
+            width: '90%',
             height: 42,
             alignItems: 'center',
             alignContent: 'center',
@@ -36,16 +35,15 @@ const DatePollButton = (props: Props) => {
             shadowOffset: {width: 0, height: 3},
             shadowOpacity: 0.25,
             shadowRadius: 2,
-            marginBottom:5,
-            marginTop:5
+            margin: 5,
         },
         text: {
             alignItems: 'center',
             fontSize: 20,
             borderRadius: 5,
         },
-        votedOn: {
+        selected: {
             backgroundColor: '#FF914D',
         }
     })
-    export default DatePollButton;
+    export default ButtonSelector;

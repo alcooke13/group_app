@@ -8,7 +8,7 @@ import LineBreak from '../components/LineBreak';
 import { useIsFocused } from "@react-navigation/native";
 import BackgroundBox from '../components/BackgroundBox';
 import { getFriendsByUserId, UserData } from '../services/UserServices';
-import DatePollButton from '../components/DatePollButton';
+import ButtonSelector from '../components/ButtonSelector';
 import { postGroup, updateGroupDataWithNewUsers } from '../services/GroupServices';
 
 interface Props {
@@ -47,7 +47,7 @@ export default function AddGroupScreen(props: Props) {
     const memberItems = friends?.map((friend, index) => {
 
         return(
-            <DatePollButton dateOption={friend.userName} 
+            <ButtonSelector option={friend.userName} 
                             onPress={() => {
                                 if (!friendsAdded.current.includes(friend.id)) {
                                     friendsAdded.current.push(friend.id);
@@ -58,8 +58,8 @@ export default function AddGroupScreen(props: Props) {
                                     }
                                 }
                             }} 
-                            votedOn={friendsAdded.current.includes(friend.id)}
-                            key={index}></DatePollButton>
+                            selected={friendsAdded.current.includes(friend.id)}
+                            key={index}></ButtonSelector>
         )
     });
 

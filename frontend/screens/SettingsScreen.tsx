@@ -5,7 +5,7 @@ import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Tex
 import BackArrow from '../components/BackArrow';
 import BackgroundBox from '../components/BackgroundBox';
 import BigButton from '../components/BigButton';
-import DatePollButton from '../components/DatePollButton';
+import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import ScreenHeaderText from '../components/ScreenHeaderText';
 import SmallPlus from '../components/SmallPlus';
@@ -119,7 +119,7 @@ export default function SettingsScreen(props: Props) {
   function ContactsView() {
     const memberItems = friends?.map((friend, index) => {
       return(
-          <DatePollButton dateOption={friend.userName} 
+          <ButtonSelector option={friend.userName} 
                           onPress={() => {
                               if (!friendsToRemove.current.includes(friend.id)) {
                                   friendsToRemove.current.push(friend.id);
@@ -130,8 +130,8 @@ export default function SettingsScreen(props: Props) {
                                   }
                               }
                           }} 
-                          votedOn={friendsToRemove.current.includes(friend.id)}
-                          key={index}></DatePollButton>
+                          selected={friendsToRemove.current.includes(friend.id)}
+                          key={index}></ButtonSelector>
       )
     });
 
