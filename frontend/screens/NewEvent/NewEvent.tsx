@@ -30,7 +30,7 @@ export interface GroupInfoProps {
 
 
 export default function NewEvent(props: GroupInfoProps) {
-
+    const { singleGroupId, singleGroupName, setState } = props;
 
     const [dateQuestionStage, setDateQuestionStage] = useState('calendar');
     const [eventTitle, setEventTitle] = useState('');
@@ -89,6 +89,8 @@ export default function NewEvent(props: GroupInfoProps) {
                     setDate("");
                     setActivity("");
                     setLocation("");
+                    setCalendarDate("");
+                    setTime("");
                     updateStage("Event name");
                     break;
                 }
@@ -106,6 +108,25 @@ export default function NewEvent(props: GroupInfoProps) {
 
     }
 
+    function goBackToSingleGroupView() {
+        setDate("");
+        setActivity("");
+        setLocation("");
+        setState("singlegroup")
+    }
+    function goBackToEventName() {
+        setDate("");
+        setActivity("");
+        setLocation("");
+        setEventTitle("");
+        updateStage("Event Name")
+    }
+
+    function goBackToDetalsKnown(){
+        updateStage("Details Known")
+    }
+  
+
     // Step 1: Ask user for the Events name
     const EventName = () => {
         let titleValue: string;
@@ -114,6 +135,17 @@ export default function NewEvent(props: GroupInfoProps) {
         }
 
         return (
+            <>
+                <View style={{
+                     position: 'absolute',
+                     top: '10%',
+                     left: '10%',
+                     
+
+                }}>
+                <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
+
+                </View>
             <View style={styles.container}>
                 <BackgroundBox boxHeight={250} >
                     <View>
@@ -127,7 +159,7 @@ export default function NewEvent(props: GroupInfoProps) {
                                     titleValue = eventTitleText;
                                 }}
                                 onEndEditing={() => { onEventTitleEnd() }}
-                            />
+                                />
 
 
                         </View>
@@ -147,6 +179,7 @@ export default function NewEvent(props: GroupInfoProps) {
 
                 </View>
             </View>
+                    </>
         );
 
 
@@ -157,6 +190,9 @@ export default function NewEvent(props: GroupInfoProps) {
     // Step 2: Get the known details of the event
     function KnownDetails() {
         return (
+            <>
+            <BackArrow onPress={() => { goBackToEventName() }}></BackArrow>
+          
             <View style={styles.container}>
                 <BackgroundBox boxHeight='70%' >
                     <View>
@@ -190,15 +226,16 @@ export default function NewEvent(props: GroupInfoProps) {
                         setActivity("")
                         setLocation("")
                         setDate("")
-
-
+                        
+                        
                         StageController();
-
-
+                        
+                        
                     }} ></SmallButton>
                 </View>
 
             </View>
+                    </>
         )
     }
 
@@ -218,17 +255,13 @@ export default function NewEvent(props: GroupInfoProps) {
         }
 
 
-
         return (
 
-            // onPress: () => void;
-            // calendarEvents?: Array<EventData>;
-            // chooseDate?: () => void;
-            // setSavedDate?: any;
-            // resultDates?: any;
-            // changeViewToDay?: any
-
             <View style={styles.container}>
+                <View>
+                <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+
+                </View>
                 <View style={{ marginTop: '20%', marginBottom: 0, paddingBottom: 0 }}>
 
                     <Text style={{
@@ -268,37 +301,41 @@ export default function NewEvent(props: GroupInfoProps) {
 
     }
 
-    function DayViewDateQuestion(){
+    function DayViewDateQuestion() {
 
 
         return (
             <View>
-
-            <View style={styles.container}>
-            <BackArrow onPress={() => console.log("back")}/>
-            <MenuText>Date Poll</MenuText>
-        </View>
-        <View>
-            <TimeOfDayButton timeOfDayOption='Morning' onPress={() => setTime("T09:00")}/>
-            <TimeOfDayButton timeOfDayOption='Afternoon' onPress={() => setTime("T12:00")}/>
-            <TimeOfDayButton timeOfDayOption='Evening' onPress={() => setTime("T18:00")}/>
-        </View>
-        <View>
-        <SmallButton title="Next" onPress={() => {}}/>
-        </View>
+              
+                <View>
+                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+                    
+                    <MenuText>Date Poll</MenuText>
+                </View>
+                <View>
+                    <TimeOfDayButton timeOfDayOption='Morning' selected={timeProvided === "T09:00" ? true : false} onPress={() => setTime("T09:00")} />
+                    <TimeOfDayButton timeOfDayOption='Afternoon' selected={timeProvided === "T12:00" ? true : false} onPress={() => setTime("T12:00")} />
+                    <TimeOfDayButton timeOfDayOption='Evening' selected={timeProvided === "T18:00" ? true : false} onPress={() => setTime("T18:00")} />
+                </View>
+                <View>
+                    <SmallButton title="Next" onPress={() => {
+                        setDate(calendarDateProvided + timeProvided)
+                        StageController()
+                    }} />
+                </View>
             </View>
         )
     }
 
-    function DateQuestion(){
+    function DateQuestion() {
 
-        return(
+        return (
 
             <>
-                {dateQuestionStage==="calendar" ? <CalendarViewDateQuestion/> : ""}
-                {dateQuestionStage==="dayView" ? <DayViewDateQuestion/> : ""}
-            
-            
+                {dateQuestionStage === "calendar" ? <CalendarViewDateQuestion /> : ""}
+                {dateQuestionStage === "dayView" ? <DayViewDateQuestion /> : ""}
+
+
             </>
         )
 
@@ -315,6 +352,9 @@ export default function NewEvent(props: GroupInfoProps) {
         return (
 
             <View style={styles.container}>
+                <View>
+                <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+                </View>
                 <BackgroundBox boxHeight={250}  >
                     <View style={{ margin: 30 }}>
                         <Text style={styles.questionTitle} > What is the activity for your event?</Text>
@@ -365,6 +405,9 @@ export default function NewEvent(props: GroupInfoProps) {
         return (
 
             <View style={styles.container}>
+                <View>
+                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+                </View>
                 <BackgroundBox boxHeight={250}  >
                     <View style={{ margin: 30 }}>
                         <Text style={styles.questionTitle} > What is the location of your event?</Text>
@@ -395,7 +438,7 @@ export default function NewEvent(props: GroupInfoProps) {
     }
 
     function prepareBundle() {
-        const { singleGroupId, singleGroupName, setState } = props;
+        // const { singleGroupId, singleGroupName, setState } = props;
         const newBundle: any = { ...bundle }
         newBundle.eventName = eventTitle
 
@@ -409,7 +452,7 @@ export default function NewEvent(props: GroupInfoProps) {
 
         }
         if (dateProvided) {
-            newBundle.date = "2023-10-08T13:30";
+            newBundle.date = dateProvided;
         }
         if (locationProvided) {
             newBundle.eventLocation = locationProvided;
@@ -433,14 +476,6 @@ export default function NewEvent(props: GroupInfoProps) {
         setState("singlegroup")
 
 
-
-
-
-
-
-
-
-
     }
 
 
@@ -448,16 +483,32 @@ export default function NewEvent(props: GroupInfoProps) {
 
     function Review() {
 
+        const eventDate = new Date(dateProvided).toLocaleString('en-GB', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+        });
+
+        const eventTime = new Date(dateProvided).toLocaleTimeString("en-US", {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
         return (
             <View style={styles.container}>
 
-                <BackgroundBox boxHeight='70%' >
+                <BackgroundBox boxHeight='60%' >
                     <View style={{ margin: 20 }}>
                         <Text style={styles.questionTitle}> Are you happy with the below details? </Text>
-                        <Text style={styles.reviewText} >Event Title: {eventTitle}</Text>
-                        {dateProvided != "" ? <Text style={styles.reviewText} >Date: {dateProvided}</Text> : ""}
+                        <Text style={{
+                            fontSize: 24,
+                            padding: 10,
+                            textAlign: 'center'
+                        }} >{eventTitle}</Text>
+                        {dateProvided != "" ? <Text style={styles.reviewText} >Date: {eventDate}</Text> : ""}
+                        {dateProvided != "" ? <Text style={styles.reviewText} >Time: {eventTime}</Text> : ""}
                         {activityProvided != "" ? <Text style={styles.reviewText}>Activity: {activityProvided}</Text> : ""}
-                        {locationProvided != "" ? <Text style={styles.reviewText}>Location {locationProvided}</Text> : ""}
+                        {locationProvided != "" ? <Text style={styles.reviewText}>Location: {locationProvided}</Text> : ""}
 
                     </View>
 
@@ -583,7 +634,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
 
-    }
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent:'space-between',
+        width:"100%",
+        justifyContent: 'space-around',
+
+      },
 })
 
 

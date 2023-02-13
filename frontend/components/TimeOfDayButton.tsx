@@ -5,16 +5,16 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 interface Props {
     timeOfDayOption: string;
     onPress: () => void;
-    backgroundColor: string;
+    selected?: boolean;
 }
 
 const TimeOfDayButton = (props: Props) => {
-    const {timeOfDayOption, onPress} = props;
+    const {timeOfDayOption, onPress, selected} = props;
     return (
         <TouchableOpacity
         onPress={onPress}
         style={{
-            backgroundColor: '#E0E1F0',
+            backgroundColor: selected ? '#FF914D' : '#E0E1F0',
             borderWidth: 1,
             borderRadius: 10,
             borderColor:'#25242B',
@@ -31,7 +31,12 @@ const TimeOfDayButton = (props: Props) => {
             marginTop:15
         }}
         >
-        <Text style={styles.text }>{timeOfDayOption}
+        <Text style={{ 
+            alignItems: 'center',
+            fontSize: 20,
+            borderRadius: 5,
+            color: 'black',
+            }}>{timeOfDayOption}
             </Text>
             </TouchableOpacity>
     );
