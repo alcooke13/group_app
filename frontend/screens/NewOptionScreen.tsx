@@ -11,6 +11,7 @@ import TimeOfDayButton from '../components/TimeOfDayButton';
 import CalendarOption from '../components/CalenderOption';
 import { updateDatePollDataWithNewOption, DatePollData } from '../services/DatePollServices';
 import { updateLocationPollDataWithNewOption, LocationPollData } from '../services/LocationPollServices';
+import { updateActivityPollDataWithNewOption, ActivityPollData } from '../services/ActivityPollServices';
 
 
 interface Props {
@@ -21,12 +22,13 @@ export default function(props: Props){
     const {user} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
     const [pollView, setPollView] = useState<string>("activityOption");
-    const [activityPollData, setActivityPollData] = useState<string>("");
+    const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
     const [savedDate, setSavedDated] = useState<string>("");
     const [savedTime, setSavedTime] = useState<string>("");
-    const [dateBundle, setDateBundle] = useState<DatePollData>()
-    const [locationBundle, setLocationBundle] = useState<LocationPollData>()
+    const [dateBundle, setDateBundle] = useState<DatePollData>();
+    const [locationBundle, setLocationBundle] = useState<LocationPollData>();
+    const [activityBundle, setActivityBundle] = useState<ActivityPollData>();
 
     
     // Change state functions
@@ -53,7 +55,7 @@ export default function(props: Props){
     const ActivityPollInput = () => {
         let activityValue: string;
         const onActivityInputEnd = () => {
-            setActivityPollData(activityValue)
+            setSavedActivityPoll(activityValue)
         }
         return (
         <>
@@ -115,17 +117,25 @@ export default function(props: Props){
             const newLocationBundle: {[key: string]: [] }  = {}
             newLocationBundle[locationStringKey] = []
 
+            //Activity Bundle
+            let activityStringKey: string = savedActivityPoll;
+            const newActivityBundle: {[key: string]: [] } = {}
+            newActivityBundle[activityStringKey] = []
+
             // Date/Time
             // updateDatePollDataWithNewOption(user, newBundle).then((data) => {
             //     setDateBundle(data)
            
             // })
             // Location Data
-            updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
-                setLocationBundle(data)
-            })
+            // updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
+            //     setLocationBundle(data)
+            // })
 
             // Activity Data
+            updateActivityPollDataWithNewOption(user, newActivityBundle).then((data) => {
+                setActivityBundle(data)
+            })
 
 
         }
