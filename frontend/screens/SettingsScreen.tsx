@@ -23,11 +23,12 @@ export default function SettingsScreen(props: Props) {
   const [currentView, updateCurrentView] = useState<String>("Settings");
   const [userDetails, setUserDetails] = useState<UserData>();
   const [friends, setFriends] = useState<UserData[]>();
+  const [userName, updateUsername] = useState<string>();
   const friendsToRemove = useRef<Array<number>>([]);
 
   useEffect(() => {
     if (isFocused) {
-      updateCurrentView("Settings");
+      updateCurrentView("Contacts");
       getFriendsByUserId(user)
       .then((userFriends) => {
           setFriends(userFriends);
@@ -54,7 +55,7 @@ export default function SettingsScreen(props: Props) {
 
   function SettingsView() {
     return (
-      <>
+      <View style={styles.settingsContainer}>
         <View>
           <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Account")}>
             <Text style={styles.settingElements} >Account</Text>
@@ -70,39 +71,52 @@ export default function SettingsScreen(props: Props) {
             <Text style={styles.settingElements}>Notifications</Text>
           </TouchableOpacity> */}
         </View>
-      </>
+      </View>
     )
   }
 
   function AccountView() {
     return (
-      <>
-        <BackgroundBox>
-          <View style={styles.groupName}>
-            <Text style={styles.groupHeader}>Group name</Text>
+      <View style={styles.accountContainer}>
+        <BackgroundBox boxHeight={"20%"}>
+          <View style={styles.accountBox}>
+            <Text style={styles.accountHeader}>Group name</Text>
             <TextInput 
-                style={styles.groupInput}
-                placeholder=""
-                onChangeText={groupName => setGroupName(groupName)}>
+                style={styles.accountNameInput}
+                placeholder={userDetails?.userName}
+                onChangeText={userName => updateUsername(userName)}>
             </TextInput>
           </View>
         </BackgroundBox>
-        <View>
-          <TouchableOpacity activeOpacity={0.7}onPress={() => updateCurrentView("Contacts")}>
-            <Text style={styles.settingElements} >Contacts</Text>
-          </TouchableOpacity>
+        <BackgroundBox boxHeight={"20%"}>
+          <View style={styles.accountBox}>
+            <Text style={styles.accountHeader}>Phone Number</Text>
+            <Text  style={styles.accountPhoneNumber}>{userDetails?.phoneNumber}</Text>
+          </View>
+        </BackgroundBox>
+        <BackgroundBox boxHeight={"30%"}>
+          <View style={styles.accountBox}>
+            <Text style={styles.accountHeader}>Address</Text>
+            <TextInput 
+                style={styles.accountAddress}
+                multiline={true}
+                placeholder={userDetails?.address}
+                onChangeText={userName => updateUsername(userName)}>
+            </TextInput>
+          </View>
+        </BackgroundBox>
+        <View style={styles.accountButton}>
+          <BigButton 
+              title='Done' 
+              onPress={() => {
+                updateCurrentView("Settings")
+              }}></BigButton>
         </View>
-        <View>
-          {/* <TouchableOpacity activeOpacity={0.7} onPress={onPressNotificationSetting}>
-            <Text style={styles.settingElements}>Notifications</Text>
-          </TouchableOpacity> */}
-        </View>
-      </>
+      </View>
     )
   }
 
   function ContactsView() {
-
     const memberItems = friends?.map((friend, index) => {
       return(
           <DatePollButton dateOption={friend.userName} 
@@ -122,12 +136,12 @@ export default function SettingsScreen(props: Props) {
     });
 
     return (
-      <>
+      <View style={styles.contactContainer}>
         <View style={styles.contactsHeader}>
           <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
         </View>
-        <InfoBox header='Group Members'
-                  boxHeight='70%'
+        <InfoBox header='Contacts'
+                  boxHeight='80%'
                   smallPlus={<SmallPlus onPress={() => {}} />} >
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.contactsMembers}>
@@ -138,9 +152,11 @@ export default function SettingsScreen(props: Props) {
         <View style={styles.contactsButton}>
           <BigButton 
               title='Remove Selected' 
-              onPress={() => {}}></BigButton>
+              onPress={() => {
+                updateCurrentView("Settings")
+              }}></BigButton>
         </View>
-      </>
+      </View>
     )
   }
 
@@ -159,7 +175,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#25242B',
-    alignItems: 'center',
   },
   settingElements: {
     fontSize: 36,
@@ -170,13 +185,66 @@ const styles = StyleSheet.create({
   },
   contactsMembers: {
     alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10
   },
   contactsHeader: {
     flexDirection: 'row',
+    alignSelf: 'flex-start',
+    paddingTop: '5%',
+    paddingLeft: '5%'
+  },
+  settingsContainer: {
+    paddingTop: '10%',
+    width: '100%',
+    height: '100%'
+  },
+  accountContainer: {
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    width: "100%",
+    height: "100%"
+  },
+  contactContainer: {
+    alignItems: 'center',
+    width: '100%',
+    height: '100%'
   },
   contactsButton: {
-
+    alignSelf: 'flex-end',
+    paddingBottom: '10%',
+    paddingRight: '5%'
+  },
+  accountBox: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  accountHeader: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    fontSize: 24
+  },
+  accountNameInput: {
+    padding: 10,
+    backgroundColor: 'white',
+    width: '70%',
+    fontSize: 20
+  },
+  accountPhoneNumber: {
+    padding: 10,
+    width: '70%',
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  accountAddress: {
+    padding: 10,
+    backgroundColor: 'white',
+    width: '70%',
+    height: '50%',
+    fontSize: 20,
+  },
+  accountButton: {
+    alignSelf: 'flex-end',
+    paddingRight: '5%'
   }
 });

@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     },
     members: {
         alignItems: 'center',
-        paddingTop: 10
+        paddingTop: 10,
+        paddingBottom: 10
     },
     doneButton: {
         alignSelf: 'flex-end',
