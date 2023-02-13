@@ -112,7 +112,7 @@ export default function SettingsScreen(props: Props) {
         </BackgroundBox>
         <View style={styles.accountButton}>
           <BigButton 
-              title='Done' 
+              title='Update' 
               onPress={() => {
                 updateCurrentView("Settings")
               }}></BigButton>
