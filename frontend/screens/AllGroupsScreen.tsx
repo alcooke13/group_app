@@ -211,9 +211,9 @@ export default function AllGroupsScreen(props: Props) {
 
     function AddNewOptionPollView(){
       return (
-        <>
-          <NewOptionScreen user={user} polltype={pollType}/>
-        </>
+        <View>
+          <NewOptionScreen user={user}/>
+        </View>
       )
     }
 
