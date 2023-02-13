@@ -8,7 +8,7 @@ import BigButton from '../components/BigButton';
 import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
-import { getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
+import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
 
 interface Props {
     user: number
@@ -163,7 +163,8 @@ export default function SettingsScreen(props: Props) {
           <BigButton 
               title='Remove Selected' 
               onPress={() => {
-                updateCurrentView("Settings")
+                if (friendsToRemove.length > 0) deleteFriendsByUserId(user, friendsToRemove);
+                updateSettingsUpdated(true);
               }}></BigButton>
         </View>
       </View>

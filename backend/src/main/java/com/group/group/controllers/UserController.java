@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -60,6 +57,56 @@ public class UserController {
                 .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
 
         updateUser.setAddress(address.get("new"));
+
+        userRepository.save(updateUser);
+
+        return ResponseEntity.ok(updateUser);
+    }
+
+    @PutMapping("/users/{id}/remove-friends")
+    public ResponseEntity<User> deleteFriends(
+        @PathVariable long id,
+        @RequestBody List<Long> userIds) {
+
+            User updateUser = userRepository
+                    .findById(id)
+                    .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+            List<User> friends = updateUser.getFriends();
+
+            for (Long userId : userIds) {
+                User friend = userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+                if (friends.contains(friend)) {
+                    updateUser.removeFriend(friend);
+                }
+            }
+
+            userRepository.save(updateUser);
+
+            return ResponseEntity.ok(updateUser);
+    }
+
+    @PutMapping("/users/{id}/add-friends")
+    public ResponseEntity<User> addFriends(
+            @PathVariable long id,
+            @RequestBody List<String> phoneNumbers) {
+
+        User updateUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+        List<User> allUsers = userRepository.findAll();
+
+        for (User user : allUsers) {
+            for (String phoneNumber : phoneNumbers) {
+                if (user.getPhoneNumber() == phoneNumber) {
+                    updateUser.addFriend(user);
+                }
+            }
+        }
 
         userRepository.save(updateUser);
 
