@@ -16,13 +16,11 @@ import { updateActivityPollDataWithNewOption, ActivityPollData } from '../servic
 
 interface Props {
     user: number
-    singleGroupId: string;
-    singleGroupName: string;
-    setState: React.Dispatch<React.SetStateAction<string>>;
+    polltype?: any
 }
 
 export default function(props: Props){
-    const {user, singleGroupId, singleGroupName, setState} = props;
+    const {user, polltype} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
     const [pollView, setPollView] = useState<string>("activityOption");
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
@@ -33,7 +31,6 @@ export default function(props: Props){
     const [locationBundle, setLocationBundle] = useState<LocationPollData>();
     const [activityBundle, setActivityBundle] = useState<ActivityPollData>();
 
-    
     // Change state functions
     const changeViewToLocation = () => {
         setPollView("locationOption")

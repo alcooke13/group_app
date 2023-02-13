@@ -212,7 +212,7 @@ export default function AllGroupsScreen(props: Props) {
     function AddNewOptionPollView(){
       return (
         <>
-          <NewOptionScreen user={user} singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/>
+          <NewOptionScreen user={user} polltype={pollType}/>
         </>
       )
     }
