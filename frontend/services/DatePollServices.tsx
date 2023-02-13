@@ -104,3 +104,21 @@ export function postDatePoll(payload: Object): Promise<DatePollData> {
           return response as DatePollData;
       });
 }
+
+export function updateDatePollTimeout(
+  pollId: number, 
+  payload: Object
+  ): Promise <DatePollData> {
+  return fetch(
+        'http://127.0.0.1:8080/date-polls/' + pollId.toString() + '/update-timeout', 
+    {
+    method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+  }
+  ).then ((response) => response.json())
+  .then ((response) => {
+      console.log(response)
+      return response as DatePollData
+  })
+}

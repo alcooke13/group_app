@@ -10,9 +10,9 @@ import ScreenHeaderText from '../components/ScreenHeaderText';
 import BackArrow from '../components/BackArrow';
 import BigPlus from '../components/BigPlus';
 import BurgerIcon from '../components/BurgerIcon';
-import { DatePollData, getDatePollDataByGroupId, postDatePoll } from '../services/DatePollServices';
-import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll } from '../services/LocationPollServices';
-import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll } from '../services/ActivityPollServices';
+import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout } from '../services/DatePollServices';
+import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout } from '../services/LocationPollServices';
+import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout } from '../services/ActivityPollServices';
 import ButtonSelector from '../components/ButtonSelector';
 import NewEvent from './NewEvent/NewEvent';
 import AddGroupScreen from './AddGroupScreen';
@@ -67,33 +67,45 @@ export default function AllGroupsScreen(props: Props) {
       } 
     }, [isFocused]);
 
-    // function findActivePoll(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[]){
-    //   const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
-    //   setActiveGroupPoll(upcomingPoll)
-    //   return upcomingPoll;
-    // }
-
     function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
       const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
       const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
 
+      function mostPollVotes(poll: DatePollData | ActivityPollData | LocationPollData) {
+        let mostVotes = 0;
+        let winningOption;
 
-      // function mostPollVotes(poll: DatePollData | ActivityPollData | LocationPollData) {
-      //   let winningOption;
+        for (const [option, user_ids] of Object.entries(poll?.options)) {
+          if (user_ids.length > 0 && user_ids.length > mostVotes) {
+            winningOption = option;
+          }
+        }
 
-      //   for (const [option, user_ids] of Object.entries(poll?.options)) {
-      //   }
-
-      // }
+        return winningOption;
+      }
 
       if (pastPolls.length != 0) {
         pastPolls.forEach((poll) => {
+          const winningOption = mostPollVotes(poll);
+
           if (poll?.type === "Date" && !upcomingEvent.date) {
-            updateEventDate(upcomingEvent.id, {'new': "2023-02-03T17:00:00"})
+            if (!winningOption) {
+              updateDatePollTimeout(poll.id, {'timeout': 48});
+            } else {
+              updateEventDate(upcomingEvent.id, {'new': winningOption});
+            }
           } else if (poll?.type === "Activity" && !upcomingEvent.activity) {
-            updateEventActivity(upcomingEvent.id, {'new': "cycling"})
+            if (!winningOption) {
+              updateActivityPollTimeout(poll.id, {'timeout': 48});
+            } else {
+              updateEventActivity(upcomingEvent.id, {'new': winningOption});
+            }
           } else if (poll?.type === "Location" && !upcomingEvent.eventLocation) {
-            updateEventLocation(upcomingEvent.id, {'new': "bristol"})
+            if (!winningOption) {
+              updateLocationPollTimeout(poll.id, {'timeout': 48});
+            } else {
+              updateEventLocation(upcomingEvent.id, {'new': winningOption});
+            }
           }
         })
       }
@@ -124,7 +136,6 @@ export default function AllGroupsScreen(props: Props) {
       } 
       
       console.log("upcoming poll: ", upcomingPoll)
-      
     }
 
     function getUpcomingEvent(group: GroupData) {
@@ -235,6 +246,8 @@ export default function AllGroupsScreen(props: Props) {
             availableOptions.push(option)
             voteCount.set(option, user_ids)
         }
+
+        console.log(Object.entries(activeGroupPoll?.options))
 
         const getOptions = availableOptions.map(function(val, index){
           return (

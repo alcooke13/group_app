@@ -101,6 +101,23 @@ public class DatePollController {
             throw new ServerException("error: could not create event");
         }
     }
+
+    @PutMapping("/date-polls/{id}/update-timeout")
+    public ResponseEntity<DatePoll> updateDatePollTimeout(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        DatePoll updateDatePoll = datePollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Date Poll Not Found: " + id));
+
+        LocalDateTime timeout = LocalDateTime.now().withNano(0).plusHours(body.get("timeout"));
+
+        updateDatePoll.setTimeout(timeout);
+
+        datePollRepository.save(updateDatePoll);
+        return ResponseEntity.ok(updateDatePoll);
+    }
 }
 
 
