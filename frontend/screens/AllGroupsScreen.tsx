@@ -253,9 +253,9 @@ export default function AllGroupsScreen(props: Props) {
 
     function AddNewOptionPollView(){
       return (
-        <>
-          <NewOptionScreen user={user} singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/>
-        </>
+        <View>
+          <NewOptionScreen user={user} setState={setGroupView}/>
+        </View>
       )
     }
 
@@ -300,7 +300,7 @@ export default function AllGroupsScreen(props: Props) {
           {groupView === "addgroupview" ? <AddGroupView/>: ""}
           {groupView === "newEvent" ? <AddEventView/>: ""}
           {groupView === "loading" ? "" : ""}
-          {groupView === "addOption" ? <AddNewOptionPollView/> : ""}
+          {groupView === "addOption" ? <AddNewOptionPollView /> : ""}
         </SafeAreaView>
     )
 }
