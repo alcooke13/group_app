@@ -53,3 +53,20 @@ export function getLocationPollDataByGroupId(id: number): Promise<LocationPollDa
                 return response as LocationPollData[];
             });
         }
+        export function updateLocationPollDataWithNewOption(
+            locationPollId: number,
+            payload: { [key: string]: [] }
+          ): Promise<LocationPollData> {
+            return fetch(
+              "http://127.0.0.1:8080/location-polls/" + locationPollId.toString() + "/add-option",
+              {
+                method: "PUT",
+                body: JSON.stringify(payload),
+                headers: { "Content-Type": "application/json" },
+              }
+            ).then((response) => response.json())
+            .then((response) => {
+              return response as LocationPollData;
+            });
+        }
+            
