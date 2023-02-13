@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, TextInput} from 'react-native';
-import { useEffect, useState } from 'react';
+import { View, StyleSheet, SafeAreaView, TextInput} from 'react-native';
+import { useState } from 'react';
 import BackArrow from '../components/BackArrow';
 import TextHeader from '../components/TextHeader';
 import BackgroundBox from '../components/BackgroundBox';
 import MenuText from '../components/MenuText';
 import SmallButton from '../components/SmallButton';
 import InfoBox from '../components/InfoBox';
-import CalendarMonth from '../components/Calendar';
 import TimeOfDayButton from '../components/TimeOfDayButton';
 import CalendarOption from '../components/CalenderOption';
 import { updateDatePollDataWithNewOption, DatePollData } from '../services/DatePollServices';
+import { updateLocationPollDataWithNewOption, LocationPollData } from '../services/LocationPollServices';
 
 
 interface Props {
@@ -22,11 +22,11 @@ export default function(props: Props){
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
     const [pollView, setPollView] = useState<string>("activityOption");
     const [activityPollData, setActivityPollData] = useState<string>("");
-    const [locationPollData, setLocationPollData] = useState<string>("");
-    const [datePollData, setDatePollData] = useState<Date>();
+    const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
     const [savedDate, setSavedDated] = useState<string>("");
     const [savedTime, setSavedTime] = useState<string>("");
-    const [bundle, setBundle] = useState<DatePollData>()
+    const [dateBundle, setDateBundle] = useState<DatePollData>()
+    const [locationBundle, setLocationBundle] = useState<LocationPollData>()
 
     
     // Change state functions
@@ -67,7 +67,7 @@ export default function(props: Props){
                 <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
                     <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
-                                    activityValue = inputText;;
+                                    activityValue = inputText;
                                 }}
                                 onEndEditing={onActivityInputEnd}/>
                 </View>
@@ -79,7 +79,7 @@ export default function(props: Props){
     const LocationPollInput = () => {
         let locationValue: string;
         const onLocationInputEnd = () => {
-            setActivityPollData(locationValue)
+            setSavedLocationPoll(locationValue)
         }
         return (
         <>
@@ -93,7 +93,7 @@ export default function(props: Props){
                 <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
                     <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
-                                    locationValue = inputText;;
+                                    locationValue = inputText;
                                 }}
                                 onEndEditing={onLocationInputEnd}/>
                 </View>
@@ -105,15 +105,26 @@ export default function(props: Props){
 
     const ConfirmationScreen = () => {
         function prepareBundle(){
+            // Date/Time Bundle
             let dateStringKey : string = savedDate + savedTime;
             const newBundle: {[key: string]: [] }  = {}
-                
-            newBundle[dateStringKey]  = []
-            
-            updateDatePollDataWithNewOption(1, newBundle).then((data)=> {
-                setBundle(data)
-                console.log(bundle)
+            newBundle[dateStringKey]  = [];
+
+            //Location Bundle
+            let locationStringKey: string = savedLocationPoll;
+            const newLocationBundle: {[key: string]: [] }  = {}
+            newLocationBundle[locationStringKey] = []
+
+            // Setup if statements for which one to run
+            // updateDatePollDataWithNewOption(user, newBundle).then((data) => {
+            //     setDateBundle(data)
+           
+            // })
+
+            updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
+                setLocationBundle(data)
             })
+
         }
         return (
             <BackgroundBox>

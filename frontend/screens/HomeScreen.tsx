@@ -162,8 +162,8 @@ export default function HomeScreen(props: Props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'space-evenly',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
         backgroundColor: '#25242B'
       },
       title: {
