@@ -37,41 +37,6 @@ export default function AllGroupsScreen (props: Props) {
   const { user } = props
   const isFocused = useIsFocused()
 
-  const initialState = {
-    id: '',
-    groupName: '',
-    events: [
-      {
-        id: '',
-        date: '',
-        eventName: '',
-        eventLocation: '',
-        activity: '',
-        activityPoll: '',
-        locationPoll: '',
-        datePoll: ''
-      }
-    ]
-  }
-
-  const [groups, setGroups] = useState<GroupData[]>()
-  const [singleGroup, setSingleGroup] = useState(initialState)
-  const [groupView, setGroupView] = useState('loading')
-  const [groupPolls, setGroupPolls] =
-    useState<(DatePollData | ActivityPollData | LocationPollData)[]>()
-  const [activeGroupPoll, setActiveGroupPoll] = useState<
-    DatePollData | ActivityPollData | LocationPollData
-  >()
-
-  const route = useRoute()
-  let groupId: number
-
-  try {
-    groupId = route.params.groupId
-  } catch {
-    groupId = 0
-  }
-
   const [groups, setGroups] = useState<GroupData[]>();
   const [singleGroup, setSingleGroup] = useState<GroupData>();
   const [groupView, setGroupView] = useState<string>("loading");
@@ -236,53 +201,73 @@ export default function AllGroupsScreen (props: Props) {
                 status={false} 
                 onPress={() => getSingleGroupData(group.id)
                 }/>
-    })
-  }
+  })
 
-  function addNewEvent () {
+  function addNewEvent() {
     setGroupView('newEvent')
   }
 
-  function addNewOption () {
+  function addNewOption() {
     setGroupView('addOption')
   }
 
-  function SingleGroupDetails () {
-  if (upcomingEvent) {
-      const eventDate = new Date(singleGroup.events[0].date).toLocaleString(
-        'en-GB',
-        {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long'
-        }
-      )
+  function SingleGroupDetails() {
+    if (upcomingEvent) {
+      let eventDate;
+
+      if (upcomingEvent.date) {
+        eventDate = new Date(upcomingEvent.date).toLocaleString(
+          'en-GB',
+          {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long'
+          }
+        )
+      }
 
       return (
-        <>
-          <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
           <>
-
             <TextHeader>{upcomingEvent.eventName}</TextHeader>
-            <>
-              <Text>Date:         {eventDate}</Text>
-              <Text>Time:         TBC</Text>
-              <Text>Location:   {upcomingEvent.eventLocation}</Text>
-            </>
+            <Text>Date:         {eventDate}</Text>
+            <Text>Time:         TBC</Text>
+            <Text>Location:   {upcomingEvent.eventLocation}</Text>
           </>
-          )
-      } else {
-          return (
-            <>
-              <TextHeader> No upcoming event </TextHeader>
-              <Text>Date:        </Text>
-              <Text>Time:        </Text>
-              <Text>Location:   </Text>
-            </>
-           )
-       } 
-  }   
-
+      )
+    } else {
+      return (
+        <>
+          <TextHeader> No upcoming event </TextHeader>
+          <Text>Date:        </Text>
+          <Text>Time:        </Text>
+          <Text>Location:   </Text>
+        </>
+      )
+    }
+  }
+  
+  function captureChosenVote (val: string) {
+    let chosenOption: string
+    let voter: number = user
+    let newData: { [key: string]: number } = {}
+    for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
+      if (val === option) {
+        chosenOption = val
+      }
+      if (activeGroupPoll.type == 'Location') {
+        newData[chosenOption] = voter
+        updateLocationPollWithNewVote(activeGroupPoll?.id, newData)
+      } else if (activeGroupPoll.type == 'Activity') {
+        newData[chosenOption] = voter
+        updateActivityPollWithNewVote(activeGroupPoll?.id, newData)
+      } else if (activeGroupPoll.type == 'Date') {
+        let dateoption = chosenOption.toString()
+        newData[dateoption] = voter
+        updateDatePollWithNewVote(activeGroupPoll?.id, newData)
+      }
+    }
+  }
+ 
   function SingleGroupPollDetails () {
     if (activeGroupPoll) {
       let availableOptionsArray = []
@@ -313,6 +298,7 @@ export default function AllGroupsScreen (props: Props) {
             month: 'long'
           })
         }
+
         return (
           <View style={styles.pollOption}>
             <ButtonSelector
@@ -388,35 +374,7 @@ export default function AllGroupsScreen (props: Props) {
       </>
     )
   }
-
-  function SingleGroupView () {
-    return (
-      <>
-        <View style={styles.header}>
-          <BackArrow onPress={() => setGroupView('allgroups')}></BackArrow>
-          <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
-          <BurgerIcon></BurgerIcon>
-        </View>
-        <InfoBox
-          header='Next Event'
-          boxHeight='60%'
-          smallPlus={<SmallPlus onPress={() => addNewEvent()} />}
-        >
-          <SingleGroupDetails />
-        </InfoBox>
-        <InfoBox
-          header={activeGroupPoll.event.eventName}
-          smallPlus={<SmallPlus onPress={() => addNewOption()} />}
-        >
-          <View>
-            <SingleGroupPollDetails />
-          </View>
-        </InfoBox>
-        </>
-    )}
       
-  
-
   function AddGroupView () {
     return <AddGroupScreen user={user} />
   }
