@@ -17,12 +17,13 @@ import { updateActivityPollDataWithNewOption, ActivityPollData } from '../servic
 interface Props {
     user: number
     polltype?: any
+    setState: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function(props: Props){
-    const {user, polltype} = props;
+    const {user, polltype, setState} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
-    const [pollView, setPollView] = useState<string>("confirmation"); // This will need to change depending on the polltype
+    const [pollView, setPollView] = useState<string>("calenderOption"); // This will need to change depending on the polltype
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
     const [savedDate, setSavedDated] = useState<string>("");
@@ -30,7 +31,7 @@ export default function(props: Props){
     const [dateBundle, setDateBundle] = useState<DatePollData>();
     const [locationBundle, setLocationBundle] = useState<LocationPollData>();
     const [activityBundle, setActivityBundle] = useState<ActivityPollData>();
-    const [pollType, setPollType] = useState("Activity");
+    const [pollType, setPollType] = useState("Date");
 
     // Change state functions
     const changeFromActivityToConfirmation = () => {
@@ -108,6 +109,16 @@ export default function(props: Props){
             <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/></View>
             </>
     )};
+    let eventDate = new Date(savedDate+savedTime).toLocaleString('en-GB', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+    });
+
+    let eventTime = new Date(savedDate+savedTime).toLocaleTimeString("en-US", {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 
     const ConfirmationScreen = () => {
         function prepareBundle(){
@@ -147,11 +158,14 @@ export default function(props: Props){
            
             })
             } 
-
-            // setSavedActivityPoll("");
-            // setSavedLocationPoll("");
-            // setSavedDated("");
-            // setSavedTime("");
+          
+                setSavedActivityPoll("");
+                setSavedLocationPoll("");
+                setSavedDated("");
+                setSavedTime("");    
+            
+            setState("singlegroup")
+          
         
         }
         return (
@@ -162,8 +176,8 @@ export default function(props: Props){
                 {savedActivityPoll !== "" ? <Text style={styles.reviewText}>Activity: {savedActivityPoll}</Text> : ""}
                 {savedLocationPoll !== "" ? <Text style={styles.reviewText}>Location: {savedLocationPoll}</Text> : ""}
                 {savedTime !== "" && savedDate ? <>
-                <Text style={styles.reviewText}>Time: {savedTime}</Text>
-                <Text style={styles.reviewText}>Date: {savedDate}</Text>
+                <Text style={styles.reviewText}>Time: {eventTime}</Text>
+                <Text style={styles.reviewText}>Date: {eventDate}</Text>
                 </> : ""}
                 </>
             </BackgroundBox>
@@ -209,7 +223,7 @@ export default function(props: Props){
         <View>
             <TimeOfDayButton timeOfDayOption='Morning' selected={savedTime === "T09:00" ? true : false} onPress={() => setSavedTime("T09:00")}/>
             <TimeOfDayButton timeOfDayOption='Afternoon' selected={savedTime === "T12:00" ? true : false} onPress={() => setSavedTime("T12:00")}/>
-            <TimeOfDayButton timeOfDayOption='Evening' selected={savedTime === "T09:00" ? true : false} onPress={() => setSavedTime("T18:00")}/>
+            <TimeOfDayButton timeOfDayOption='Evening' selected={savedTime === "T18:00" ? true : false} onPress={() => setSavedTime("T18:00")}/>
         </View>
         <View>
         <SmallButton title="Done" onPress={() => changeConfirmationScreen()}/>
