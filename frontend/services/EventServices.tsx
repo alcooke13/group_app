@@ -4,9 +4,6 @@ export interface EventData {
 	eventName: string
 	eventLocation: string
 	activity: string
-	activityPoll?: string
-	locationPoll?: string
-	datePoll?: string
 	group: {
 		events: []
 		groupName: string

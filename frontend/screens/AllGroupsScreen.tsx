@@ -10,7 +10,7 @@ import ScreenHeaderText from '../components/ScreenHeaderText';
 import BackArrow from '../components/BackArrow';
 import BigPlus from '../components/BigPlus';
 import BurgerIcon from '../components/BurgerIcon';
-import { DatePollData, getDatePollDataByGroupId } from '../services/DatePollServices';
+import { DatePollData, getDatePollDataByGroupId, postDatePoll } from '../services/DatePollServices';
 import { getLocationPollDataByGroupId, LocationPollData } from '../services/LocationPollServices';
 import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
 import ButtonSelector from '../components/ButtonSelector';
@@ -35,7 +35,7 @@ export default function AllGroupsScreen(props: Props) {
     const [singleGroup, setSingleGroup] = useState<GroupData>();
     const [groupView, setGroupView] = useState<string>("loading");
     const [upcomingEvent, setUpcomingEvent] = useState<EventData>();
-    const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
+    const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
     const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData)>();
 
     const route = useRoute();
@@ -67,9 +67,19 @@ export default function AllGroupsScreen(props: Props) {
       }
     }, [isFocused]);
 
+    function findActivePoll(groupPolls: Array<ActivityPollData | DatePollData | LocationPollData>){
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = groupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
+      return upcomingPoll;
+    }
+
     function pollController() {
-      if (!upcomingEvent?.datePoll) {
-        setActiveGroupPoll
+      const activePoll: DatePollData | ActivityPollData | LocationPollData | undefined = findActivePoll(groupPolls);
+
+      if (!upcomingEvent?.date && activePoll?.type !== "Date") {
+        postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((datePoll) => setActiveGroupPoll(datePoll));
+      } else if (!upcomingEvent?.activity && activePoll?.type !== "Activity") {
+        
       }
     }
 
@@ -125,11 +135,6 @@ export default function AllGroupsScreen(props: Props) {
 
     function addNewOption(){
       setGroupView("addOption")
-    }
-
-    function findActivePoll(allGroupPolls){
-      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
-      setActiveGroupPoll(upcomingPoll);
     }
 
     function SingleGroupDetails(){
