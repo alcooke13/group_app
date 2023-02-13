@@ -43,17 +43,6 @@ export default function SettingsScreen(props: Props) {
   }, [isFocused, settingsUpdated]);
 
 
-  function onPressAccountSetting(){
-    return console.log("Account settings pressed")
-  }
-  function onPressContactsSetting(){
-    return console.log("Contacts settings pressed")
-  }
-  function onPressNotificationSetting(){
-    return console.log("Notification settings pressed")
-  }
-
-
   function SettingsView() {
     return (
       <View style={styles.settingsContainer}>
