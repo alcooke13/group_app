@@ -198,8 +198,6 @@ export default function AllGroupsScreen (props: Props) {
     }
   }
 
-  
-
   function captureChosenVote (val: string) {
     let chosenOption: string
     let voter: number = user
@@ -225,30 +223,39 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   function SingleGroupPollDetails () {
-      let availableOptionsArray = []
-      let allOptionsMap = new Map<string, Array <number>> ()
-      
-      for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
-          availableOptionsArray.push(option)
-      }
+    let availableOptionsArray = []
+    let allOptionsMap = new Map<string, Array<number>>()
+
+    for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+      availableOptionsArray.push(option)
+    }
 
     for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
       allOptionsMap.set(option, user_ids)
     }
+
     
-
-
     const returnStatement = availableOptionsArray.map(function (val, index) {
-      console.log(allOptionsMap.get(val))
+      let valToDisplay = val
+      if (activeGroupPoll?.type == 'Date') {
+        valToDisplay = new Date(val).toLocaleString('en-GB', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long'
+        })
+      }
+
       return (
         <View style={styles.pollOption}>
           <ButtonSelector
             key={index}
-            option={val}
+            option={valToDisplay}
             onPress={() => captureChosenVote(val)}
             selected={false}
           ></ButtonSelector>
-          <Text style={styles.voteCounter}>{allOptionsMap.get(val)?.length}</Text>
+          <Text style={styles.voteCounter}>
+            {allOptionsMap.get(val)?.length}
+          </Text>
         </View>
       )
     })
