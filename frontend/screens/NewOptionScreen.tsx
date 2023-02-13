@@ -122,22 +122,28 @@ export default function(props: Props){
             const newActivityBundle: {[key: string]: [] } = {}
             newActivityBundle[activityStringKey] = []
 
-            // Date/Time
-            // updateDatePollDataWithNewOption(user, newBundle).then((data) => {
-            //     setDateBundle(data)
+            // Making the put requests:
            
-            // })
-            // Location Data
-            // updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
-            //     setLocationBundle(data)
-            // })
-
             // Activity Data
+            if(dateStringKey === "" && locationStringKey === "") {  
             updateActivityPollDataWithNewOption(user, newActivityBundle).then((data) => {
                 setActivityBundle(data)
             })
 
-
+            //Location Data
+            } else if (dateStringKey === "" && activityStringKey === "") {
+                updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
+                        setLocationBundle(data)
+                    })
+            
+            // Date/Time        
+            } else if (activityStringKey === "" && locationStringKey === "") {
+                 updateDatePollDataWithNewOption(user, newBundle).then((data) => {
+                setDateBundle(data)
+           
+            })
+            } 
+        
         }
         return (
             <BackgroundBox>
@@ -146,8 +152,6 @@ export default function(props: Props){
             </BackgroundBox>
         )
     }
-
-
     
     return (
         // container
