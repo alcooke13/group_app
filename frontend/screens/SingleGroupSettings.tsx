@@ -9,8 +9,10 @@ import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
 import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
-import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData } from '../services/GroupServices';
+import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData, updateGroupTitle } from '../services/GroupServices';
 import { EventData } from '../services/EventServices';
+import LineBreak from '../components/LineBreak';
+import SmallButton from '../components/SmallButton';
 interface Props {
     user: number,
     groupId: number;
@@ -27,28 +29,30 @@ export default function SingleGroupSettings(props: Props) {
 
     const [currentView, updateCurrentView] = useState<String>("Settings");
     const [userDetails, setUserDetails] = useState<UserData>();
-    const [friends, setFriends] = useState<UserData[]>([]);
     const [members, setGroupMembers] = useState<UserData[]>([]);
     const [settingsUpdated, updateSettingsUpdated] = useState<boolean>(false);
     const [membersToRemove, updateMembersToRemove] = useState<Array<number>>([]);
     const [singleGroup, setSingleGroup] = useState<any>({})
     const [refreshing, setRefreshing] = useState(false);
-    const [pastEvents, setPastEvents] = useState<EventData []>()
+    const [pastEvents, setPastEvents] = useState<EventData[]>()
+    const [title, setTitle] = useState<string >("")
+
     useEffect(() => {
+        const newPastEvents: any[] = [];
         if (isFocused || settingsUpdated) {
             updateCurrentView("Settings");
             getGroupDataByGroupId(groupId)
                 .then((group) => {
                     setSingleGroup(group);
                     setGroupMembers(group.users)
-                    const newPastEvents : EventData [];
                     group.events.forEach(event => {
                         if (Date.parse(event.date) < Date.now()) {
                             newPastEvents.push(event);
-                          }})
+                        }
+                    })
                     setPastEvents(newPastEvents)
-                    });
                 }
+
                 ).then(data => { console.log(data) })
             getUserDataByUserId(user)
                 .then((user) => {
@@ -58,6 +62,14 @@ export default function SingleGroupSettings(props: Props) {
             updateSettingsUpdated(false);
         }
     }, [isFocused, settingsUpdated, refreshing]);
+
+    function TitleUpdate(){
+        if (title){
+            updateGroupTitle(groupId, title)
+        }
+       
+        
+    }
 
 
 
@@ -105,13 +117,27 @@ export default function SingleGroupSettings(props: Props) {
         )
     }
 
+    
     function EditGroupView() {
-        let newGroupName: string;
         // let newAddressValue: string;
+        let newGroupTitle : string  
+        
+        
+        
+        function setNewGroupTitle(){
+            
+            if(newGroupTitle){
+                
+                setTitle(newGroupTitle)
+                TitleUpdate()
+            }
+            console.log(newGroupTitle, "title_check")
+            
+        }
         const memberItems = members?.map((member, index) => {
             return (
                 <ButtonSelector option={member.userName}
-                    onPress={() => {
+                onPress={() => {
                         if (!membersToRemove.includes(member.id)) {
                             const newMembersToRemove = [...membersToRemove];
                             newMembersToRemove.push(member.id);
@@ -128,34 +154,46 @@ export default function SingleGroupSettings(props: Props) {
                     }}
                     selected={membersToRemove.includes(member.id)}
                     key={index}></ButtonSelector>
-            )
-        });
+                    )
+                });
+                
         return (
             <View style={{ flex: 1 }} >
-                <View style ={{flex: 0.1}}>
-                    <BackArrow onPress={()=>{
+                <View style={{ flex: 0.1 }}>
+                    <BackArrow onPress={() => {
                         updateCurrentView("Settings")
                     }} />
 
                 </View>
-                <View style={{ width: 300, height: 400, flex: 0.2 }}>
+                <View style={{ width: 300, flex: 0.3 }}>
                     <BackgroundBox boxHeight={'100%'}>
                         <View >
                             <Text style={styles.accountHeader}>Group Name</Text>
                             <TextInput
                                 style={styles.accountNameInput}
-                                placeholder={props.groupName}
-                                onChangeText={(text) => newGroupName = text}>
-                            </TextInput>
-                        </View>
-                    </BackgroundBox>
+                                defaultValue={groupName}
+                                onChangeText={(text) => {newGroupTitle = text}}
+                                onEndEditing={() => {
+                                    setTitle(newGroupTitle)
+                            
+                                }}
+                            >
 
+                            </TextInput>
+                    <SmallButton title='Submit' onPress={() => {
+                        setNewGroupTitle()
+                        TitleUpdate()
+
+
+                    }} ></SmallButton>
+                    </View>
+                    </BackgroundBox>
                 </View>
 
                 <View style={{ flex: 0.7 }}>
 
                     <InfoBox header='Contacts'
-                        boxHeight='80%'
+                        boxHeight='70%'
                     // smallPlus={<SmallPlus onPress={() => { }} />} 
                     >
                         <ScrollView showsVerticalScrollIndicator={false}>
@@ -186,18 +224,67 @@ export default function SingleGroupSettings(props: Props) {
 
     }
 
-    function PastEvents(){
+    function PastEvents() {
+
+        const pastEventItems = pastEvents?.map((event, index) => {
+            let eventDate = new Date(event.date).toLocaleString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+            });
+
+            let eventTime = new Date(event.date).toLocaleTimeString("en-US", {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+
+            return (
+                <View style={{ width: '90%' }}>
+                    <View style={{}}>
+                        {index != 0 ? <LineBreak /> : ""}
+                    </View>
+                    <View key={index} style={{}} >
+                        <Text style={{ fontSize: 18, color: '#1E1E1E', paddingBottom: 8 }} >{event.eventName}</Text>
+                        <Text style={{ paddingVertical: 1 }} >
+                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Date:</Text>
+                            <Text>  {eventDate}</Text>
+                        </Text>
+                        <Text style={{ paddingVertical: 1 }}>
+                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Time:</Text>
+                            <Text>  {eventTime}</Text>
+                        </Text>
+                        <Text style={{ paddingVertical: 1 }}>
+                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Activity:</Text>
+                            <Text>  {event.activity}</Text>
+                        </Text>
+                        <Text style={{ paddingVertical: 1 }}>
+                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Location:</Text>
+                            <Text>  {event.eventLocation}</Text>
+                        </Text>
+
+                    </View>
+                </View>
+            )
+        });
 
 
 
         return (
-            <View style={{flex:1}}> 
-                <InfoBox header='Past Events' boxHeight='60%'>
-                    <View>
+            <SafeAreaView style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                backgroundColor: '#25242B',
+            }}>
 
-                    </View>
+                <InfoBox header='Past Events' boxHeight='60%' boxMarginTop='5%' >
+                    <ScrollView style={{ padding: 10 }}>
+                        {pastEventItems}
+                    </ScrollView>
                 </InfoBox>
-            </View>
+
+            </SafeAreaView>
         )
     }
 

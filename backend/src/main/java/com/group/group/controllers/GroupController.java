@@ -1,5 +1,6 @@
 package com.group.group.controllers;
 
+import com.group.group.models.Event;
 import com.group.group.models.Group;
 import com.group.group.models.User;
 import com.group.group.repositories.GroupRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,5 +109,21 @@ public class GroupController {
         groupRepository.save(updateGroup);
 
         return ResponseEntity.ok(updateGroup);
+    }
+
+    @PutMapping("/groups/{id}/modify-title")
+    public ResponseEntity<Group> changeGroupTitle(
+            @PathVariable long id,
+            @RequestBody String newTitle ){
+
+        Group groupToUpdate = groupRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Event Not Found: " + id));
+        groupToUpdate.setGroupName(newTitle.toString());
+
+        groupRepository.save(groupToUpdate);
+
+
+        return ResponseEntity.ok(groupToUpdate);
     }
 }

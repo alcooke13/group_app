@@ -40,6 +40,8 @@ return fetch('http://127.0.0.1:8080/events?user_id=' + id.toString(), {
 }
 
 
+
+
 export function postEvent(payload: Object): Promise<EventData>{
 return fetch("http://127.0.0.1:8080/events", {
 	method: 'POST',
