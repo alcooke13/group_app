@@ -54,7 +54,7 @@ export default function AllGroupsScreen(props: Props) {
       ],
     }; 
 
-    const [groups, setGroup] = useState<GroupData[]>();
+    const [groups, setGroups] = useState<GroupData[]>();
     const [singleGroup, setSingleGroup] = useState(initialState);
     const [groupView, setGroupView] = useState("loading");
     const [groupPolls, setGroupPolls] = useState<(DatePollData | ActivityPollData | LocationPollData)[]>();
@@ -85,7 +85,8 @@ export default function AllGroupsScreen(props: Props) {
 
         getGroupData()
         .then((userGroups) => {
-          setGroup(userGroups);
+          setGroups(userGroups);
+          console.log(groups)
         })
       }
     }, [isFocused]);
