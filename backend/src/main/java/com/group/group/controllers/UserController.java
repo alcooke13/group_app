@@ -6,11 +6,11 @@ import com.group.group.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -32,5 +32,37 @@ public class UserController {
     @GetMapping(value = "/users/{id}")
     public ResponseEntity getUser(@PathVariable Long id){
         return new ResponseEntity<>(userRepository.findById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/users/{id}/update-user-name")
+    public ResponseEntity<User> updateUserName(
+            @PathVariable long id,
+            @RequestBody HashMap<String, String> userName) {
+
+        User updateUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+        updateUser.setUserName(userName.get("new"));
+
+        userRepository.save(updateUser);
+
+        return ResponseEntity.ok(updateUser);
+    }
+
+    @PutMapping("/users/{id}/update-address")
+    public ResponseEntity<User> updateAddress(
+            @PathVariable long id,
+            @RequestBody HashMap<String, String> address) {
+
+        User updateUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+        updateUser.setAddress(address.get("new"));
+
+        userRepository.save(updateUser);
+
+        return ResponseEntity.ok(updateUser);
     }
 }

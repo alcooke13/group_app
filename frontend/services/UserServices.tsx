@@ -42,3 +42,45 @@ export function getFriendsByUserId(id: number): Promise<UserData[]> {
             return response as UserData[];
         });
 }
+
+export function updateUserName(
+    userId: number,
+    payload: Object
+  ): Promise<UserData> {
+    return fetch(
+      "http://127.0.0.1:8080/users/" + userId.toString() + "/update-user-name",
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((response) => response.json())
+    .then((response) => {
+      return response as UserData;
+    });
+}
+
+export function updateUserAddress(
+    userId: number,
+    payload: Object
+  ): Promise<UserData> {
+    return fetch(
+      "http://127.0.0.1:8080/users/" + userId.toString() + "/update-address",
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((response) => response.json())
+    .then((response) => {
+      return response as UserData;
+    });
+}
+
+export function deleteFriendsByUserId(userId: number, payload: Array<number>): Promise<Response> {
+    return fetch('http://127.0.0.1:8080/users/' + userId.toString() + '/delete-users', {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+    })
+}
