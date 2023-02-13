@@ -14,8 +14,6 @@ import NewEvent from './NewEvent/NewEvent';
 import AllGroupsScreen from './AllGroupsScreen';
 import navigation from '../navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import NewOptionScreen from './NewOptionScreen';
-
 
 interface Props {
     user: number
@@ -144,7 +142,7 @@ export default function HomeScreen(props: Props) {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
+            <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {eventItems}
                 </ScrollView>
@@ -154,8 +152,7 @@ export default function HomeScreen(props: Props) {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {pollItems}
                 </ScrollView>
-            </InfoBox> */}
-            <NewOptionScreen user={user}/>
+            </InfoBox>
         </SafeAreaView>
     );
 }
@@ -163,8 +160,8 @@ export default function HomeScreen(props: Props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'space-evenly',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
         backgroundColor: '#25242B'
       },
       title: {

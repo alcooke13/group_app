@@ -22,6 +22,7 @@ import NewEvent from './NewEvent/NewEvent';
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 import AddGroupScreen from './AddGroupScreen';
 import SmallPlus from '../components/SmallPlus';
+import NewOptionScreen from './NewOptionScreen';
 
 interface Props {
   user: number
@@ -122,6 +123,10 @@ export default function AllGroupsScreen(props: Props) {
       setGroupView("newEvent")
     }
 
+    function addNewOption(){
+      setGroupView("addOption")
+    }
+
     function findActivePoll(allGroupPolls){
       const upcomingPoll: DatePollData | ActivityPollData | LocationPollData = allGroupPolls.find(poll => (Date.parse(poll.timeout) - Date.now()>0))
       setActiveGroupPoll(upcomingPoll);
@@ -204,6 +209,13 @@ export default function AllGroupsScreen(props: Props) {
       ) 
     }
 
+    function AddNewOptionPollView(){
+      return (
+        <>
+          <NewOptionScreen user={user} singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/>
+        </>
+      )
+    }
 
     function AddEventView(){
       return (
@@ -224,8 +236,10 @@ export default function AllGroupsScreen(props: Props) {
           <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
             <SingleGroupDetails/>
           </InfoBox>
-          <InfoBox header={activeGroupPoll.event.eventName} boxHeight='60%'>
-            <SingleGroupPollDetails/>
+          <InfoBox header={activeGroupPoll.event.eventName} smallPlus={<SmallPlus onPress={() => addNewOption()}/>}>
+            <View>
+              <SingleGroupPollDetails/>
+            </View>
           </InfoBox>
         </>
       )
@@ -244,6 +258,7 @@ export default function AllGroupsScreen(props: Props) {
           {groupView === "addgroupview" ? <AddGroupView/>: ""}
           {groupView === "newEvent" ? <AddEventView/>: ""}
           {groupView === "loading" ? "" : ""}
+          {groupView === "addOption" ? <AddNewOptionPollView/> : ""}
         </SafeAreaView>
     )
 }

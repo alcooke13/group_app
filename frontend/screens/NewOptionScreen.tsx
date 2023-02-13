@@ -16,10 +16,13 @@ import { updateActivityPollDataWithNewOption, ActivityPollData } from '../servic
 
 interface Props {
     user: number
+    singleGroupId: string;
+    singleGroupName: string;
+    setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function(props: Props){
-    const {user} = props;
+    const {user, singleGroupId, singleGroupName, setState} = props;
     // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
     const [pollView, setPollView] = useState<string>("activityOption");
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
