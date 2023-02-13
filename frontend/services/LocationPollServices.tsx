@@ -37,55 +37,88 @@ export function getLocationPollDataByGroupId(id: number): Promise<LocationPollDa
         // headers: {
         // },
     })
-        .then((response) => response.json())
-        .then((response) => {
-            return response as LocationPollData[];
-        });
+    .then((response) => response.json())
+    .then((response) => {
+        return response as LocationPollData[];
+    });
+}
+
+export function getLocationPollDataByUserId(id: number): Promise<LocationPollData[]> {
+    return fetch('http://127.0.0.1:8080/location-polls?user_id=' + id.toString(), {
+        method: 'GET',
+        // headers: {
+        // },
+    })
+    .then((response) => response.json())
+    .then((response) => {
+        return response as LocationPollData[];
+    });
+}
+
+export function updateLocationPollWithNewVote(
+    pollId: number, 
+    payload:{[key: string]: number} 
+    ): Promise <LocationPollData> {
+    return fetch(
+        'http://127.0.0.1:8080/location-poll/' + pollId.toString() + '/add-vote', 
+    {
+    method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+    }
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as LocationPollData
+    })
     }
 
-    export function getLocationPollDataByUserId(id: number): Promise<LocationPollData[]> {
-        return fetch('http://127.0.0.1:8080/location-polls?user_id=' + id.toString(), {
-            method: 'GET',
-            // headers: {
-            // },
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                return response as LocationPollData[];
-            });
+export function updateLocationPollDataWithNewOption(
+    locationPollId: number,
+    payload: { [key: string]: [] }
+    ): Promise<LocationPollData> {
+    return fetch(
+        "http://127.0.0.1:8080/location-polls/" + locationPollId.toString() + "/add-option",
+        {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
         }
+    ).then((response) => response.json())
+    .then((response) => {
+        return response as LocationPollData;
+    });
+}
 
-        export function updateLocationPollWithNewVote(
-            pollId: number, 
-            payload:{[key: string]: number} 
-            ): Promise <LocationPollData> {
-          return fetch(
-                'http://127.0.0.1:8080/location-poll/' + pollId.toString() + '/add-vote', 
-            {
-            method: 'PUT',
-                body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'application/json' }
-          }
-            ).then ((response) => response.json())
-            .then ((response) => {
-                console.log(response)
-                return response as LocationPollData
-            })
-          }
-        export function updateLocationPollDataWithNewOption(
-            locationPollId: number,
-            payload: { [key: string]: [] }
-          ): Promise<LocationPollData> {
-            return fetch(
-              "http://127.0.0.1:8080/location-polls/" + locationPollId.toString() + "/add-option",
-              {
-                method: "PUT",
-                body: JSON.stringify(payload),
-                headers: { "Content-Type": "application/json" },
-              }
-            ).then((response) => response.json())
-            .then((response) => {
-              return response as LocationPollData;
-            });
-        }
-            
+export function postLocationPoll(payload: Object): Promise<LocationPollData> {
+    return fetch('http://127.0.0.1:8080/location-polls', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 
+            "Accept":"application/json",
+            "Content-Type":"application/json",
+         }
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as LocationPollData;
+        });
+}
+
+export function updateLocationPollTimeout(
+    pollId: number, 
+    payload: Object
+    ): Promise <LocationPollData> {
+  return fetch(
+        'http://127.0.0.1:8080/location-polls/' + pollId.toString() + '/update-timeout', 
+    {
+    method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+  }
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as LocationPollData
+    })
+  }

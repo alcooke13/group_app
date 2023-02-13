@@ -1,27 +1,10 @@
 import * as React from 'react'
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-  Pressable,
-  ScrollView
-} from 'react-native'
-import {
-  NavigationContainer,
-  TabRouter,
-  useIsFocused,
-  useRoute
-} from '@react-navigation/native'
+import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native'
+import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useEffect, useRef, useState } from 'react'
-import {
-  getGroupData,
-  getGroupDataByGroupId,
-  GroupData
-} from '../services/GroupServices'
+import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
 import GroupNameButton from '../components/GroupNameButton'
 import route from '../navigation'
 import { TabView } from '@rneui/base'
@@ -31,18 +14,9 @@ import ScreenHeaderText from '../components/ScreenHeaderText'
 import BackArrow from '../components/BackArrow'
 import BigPlus from '../components/BigPlus'
 import BurgerIcon from '../components/BurgerIcon'
-import {
-  DatePollData,
-  getDatePollDataByGroupId
-} from '../services/DatePollServices'
-import {
-  getLocationPollDataByGroupId,
-  LocationPollData
-} from '../services/LocationPollServices'
-import {
-  ActivityPollData,
-  getActivityPollDataByGroupId
-} from '../services/ActivityPollServices'
+import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout } from '../services/DatePollServices'
+import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout } from '../services/LocationPollServices'
+import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout } from '../services/ActivityPollServices'
 import ButtonSelector from '../components/ButtonSelector'
 import NewEvent from './NewEvent/NewEvent'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens'
@@ -51,7 +25,9 @@ import SmallPlus from '../components/SmallPlus'
 import { updateActivityPollWithNewVote } from '../services/ActivityPollServices'
 import { updateDatePollWithNewVote } from '../services/DatePollServices'
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices'
+import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices';
 import NewOptionScreen from './NewOptionScreen'
+
 
 interface Props {
   user: number
@@ -96,60 +72,172 @@ export default function AllGroupsScreen (props: Props) {
     groupId = 0
   }
 
-  useEffect(() => {
-    if (groupId != 0) {
-      setGroupView('loading')
-      getSingleGroupData(groupId)
-      route.params.groupId = 0
+  const [groups, setGroups] = useState<GroupData[]>();
+  const [singleGroup, setSingleGroup] = useState<GroupData>();
+  const [groupView, setGroupView] = useState<string>("loading");
+  const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
+  const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
+  const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
 
-      getGroupData().then(userGroups => {
-        setGroup(userGroups)
-      })
-    } else if (isFocused) {
-      setSingleGroup(initialState)
-      setGroupView('allgroups')
+  const route = useRoute();
+  let groupId: number;
 
-      getGroupData().then(userGroups => {
-        setGroups(userGroups)
-      })
-    }
-  }, [isFocused])
-
-  function getSingleGroupData (groupId: number) {
-    getGroupDataByGroupId(groupId).then(group => {
-      setSingleGroup(group)
-
-      const allGroupsPolls: Array<
-        DatePollData | ActivityPollData | LocationPollData
-      > = []
-
-      Promise.all([
-        getDatePollDataByGroupId(group.id),
-        getActivityPollDataByGroupId(group.id),
-        getLocationPollDataByGroupId(group.id)
-      ])
-        .then(polls => {
-          polls.flat().forEach(poll => {
-            if (Date.parse(poll.timeout) > Date.now()) {
-              allGroupsPolls.push(poll)
-            }
-          })
-        })
-        .then(() => findActivePoll(allGroupsPolls))
-        .then(() => setGroupView('singlegroup'))
-    })
+  try {
+    groupId = route.params.groupId;
+  } catch {
+    groupId = 0;
   }
 
-  const allUsersGroupsByName = groups?.flatMap(function (group, index) {
-    return (
-      <GroupNameButton
-        key={index}
-        title={group.groupName}
-        status={false}
-        onPress={() => getSingleGroupData(group.id)}
-      />
-    )
-  })
+  useEffect(() => {
+    if (groupId != 0) {
+      setGroupView("loading")
+      getSingleGroupData(groupId);
+      route.params.groupId = 0;
+
+      getGroupData()
+      .then((userGroups) => {
+        setGroups(userGroups);
+      })
+    } else if (isFocused) {
+      setGroupView("allgroups");
+
+      getGroupData()
+      .then((userGroups) => {
+        setGroups(userGroups);
+      }) 
+    } 
+  }, [isFocused]);
+
+  function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
+    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
+    const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
+
+    function mostPollVotes(poll: DatePollData | ActivityPollData | LocationPollData) {
+      let mostVotes = 0;
+      let winningOption;
+
+      for (const [option, user_ids] of Object.entries(poll?.options)) {
+        if (user_ids.length > 0 && user_ids.length > mostVotes) {
+          winningOption = option;
+        }
+      }
+
+      return winningOption;
+    }
+
+    if (pastPolls.length != 0) {
+      pastPolls.forEach((poll) => {
+        const winningOption = mostPollVotes(poll);
+
+        if (poll?.type === "Date" && !upcomingEvent.date) {
+          if (!winningOption) {
+            updateDatePollTimeout(poll.id, {'timeout': 48});
+          } else {
+            updateEventDate(upcomingEvent.id, {'new': winningOption});
+          }
+        } else if (poll?.type === "Activity" && !upcomingEvent.activity) {
+          if (!winningOption) {
+            updateActivityPollTimeout(poll.id, {'timeout': 48});
+          } else {
+            updateEventActivity(upcomingEvent.id, {'new': winningOption});
+          }
+        } else if (poll?.type === "Location" && !upcomingEvent.eventLocation) {
+          if (!winningOption) {
+            updateLocationPollTimeout(poll.id, {'timeout': 48});
+          } else {
+            updateEventLocation(upcomingEvent.id, {'new': winningOption});
+          }
+        }
+      })
+    }
+
+    console.log("date: ", upcomingEvent?.date)
+    console.log("type: ", upcomingPoll?.type)
+
+    if (upcomingPoll) {
+      setActiveGroupPoll(upcomingPoll);
+    } else if (!upcomingEvent?.date) {
+      postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
+      .then((datePoll) => {
+        console.log("date poll: ", datePoll)
+        setActiveGroupPoll(datePoll);
+      });
+    } else if (!upcomingEvent?.activity) {
+      postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
+      .then((activityPoll) => {
+        console.log("activity poll: ", activityPoll)
+        setActiveGroupPoll(activityPoll);
+      });
+    } else if (!upcomingEvent?.eventLocation) {
+      postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
+      .then((locationPoll) => {
+        console.log("location poll: ", locationPoll)
+        setActiveGroupPoll(locationPoll);
+      });
+    } 
+
+    console.log("upcoming poll: ", upcomingPoll)
+  }
+
+  function getUpcomingEvent(group: GroupData) {
+    if (group.events.length > 0) {
+      const filteredEvents = group?.events?.filter((event) => {
+        return Date.parse(event.date) - Date.now() > 0 || !event.date
+      });
+
+      setUpcomingEvent(filteredEvents[0]);
+      return filteredEvents[0];
+    } else {
+      setUpcomingEvent(null);
+      return null;
+    }
+  }
+
+  function getSingleGroupData(groupId: number) {
+    setActiveGroupPoll(null);
+
+    getGroupDataByGroupId(groupId)
+    .then((group) => {
+        setSingleGroup(group);
+
+        const upcomingEventDetails = getUpcomingEvent(group);
+
+        if (upcomingEventDetails) {
+          const allGroupsPolls: Array<DatePollData | ActivityPollData | LocationPollData> = [];
+          Promise.all([
+              getDatePollDataByGroupId(group.id),
+              getActivityPollDataByGroupId(group.id),
+              getLocationPollDataByGroupId(group.id)
+          ])
+          .then((polls) => {
+              polls.flat().forEach((poll) => {
+                if (Date.parse(poll.timeout) > Date.now()) {
+                  allGroupsPolls.push(poll);
+                }})
+              })
+              .then(() => {
+                pollController(allGroupsPolls, upcomingEventDetails)
+              })
+              .then(() => {
+                setGroupView("singlegroup")
+              })
+        } else {
+          setUpcomingEvent(null);
+          setGroupView("singlegroup");
+        }
+      }
+    );
+  }
+
+  const allUsersGroupsByName = groups?.flatMap(function(group, index){
+    return <GroupNameButton 
+                key={index} 
+                title={group.groupName} 
+                status={false} 
+                onPress={() => getSingleGroupData(group.id)
+                }/>
+    })
+  }
 
   function addNewEvent () {
     setGroupView('newEvent')
@@ -159,14 +247,8 @@ export default function AllGroupsScreen (props: Props) {
     setGroupView('addOption')
   }
 
-  function findActivePoll (allGroupPolls) {
-    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData =
-      allGroupPolls.find(poll => Date.parse(poll.timeout) - Date.now() > 0)
-    setActiveGroupPoll(upcomingPoll)
-  }
-
   function SingleGroupDetails () {
-    if (Date.parse(singleGroup.events[0].date) > Date.now()) {
+  if (upcomingEvent) {
       const eventDate = new Date(singleGroup.events[0].date).toLocaleString(
         'en-GB',
         {
@@ -180,95 +262,97 @@ export default function AllGroupsScreen (props: Props) {
         <>
           <TextHeader>{singleGroup.events[0].eventName}</TextHeader>
           <>
-            <Text>Date: {eventDate}</Text>
-            <Text>Time: TBC</Text>
-            <Text>Location: {singleGroup.events[0].eventLocation}</Text>
+
+            <TextHeader>{upcomingEvent.eventName}</TextHeader>
+            <>
+              <Text>Date:         {eventDate}</Text>
+              <Text>Time:         TBC</Text>
+              <Text>Location:   {upcomingEvent.eventLocation}</Text>
+            </>
           </>
-        </>
-      )
-    } else {
-      return (
-        <>
-          <TextHeader> No upcoming event </TextHeader>
-          <Text>Date: </Text>
-          <Text>Time: </Text>
-          <Text>Location: </Text>
-        </>
-      )
-    }
-  }
-
-  function captureChosenVote (val: string) {
-    let chosenOption: string
-    let voter: number = user
-    let newData: { [key: string]: number } = {}
-
-    for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
-      if (val === option) {
-        chosenOption = val
-      }
-
-      if (activeGroupPoll.type == 'Location') {
-        newData[chosenOption] = voter
-        updateLocationPollWithNewVote(activeGroupPoll?.id, newData)
-      } else if (activeGroupPoll.type == 'Activity') {
-        newData[chosenOption] = voter
-        updateActivityPollWithNewVote(activeGroupPoll?.id, newData)
-      } else if (activeGroupPoll.type == 'Date') {
-        let dateoption = chosenOption.toString()
-        newData[dateoption] = voter
-        updateDatePollWithNewVote(activeGroupPoll?.id, newData)
-      }
-    }
-  }
+          )
+      } else {
+          return (
+            <>
+              <TextHeader> No upcoming event </TextHeader>
+              <Text>Date:        </Text>
+              <Text>Time:        </Text>
+              <Text>Location:   </Text>
+            </>
+           )
+       } 
+  }   
 
   function SingleGroupPollDetails () {
-    let availableOptionsArray = []
-    let allOptionsMap = new Map<string, Array<number>>()
+    if (activeGroupPoll) {
+      let availableOptionsArray = []
+      let allOptionsMap = new Map<string, Array<number>>()
 
-    for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
-      availableOptionsArray.push(option)
-    }
-
-    for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
-      allOptionsMap.set(option, user_ids)
-    }
-
-    function AddNewOptionPollView(){
-      return (
-        <View>
-          <NewOptionScreen user={user} setState={setGroupView}/>
-        </View>
-      )
-    }
-
-    
-    const returnStatement = availableOptionsArray.map(function (val, index) {
-      let valToDisplay = val
-      if (activeGroupPoll?.type == 'Date') {
-        valToDisplay = new Date(val).toLocaleString('en-GB', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long'
-        })
+      for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+        availableOptionsArray.push(option)
       }
-      return (
-        <View style={styles.pollOption}>
-          <ButtonSelector
-            key={index}
-            option={valToDisplay}
-            onPress={() => captureChosenVote(val)}
-            selected={false}
-          ></ButtonSelector>
-          <Text style={styles.voteCounter}>
-            {allOptionsMap.get(val)?.length}
-          </Text>
-        </View>
-      )
-    })
-    return returnStatement
+
+      for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+        allOptionsMap.set(option, user_ids)
+      }
+
+      function AddNewOptionPollView(){
+        return (
+          <View>
+            <NewOptionScreen user={user} setState={setGroupView}/>
+          </View>
+        )
+      }
+
+      const returnStatement = availableOptionsArray.map(function (val, index) {
+        let valToDisplay = val
+        if (activeGroupPoll?.type == 'Date') {
+          valToDisplay = new Date(val).toLocaleString('en-GB', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long'
+          })
+        }
+        return (
+          <View style={styles.pollOption}>
+            <ButtonSelector
+              key={index}
+              option={valToDisplay}
+              onPress={() => captureChosenVote(val)}
+              selected={false}
+            ></ButtonSelector>
+            <Text style={styles.voteCounter}>
+              {allOptionsMap.get(val)?.length}
+            </Text>
+          </View>
+        )
+      })
+      return returnStatement
+      
+    } else {
+      <Text>No current poll</Text>
+    }
   }
     
+  function SingleGroupView(){
+    return(
+      <>
+        <View style={styles.header}>
+          <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
+          <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
+          <BurgerIcon></BurgerIcon>
+        </View>
+        <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
+          <SingleGroupDetails/>
+        </InfoBox>
+        <InfoBox header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} smallPlus={<SmallPlus onPress={() => addNewOption()}/>}>
+          <View>
+            <SingleGroupPollDetails/>
+          </View>
+        </InfoBox>
+      </>
+    )
+  }
 
   function AllGroupView () {
     return (

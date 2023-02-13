@@ -1,16 +1,18 @@
 package com.group.group.controllers;
 
-import com.group.group.models.ActivityPoll;
-import com.group.group.models.DatePoll;
-import com.group.group.models.Group;
-import com.group.group.models.User;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.group.group.models.*;
 import com.group.group.repositories.DatePollRepository;
+import com.group.group.repositories.EventRepository;
 import com.group.group.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.ServerException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -18,8 +20,12 @@ public class DatePollController {
 
     @Autowired
     DatePollRepository datePollRepository;
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     @GetMapping(value = "/date-polls")
     public ResponseEntity<List<DatePoll>> getAllDatePolls(
@@ -72,6 +78,45 @@ public class DatePollController {
         updatePollVoters.addUserToOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
         datePollRepository.save(updatePollVoters);
         return ResponseEntity.ok(updatePollVoters);
+    }
+
+    @PostMapping(path = "/date-polls",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DatePoll> createDatePoll(@RequestBody HashMap<String, Long> body) throws ServerException {
+
+        Event updateEvent = eventRepository.findById(body.get("eventId"))
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + body.get("eventId")));
+
+        LocalDateTime timeout = LocalDateTime.now().withNano(0).plusHours(body.get("timeout"));
+        DatePoll newDatePoll = new DatePoll(timeout, updateEvent);
+
+        if (updateEvent.getDatePoll() == null) {
+            datePollRepository.save(newDatePoll);
+        }
+
+        if (newDatePoll != null) {
+            return new ResponseEntity<>(newDatePoll, HttpStatus.CREATED);
+        } else {
+            throw new ServerException("error: could not create event");
+        }
+    }
+
+    @PutMapping("/date-polls/{id}/update-timeout")
+    public ResponseEntity<DatePoll> updateDatePollTimeout(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        DatePoll updateDatePoll = datePollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Date Poll Not Found: " + id));
+
+        LocalDateTime timeout = LocalDateTime.now().withNano(0).plusHours(body.get("timeout"));
+
+        updateDatePoll.setTimeout(timeout);
+
+        datePollRepository.save(updateDatePoll);
+        return ResponseEntity.ok(updateDatePoll);
     }
 }
 
