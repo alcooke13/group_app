@@ -16,7 +16,7 @@ export interface ActivityPollData {
             id: number
         }
     }
-    type:string
+    type: string
 }
 
 export function getActivityPollData(): Promise<ActivityPollData[]> {
