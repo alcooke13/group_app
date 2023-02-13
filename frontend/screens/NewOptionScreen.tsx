@@ -16,14 +16,14 @@ import { updateActivityPollDataWithNewOption, ActivityPollData } from '../servic
 
 interface Props {
     user: number
-    polltype?: any
+    setActivePollType?: any
+    activePollType?: any
     setState: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function(props: Props){
-    const {user, polltype, setState} = props;
-    // Stages will be Location -> Activity Option -> Date Option (Calender date to choose) -> Day Date option (Time of day)
-    const [pollView, setPollView] = useState<string>("calenderOption"); // This will need to change depending on the polltype
+    const {user, setActivePollType, setState, activePollType} = props;
+    const [pollView, setPollView] = useState<string>(activePollType);
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
     const [savedDate, setSavedDated] = useState<string>("");
@@ -31,22 +31,21 @@ export default function(props: Props){
     const [dateBundle, setDateBundle] = useState<DatePollData>();
     const [locationBundle, setLocationBundle] = useState<LocationPollData>();
     const [activityBundle, setActivityBundle] = useState<ActivityPollData>();
-    const [pollType, setPollType] = useState("Date");
 
     // Change state functions
     const changeFromActivityToConfirmation = () => {
-        if(pollType === "Activity")
+        if(activePollType === "Activity")
         setPollView("confirmation")
     }
 
     const changeFromLocationToConfirmation = () => {
-        if(pollType === "Location")
+        if(activePollType === "Location")
         setPollView("confirmation")
     }
 
     const changeViewToCalender = () => {
-        if(pollType === "Date")
-        setPollView("calenderOption")
+        if(activePollType === "Date")
+        setPollView("Date")
     }
 
     const changeViewToDay = () => {
@@ -121,20 +120,19 @@ export default function(props: Props){
     });
 
     const detailsReset = () => {
-        if(pollType === "Activity"){
+        if(activePollType === "Activity"){
             setSavedActivityPoll("");
-            setPollView("activityOption");
+            setPollView("Activity");
         }
 
-        if(pollType === "Location"){
+        if(activePollType === "Location"){
             setSavedLocationPoll("");
-            setPollView("locationOption");
+            setPollView("Location");
         }
-        if(pollType === "Date"){
+        if(activePollType === "Date"){
             setSavedDated("");
             setSavedTime("");
-            setPollView("calenderOption")
-
+            setPollView("Date")
         }
     }
 
@@ -214,15 +212,15 @@ export default function(props: Props){
         <>  
             {/* ACTIVITY */}
            
-            {pollView === "activityOption" ? <ActivityPollInput></ActivityPollInput>: ""} 
+            {pollView === "Activity" ? <ActivityPollInput></ActivityPollInput>: ""} 
             
             {/* LOCATION */}
 
-            {pollView === "locationOption" ? <><LocationPollInput></LocationPollInput></>: ""} 
+            {pollView === "Location" ? <><LocationPollInput></LocationPollInput></>: ""} 
 
             {/* DATEPOLL CALENDER */}
 
-            {pollView === "calenderOption" ? 
+            {pollView === "Date" ? 
             <View style={styles.outer}>
             <BackArrow onPress={() => setState("singlegroup")}/>
           <View style={styles.containerCalendar}>

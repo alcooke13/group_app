@@ -43,6 +43,7 @@ export default function AllGroupsScreen (props: Props) {
   const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
   const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
   const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
+  const [activePollType, setActivePollType] = useState<string>("")
 
   const route = useRoute();
   let groupId: number;
@@ -75,6 +76,15 @@ export default function AllGroupsScreen (props: Props) {
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
+
+    if(upcomingPoll?.type === "Activity"){
+      setActivePollType("Activity")
+    } else if(upcomingPoll?.type === "Location"){
+      setActivePollType("Location")
+    }else if(upcomingPoll?.type === "Date"){
+      setActivePollType("Date")
+    }
+
     const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
 
     function mostPollVotes(poll: DatePollData | ActivityPollData | LocationPollData) {
@@ -355,9 +365,9 @@ export default function AllGroupsScreen (props: Props) {
       <>
         <NewOptionScreen
           user={user}
-          singleGroupName={singleGroup.groupName}
-          singleGroupId={singleGroup.id}
           setState={setGroupView}
+          setActivePollType={setActivePollType}
+          activePollType={activePollType}
         />
       </>
     )
