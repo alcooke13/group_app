@@ -136,17 +136,13 @@ export default function NewEvent(props: GroupInfoProps) {
 
         return (
             <>
-                <View style={{
-                     position: 'absolute',
-                     top: '10%',
-                     left: '10%',
-                     
 
-                }}>
-                <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
-
-                </View>
+               
             <View style={styles.container}>
+                <View style={styles.header}>
+
+                <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
+                </View>
                 <BackgroundBox boxHeight={250} >
                     <View>
                         <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
@@ -638,7 +634,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignContent:'space-between',
+        alignContent:'flex-start',
         width:"100%",
         justifyContent: 'space-around',
 
