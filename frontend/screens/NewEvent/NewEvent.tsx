@@ -474,9 +474,6 @@ export default function NewEvent(props: GroupInfoProps) {
 
     }
 
-
-
-
     function Review() {
 
         const eventDate = new Date(dateProvided).toLocaleString('en-GB', {
