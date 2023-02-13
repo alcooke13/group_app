@@ -50,5 +50,44 @@ return fetch("http://127.0.0.1:8080/events", {
 	.then((response)=>{
 		return response as EventData
 	})
-
 }
+
+export function updateEventDate(eventId: number, payload: Object): Promise<EventData> {
+    return fetch("http://127.0.0.1:8080/events/" + eventId.toString() + "/update-date",
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((response) => response.json())
+    .then((response) => {
+      return response as EventData;
+    });
+}
+
+export function updateEventActivity(eventId: number, payload: Object): Promise<EventData> {
+    return fetch("http://127.0.0.1:8080/events/" + eventId.toString() + "/update-activity",
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((response) => response.json())
+    .then((response) => {
+      return response as EventData;
+    });
+}
+
+export function updateEventLocation(eventId: number, payload: Object): Promise<EventData> {
+    return fetch("http://127.0.0.1:8080/events/" + eventId.toString() + "/update-location",
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      }
+    ).then((response) => response.json())
+    .then((response) => {
+      return response as EventData;
+    });
+}
+

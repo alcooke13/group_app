@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 
 @Profile("!test") //Run every time EXCEPT Tests
-//    @Component
+    @Component
     public class DataLoader implements ApplicationRunner {
 
         @Autowired
@@ -236,9 +236,12 @@ import java.time.LocalDateTime;
             marvelGals.addUser(jennifer);
             marvelGals.addUser(jane);
 
+            fantastic4.addUser(stan);
+
 
             groupRepository.save(avengers);
             groupRepository.save(xMen);
             groupRepository.save(marvelGals);
+            groupRepository.save(fantastic4);
         }
     }

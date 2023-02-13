@@ -11,8 +11,8 @@ import BackArrow from '../components/BackArrow';
 import BigPlus from '../components/BigPlus';
 import BurgerIcon from '../components/BurgerIcon';
 import { DatePollData, getDatePollDataByGroupId, postDatePoll } from '../services/DatePollServices';
-import { getLocationPollDataByGroupId, LocationPollData } from '../services/LocationPollServices';
-import { ActivityPollData, getActivityPollDataByGroupId } from '../services/ActivityPollServices';
+import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll } from '../services/LocationPollServices';
+import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll } from '../services/ActivityPollServices';
 import ButtonSelector from '../components/ButtonSelector';
 import NewEvent from './NewEvent/NewEvent';
 import AddGroupScreen from './AddGroupScreen';
@@ -73,27 +73,54 @@ export default function AllGroupsScreen(props: Props) {
     //   return upcomingPoll;
     // }
 
-    function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[]) {
-      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0))
+    function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
+      const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
+      const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
+
+      if (pastPolls.length != 0) {
+        pastPolls.forEach((poll) => {
+          if (poll?.type === "Date" && !upcomingEvent.date) {
+            
+          } 
+        })
+      }
+
 
       console.log("date: ", upcomingEvent?.date)
       console.log("type: ", upcomingPoll?.type)
 
-      if (!upcomingEvent?.date && upcomingPoll?.type !== "Date") {
+      if (upcomingPoll) {
+        setActiveGroupPoll(upcomingPoll);
+      } else if (!upcomingEvent?.date && upcomingPoll?.type !== "Date") {
         postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
-        .then((datePoll) => setActiveGroupPoll(datePoll));
+        .then((datePoll) => {
+          console.log("date poll: ", datePoll)
+          setActiveGroupPoll(datePoll);
+        });
       } else if (!upcomingEvent?.activity && upcomingPoll?.type !== "Activity") {
+        postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((activityPoll) => {
+          console.log("activity poll: ", activityPoll)
+          setActiveGroupPoll(activityPoll);
+        });
+      } else if (!upcomingEvent?.eventLocation && upcomingPoll?.type !== "Location") {
+        postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((locationPoll) => {
+          console.log("location poll: ", locationPoll)
+          setActiveGroupPoll(locationPoll);
+        });
       } 
       
-      setActiveGroupPoll(upcomingPoll);
+      console.log("upcoming poll: ", upcomingPoll)
+      
     }
 
     function getUpcomingEvent(group: GroupData) {
-      const filteredEvents = group?.events?.filter((event) => {
-        return Date.parse(event.date) - Date.now() > 0
-      });
+      if (group.events.length > 0) {
+        const filteredEvents = group?.events?.filter((event) => {
+          return Date.parse(event.date) - Date.now() > 0 || !event.date
+        });
 
-      if (filteredEvents?.length != 0) {
         setUpcomingEvent(filteredEvents[0]);
         return filteredEvents[0];
       } else {
@@ -103,9 +130,12 @@ export default function AllGroupsScreen(props: Props) {
     }
 
     function getSingleGroupData(groupId: number) {
+      setActiveGroupPoll(null);
+
       getGroupDataByGroupId(groupId)
       .then((group) => {
           setSingleGroup(group);
+
           const upcomingEventDetails = getUpcomingEvent(group);
 
           if (upcomingEventDetails) {
@@ -122,9 +152,11 @@ export default function AllGroupsScreen(props: Props) {
                   }})
                 })
                 .then(() => {
-                  pollController(allGroupsPolls)
+                  pollController(allGroupsPolls, upcomingEventDetails)
                 })
-                .then(() => setGroupView("singlegroup"))
+                .then(() => {
+                  setGroupView("singlegroup")
+                })
           } else {
             setUpcomingEvent(null);
             setGroupView("singlegroup");
