@@ -8,7 +8,7 @@ import BigButton from '../components/BigButton';
 import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
-import { getFriendsByUserId, getUserDataByUserId, UserData } from '../services/UserServices';
+import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
 
 interface Props {
     user: number
@@ -21,13 +21,12 @@ export default function SettingsScreen(props: Props) {
 
   const [currentView, updateCurrentView] = useState<String>("Settings");
   const [userDetails, setUserDetails] = useState<UserData>();
-  const [friends, setFriends] = useState<UserData[]>();
-  const [userName, updateUsername] = useState<string>();
-  const [address, updateAddress] = useState<string>();
+  const [friends, setFriends] = useState<UserData[]>([]);
+  const [settingsUpdated, updateSettingsUpdated] = useState<boolean>(false);
   const [friendsToRemove, updateFriendsToRemove] = useState<Array<number>>([]);
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused || settingsUpdated) {
       updateCurrentView("Settings");
       getFriendsByUserId(user)
       .then((userFriends) => {
@@ -38,8 +37,10 @@ export default function SettingsScreen(props: Props) {
       .then((user) => {
         setUserDetails(user);
       })
+
+      updateSettingsUpdated(false);
     }
-  }, [isFocused]);
+  }, [isFocused, settingsUpdated]);
 
 
   function onPressAccountSetting(){
@@ -87,8 +88,7 @@ export default function SettingsScreen(props: Props) {
             <TextInput 
                 style={styles.accountNameInput}
                 placeholder={userDetails?.userName}
-                onChangeText={(text) => newUserNameValue = text}
-                onEndEditing={()=> updateUsername(newUserNameValue)}>
+                onChangeText={(text) => newUserNameValue = text}>
             </TextInput>
           </View>
         </BackgroundBox>
@@ -105,16 +105,17 @@ export default function SettingsScreen(props: Props) {
                 style={styles.accountAddress}
                 multiline={true}
                 placeholder={userDetails?.address}
-                onChangeText={(text) => newAddressValue = text}
-                onEndEditing={()=> updateAddress(newAddressValue)}>
+                onChangeText={(text) => newAddressValue = text}>
             </TextInput>
           </View>
         </BackgroundBox>
         <View style={styles.accountButton}>
           <BigButton 
-              title='Update' 
+              title='Update'
               onPress={() => {
-                updateCurrentView("Settings")
+                if (newUserNameValue) updateUserName(user, {'new': newUserNameValue});
+                if (newAddressValue) updateUserAddress(user, {'new': newAddressValue});
+                updateSettingsUpdated(true);
               }}></BigButton>
         </View>
       </View>
@@ -162,7 +163,8 @@ export default function SettingsScreen(props: Props) {
           <BigButton 
               title='Remove Selected' 
               onPress={() => {
-                updateCurrentView("Settings")
+                if (friendsToRemove.length > 0) deleteFriendsByUserId(user, friendsToRemove);
+                updateSettingsUpdated(true);
               }}></BigButton>
         </View>
       </View>
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FF914D',
     paddingTop: '8%',
-    marginLeft: '7.5%'
+    textAlign: 'center'
   },
   contactsMembers: {
     alignItems: 'center',
