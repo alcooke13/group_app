@@ -1,16 +1,15 @@
 package com.group.group.controllers;
 
+import com.group.group.models.ActivityPoll;
 import com.group.group.models.DatePoll;
 import com.group.group.models.LocationPoll;
 import com.group.group.repositories.LocationPollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -38,5 +37,19 @@ public class LocationPollController {
     @GetMapping(value = "/location-polls/{id}")
     public ResponseEntity getLocationPoll(@PathVariable Long id){
         return new ResponseEntity<>(locationPollRepository.findById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/location-polls/{id}/add-vote")
+    public ResponseEntity<LocationPoll> addVoterToLocationOption(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        LocationPoll updatePollVoters = locationPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+        updatePollVoters.addUserToOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+        locationPollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
     }
 }

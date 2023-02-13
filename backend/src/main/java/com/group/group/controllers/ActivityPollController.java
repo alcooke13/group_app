@@ -41,23 +41,17 @@ public class ActivityPollController {
 
 
     @PutMapping("/activity-polls/{id}/add-vote")
-    public ResponseEntity<ActivityPoll> addVoteToPoll(
+    public ResponseEntity<ActivityPoll> addVoterToActivityOption(
             @PathVariable long id,
-            @RequestBody HashMap<String, Long> body) {
+            @RequestBody HashMap<String, Long> body ) {
 
-
-        ActivityPoll updatePoll = activityPollRepository
+        ActivityPoll updatePollVoters = activityPollRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Poll Not Found: " + id));
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
 
-      for (String key : body.keySet()) {
-            for (Long value : body.values()) {
-                updatePoll.addUserToOption(key, value);
-            }
-            activityPollRepository.save(updatePoll);
-            return ResponseEntity.ok(updatePoll);
-        }
-        return ResponseEntity.ok(updatePoll);
+        updatePollVoters.addUserToOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+        activityPollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
     }
 }
 
