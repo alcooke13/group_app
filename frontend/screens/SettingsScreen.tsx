@@ -1,13 +1,12 @@
 import { useIsFocused } from '@react-navigation/native';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import BackArrow from '../components/BackArrow';
 import BackgroundBox from '../components/BackgroundBox';
 import BigButton from '../components/BigButton';
 import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
-import ScreenHeaderText from '../components/ScreenHeaderText';
 import SmallPlus from '../components/SmallPlus';
 import { getFriendsByUserId, getUserDataByUserId, UserData } from '../services/UserServices';
 
@@ -24,11 +23,12 @@ export default function SettingsScreen(props: Props) {
   const [userDetails, setUserDetails] = useState<UserData>();
   const [friends, setFriends] = useState<UserData[]>();
   const [userName, updateUsername] = useState<string>();
-  const friendsToRemove = useRef<Array<number>>([]);
+  const [address, updateAddress] = useState<string>();
+  const [friendsToRemove, updateFriendsToRemove] = useState<Array<number>>([]);
 
   useEffect(() => {
     if (isFocused) {
-      updateCurrentView("Contacts");
+      updateCurrentView("Settings");
       getFriendsByUserId(user)
       .then((userFriends) => {
           setFriends(userFriends);
@@ -76,15 +76,19 @@ export default function SettingsScreen(props: Props) {
   }
 
   function AccountView() {
+    let newUserNameValue: string;
+    let newAddressValue: string;
+
     return (
       <View style={styles.accountContainer}>
         <BackgroundBox boxHeight={"20%"}>
           <View style={styles.accountBox}>
-            <Text style={styles.accountHeader}>Group name</Text>
+            <Text style={styles.accountHeader}>Username</Text>
             <TextInput 
                 style={styles.accountNameInput}
                 placeholder={userDetails?.userName}
-                onChangeText={userName => updateUsername(userName)}>
+                onChangeText={(text) => newUserNameValue = text}
+                onEndEditing={()=> updateUsername(newUserNameValue)}>
             </TextInput>
           </View>
         </BackgroundBox>
@@ -101,7 +105,8 @@ export default function SettingsScreen(props: Props) {
                 style={styles.accountAddress}
                 multiline={true}
                 placeholder={userDetails?.address}
-                onChangeText={userName => updateUsername(userName)}>
+                onChangeText={(text) => newAddressValue = text}
+                onEndEditing={()=> updateAddress(newAddressValue)}>
             </TextInput>
           </View>
         </BackgroundBox>
@@ -121,16 +126,20 @@ export default function SettingsScreen(props: Props) {
       return(
           <ButtonSelector option={friend.userName} 
                           onPress={() => {
-                              if (!friendsToRemove.current.includes(friend.id)) {
-                                  friendsToRemove.current.push(friend.id);
+                              if (!friendsToRemove.includes(friend.id)) {
+                                  const newFriendsToRemove = [... friendsToRemove];
+                                  newFriendsToRemove.push(friend.id);
+                                  updateFriendsToRemove(newFriendsToRemove);
                               } else {
-                                  const index = friendsToRemove.current.indexOf(friend.id);
+                                  const index = friendsToRemove.indexOf(friend.id);
                                   if (index !== -1) {
-                                      friendsToRemove.current.splice(index, 1);
+                                    const newFriendsToRemove = [... friendsToRemove];
+                                    newFriendsToRemove.splice(index, 1);
+                                    updateFriendsToRemove(newFriendsToRemove);
                                   }
                               }
                           }} 
-                          selected={friendsToRemove.current.includes(friend.id)}
+                          selected={friendsToRemove.includes(friend.id)}
                           key={index}></ButtonSelector>
       )
     });
@@ -237,6 +246,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   accountAddress: {
+    marginTop: 10,
     padding: 10,
     backgroundColor: 'white',
     width: '70%',

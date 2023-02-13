@@ -271,7 +271,6 @@ const styles = StyleSheet.create({
     alignContent:'space-between',
     width:"100%",
   justifyContent: 'space-around',
-
   },
   voteCounter: {
     color: "#FF914D",
