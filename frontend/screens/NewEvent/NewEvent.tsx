@@ -122,10 +122,10 @@ export default function NewEvent(props: GroupInfoProps) {
         updateStage("Event Name")
     }
 
-    function goBackToDetalsKnown(){
+    function goBackToDetalsKnown() {
         updateStage("Details Known")
     }
-  
+
 
     // Step 1: Ask user for the Events name
     const EventName = () => {
@@ -137,45 +137,86 @@ export default function NewEvent(props: GroupInfoProps) {
         return (
             <>
 
-               
-            <View style={styles.container}>
-                <View style={styles.header}>
+                <View style={styles.containerArea}>
+                    <View style={styles.backButtonheader}>
+                        <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
+                    </View>
+                    <View style={{alignSelf: 'center', justifyContent: 'center' }} >
 
-                <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
-                </View>
-                <BackgroundBox boxHeight={250} >
-                    <View>
-                        <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
-                            What is your events name?
-                        </Text>
+                    <BackgroundBox boxHeight={250} >
                         <View>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={(eventTitleText: string) => {
-                                    titleValue = eventTitleText;
-                                }}
-                                onEndEditing={() => { onEventTitleEnd() }}
+                            <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
+                                What is your events name?
+                            </Text>
+                            <View>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={(eventTitleText: string) => {
+                                        titleValue = eventTitleText;
+                                    }}
+                                    onEndEditing={() => { onEventTitleEnd() }}
+                                    />
+
+
+                            </View>
+                        </View>
+                    </BackgroundBox>
+                    </View>
+
+                    <View style={styles.buttonParent}>
+
+                        <SmallButton title={"Submit"} onPress={() => {
+                            if (!titleValue) {
+                                alert('Please enter an event name');
+                            }
+                            else {
+                                setEventTitle(titleValue)
+                                StageController()
+                            }
+                        }} ></SmallButton>
+
+                    </View>
+                </View>
+                {/* Edds code above */}
+
+                {/* <View style={styles.container}>
+                    <View style={styles.header}>
+
+                        <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
+                    </View>
+                    <BackgroundBox boxHeight={250} >
+                        <View>
+                            <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
+                                What is your events name?
+                            </Text>
+                            <View>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={(eventTitleText: string) => {
+                                        titleValue = eventTitleText;
+                                    }}
+                                    onEndEditing={() => { onEventTitleEnd() }}
                                 />
 
 
+                            </View>
                         </View>
+                    </BackgroundBox>
+                    <View style={styles.buttonParent}>
+
+                        <SmallButton title={"Submit"} onPress={() => {
+                            if (!titleValue) {
+                                alert('Please enter an event name');
+                            }
+                            else {
+                                setEventTitle(titleValue)
+                                StageController()
+                            }
+                        }} ></SmallButton>
+
                     </View>
-                </BackgroundBox>
-                <View style={styles.buttonParent}>
-
-                    <SmallButton title={"Submit"} onPress={() => {
-                        if (!titleValue) {
-                            alert('Please enter an event name');
-                        }
-                        else {
-                            setEventTitle(titleValue)
-                            StageController()
-                        }
-                    }} ></SmallButton>
-
-                </View>
-            </View>
-                    </>
+                </View> */}
+            </>
         );
 
 
@@ -187,51 +228,51 @@ export default function NewEvent(props: GroupInfoProps) {
     function KnownDetails() {
         return (
             <>
-            <BackArrow onPress={() => { goBackToEventName() }}></BackArrow>
-          
-            <View style={styles.container}>
-                <BackgroundBox boxHeight='70%' >
-                    <View>
+                <BackArrow onPress={() => { goBackToEventName() }}></BackArrow>
+
+                <View style={styles.container}>
+                    <BackgroundBox boxHeight='70%' >
                         <View>
-                            <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30 }} >Select what you know</Text>
-                        </View>
+                            <View>
+                                <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30 }} >Select what you know</Text>
+                            </View>
 
-                        <View style={styles.checkBoxParent}>
-                            <Text style={styles.checkboxText}>Date</Text>
-                            <TickBox value={detailsKnown.date} onPress={() => { onDetailTickBoxPress("date") }}></TickBox>
-                        </View>
-                        <View style={{ width: '90%', alignSelf: 'center' }}>
-                            <LineBreak></LineBreak>
-                        </View>
-                        <View style={styles.checkBoxParent}>
-                            <Text style={styles.checkboxText} >Activity</Text>
-                            <TickBox value={detailsKnown.activity} onPress={() => onDetailTickBoxPress("activity")}></TickBox>
-                        </View>
-                        <View style={{ width: '90%', alignSelf: 'center' }}>
-                            <LineBreak></LineBreak>
-                        </View>
-                        <View style={styles.checkBoxParent} >
-                            <Text style={styles.checkboxText} >Location</Text>
-                            <TickBox value={detailsKnown.location} onPress={() => { onDetailTickBoxPress("location") }}></TickBox>
-                        </View>
+                            <View style={styles.checkBoxParent}>
+                                <Text style={styles.checkboxText}>Date</Text>
+                                <TickBox value={detailsKnown.date} onPress={() => { onDetailTickBoxPress("date") }}></TickBox>
+                            </View>
+                            <View style={{ width: '90%', alignSelf: 'center' }}>
+                                <LineBreak></LineBreak>
+                            </View>
+                            <View style={styles.checkBoxParent}>
+                                <Text style={styles.checkboxText} >Activity</Text>
+                                <TickBox value={detailsKnown.activity} onPress={() => onDetailTickBoxPress("activity")}></TickBox>
+                            </View>
+                            <View style={{ width: '90%', alignSelf: 'center' }}>
+                                <LineBreak></LineBreak>
+                            </View>
+                            <View style={styles.checkBoxParent} >
+                                <Text style={styles.checkboxText} >Location</Text>
+                                <TickBox value={detailsKnown.location} onPress={() => { onDetailTickBoxPress("location") }}></TickBox>
+                            </View>
 
+                        </View>
+                    </BackgroundBox>
+                    <View style={styles.buttonParent}>
+                        <SmallButton title={"Next"} onPress={() => {
+                            setActivity("")
+                            setLocation("")
+                            setDate("")
+
+
+                            StageController();
+
+
+                        }} ></SmallButton>
                     </View>
-                </BackgroundBox>
-                <View style={styles.buttonParent}>
-                    <SmallButton title={"Next"} onPress={() => {
-                        setActivity("")
-                        setLocation("")
-                        setDate("")
-                        
-                        
-                        StageController();
-                        
-                        
-                    }} ></SmallButton>
-                </View>
 
-            </View>
-                    </>
+                </View>
+            </>
         )
     }
 
@@ -255,7 +296,7 @@ export default function NewEvent(props: GroupInfoProps) {
 
             <View style={styles.container}>
                 <View>
-                <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
 
                 </View>
                 <View style={{ marginTop: '20%', marginBottom: 0, paddingBottom: 0 }}>
@@ -302,10 +343,10 @@ export default function NewEvent(props: GroupInfoProps) {
 
         return (
             <View>
-              
+
                 <View>
                     <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
-                    
+
                     <MenuText>Date Poll</MenuText>
                 </View>
                 <View>
@@ -349,7 +390,7 @@ export default function NewEvent(props: GroupInfoProps) {
 
             <View style={styles.container}>
                 <View>
-                <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
                 </View>
                 <BackgroundBox boxHeight={250}  >
                     <View style={{ margin: 30 }}>
@@ -579,7 +620,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     container: {
-        flex: 1, alignItems: 'center', justifyContent: 'center', width: '80%'
+        width: '80%'
+        // flex: 1, alignItems: 'center', justifyContent: 'center', width: '80%'
     },
     title: {
         fontSize: 24,
@@ -634,11 +676,24 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignContent:'flex-start',
-        width:"100%",
+        alignContent: 'flex-start',
+        width: "100%",
         justifyContent: 'space-around',
 
-      },
+    },
+    containerArea : {
+        flex: 1,
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'space-evenly'
+    },
+    backButtonheader : {
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        // paddingTop: '5%',
+        // paddingLeft: '5%'
+    }
 })
 
 

@@ -26,6 +26,7 @@ import { updateActivityPollWithNewVote } from '../services/ActivityPollServices'
 import { updateDatePollWithNewVote } from '../services/DatePollServices';
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices';
 import NewOptionScreen from './NewOptionScreen';
+import SingleGroupSettings from './SingleGroupSettings';
 
 interface Props {
   user: number
@@ -273,7 +274,8 @@ export default function AllGroupsScreen(props: Props) {
           <View style={styles.header}>
             <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
             <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
-            <BurgerIcon></BurgerIcon>
+            <BurgerIcon onPress={()=> setGroupView("groupSettings")}/>
+            
           </View>
           <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
             <SingleGroupDetails/>
@@ -301,6 +303,7 @@ export default function AllGroupsScreen(props: Props) {
           {groupView === "newEvent" ? <AddEventView/>: ""}
           {groupView === "loading" ? "" : ""}
           {groupView === "addOption" ? <AddNewOptionPollView/> : ""}
+          {groupView === "groupSettings" ? <SingleGroupSettings user = {props.user} /> : ""}
         </SafeAreaView>
     )
 }
