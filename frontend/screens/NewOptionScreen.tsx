@@ -247,7 +247,7 @@ export default function(props: Props){
         <View>
         <View style={styles.backButtonHeaderContainer}>
             <BackArrow onPress={() => changeViewToCalender()}/>
-            <View style={{marginLeft: '15%'}}><MenuText>Date Poll</MenuText></View>
+            <View style={{marginLeft: '20%'}}><MenuText>Date Poll</MenuText></View>
         </View>
         </View>
         <View style={{marginTop: '25%', alignItems: 'center',justifyContent: 'center'}}>

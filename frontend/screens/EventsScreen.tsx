@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { getEventData, EventData, getEventDataByUserId } from '../services/EventServices';
-import { getGroupData, GroupData } from '../services/GroupServices';
+import { getGroupDataByUserId, GroupData } from '../services/GroupServices';
 import { useEffect, useState } from 'react';
 import CalendarMonth from '../components/Calendar';
 import InfoBox from '../components/InfoBox';
@@ -36,7 +36,7 @@ export default function EventsScreen(props: Props) {
             setEvents(allEvents);
           });
         
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((allGroups) => {
           setGroups(allGroups)
         });

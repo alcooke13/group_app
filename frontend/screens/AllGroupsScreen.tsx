@@ -5,7 +5,7 @@ import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-n
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useEffect, useRef, useState } from 'react'
-import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
+import { getGroupDataByUserId, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
 import GroupNameButton from '../components/GroupNameButton'
 import route from '../navigation'
 import { TabView } from '@rneui/base'
@@ -66,14 +66,14 @@ export default function AllGroupsScreen (props: Props) {
         getSingleGroupData(groupId);
         route.params.groupId = 0;
   
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((userGroups) => {
           setGroups(userGroups);
         }) 
       } else {
         setGroupView("All Groups");
 
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((userGroups) => {
           setGroups(userGroups);
         })
