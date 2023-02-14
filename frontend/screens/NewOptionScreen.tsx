@@ -12,6 +12,7 @@ import CalendarOption from '../components/CalenderOption';
 import { updateDatePollDataWithNewOption, DatePollData } from '../services/DatePollServices';
 import { updateLocationPollDataWithNewOption, LocationPollData } from '../services/LocationPollServices';
 import { updateActivityPollDataWithNewOption, ActivityPollData } from '../services/ActivityPollServices';
+import LineBreak from '../components/LineBreak';
 
 
 interface Props {
@@ -185,10 +186,12 @@ export default function(props: Props){
         
         }
         return (
-            <View>
-            <BackgroundBox boxHeight={250} boxWidth={250}>
+            <View style={{ flex: 0.8, alignItems: 'center', justifyContent: 'space-evenly' }}>
+            <BackgroundBox boxHeight="80%">
                <>
                 <Text style={styles.title}>Check Details</Text>
+                <View style={{ width: '80%', alignSelf: 'center' }}>
+                </View>
                 {savedActivityPoll !== "" ? <Text style={styles.reviewText}>Activity: {savedActivityPoll}</Text> : ""}
                 {savedLocationPoll !== "" ? <Text style={styles.reviewText}>Location: {savedLocationPoll}</Text> : ""}
                 {savedTime !== "" && savedDate ? <>
@@ -199,8 +202,8 @@ export default function(props: Props){
             </BackgroundBox>
             <View style={styles.backButtonHeaderContainer}>
                 <View style={styles.buttonContainer}>
-             <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
              <SmallButton title='Go Back' onPress={() => detailsReset()}></SmallButton>
+             <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
              </View>
              </View>
            </View>  
@@ -221,8 +224,10 @@ export default function(props: Props){
             {/* DATEPOLL CALENDER */}
 
             {pollView === "Date" ? 
-            <View style={styles.outer}>
+            <View style={styles.outer}><View style={styles.backButtonHeaderContainer}>
             <BackArrow onPress={() => setState("Single Group")}/>
+            <View style={{marginLeft: '20%'}}><MenuText>Date Poll</MenuText></View>
+        </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
             <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>
@@ -232,20 +237,22 @@ export default function(props: Props){
 
             {/* DAY VIEW */}
 
-        {pollView === "dayOption" ? <>
+        {pollView === "dayOption" ? <View style={styles.outer}>
+        <View>
         <View style={styles.backButtonHeaderContainer}>
             <BackArrow onPress={() => changeViewToCalender()}/>
-            <MenuText>Date Poll</MenuText>
+            <View style={{marginLeft: '15%'}}><MenuText>Date Poll</MenuText></View>
         </View>
-        <View>
+        </View>
+        <View style={{marginTop: '25%', alignItems: 'center',justifyContent: 'center'}}>
             <TimeOfDayButton timeOfDayOption='Morning' selected={savedTime === "T09:00" ? true : false} onPress={() => setSavedTime("T09:00")}/>
             <TimeOfDayButton timeOfDayOption='Afternoon' selected={savedTime === "T12:00" ? true : false} onPress={() => setSavedTime("T12:00")}/>
             <TimeOfDayButton timeOfDayOption='Evening' selected={savedTime === "T18:00" ? true : false} onPress={() => setSavedTime("T18:00")}/>
         </View>
-        <View>
+        <View style={{marginTop: "25%" , marginLeft: '10%'}}>
         <SmallButton title="Done" onPress={() => changeConfirmationScreen()}/>
         </View>
-        </> : ""}
+        </View> : ""}
         {pollView === "confirmation" ? <>
         <ConfirmationScreen />
         </> : ""}
@@ -262,7 +269,7 @@ const styles = StyleSheet.create({
     backButtonHeaderContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
     },
 
     innerContainer: {
