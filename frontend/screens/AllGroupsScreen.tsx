@@ -161,9 +161,9 @@ export default function AllGroupsScreen (props: Props) {
       })
     }
 
-    console.log("date: ", upcomingEvent?.date)
-    console.log("type: ", upcomingPoll?.type)
-
+    // console.log("date: ", upcomingEvent?.date)
+    // console.log("type: ", upcomingPoll?.type)
+    
     if (upcomingPoll) {
       setActiveGroupPoll(upcomingPoll);
       getVotingStats(upcomingPoll);
@@ -171,24 +171,24 @@ export default function AllGroupsScreen (props: Props) {
     } else if (!upcomingEvent?.date) {
       postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
       .then((datePoll) => {
-        console.log("date poll: ", datePoll)
+        // console.log("date poll: ", datePoll)
         setActiveGroupPoll(datePoll);
       });
     } else if (!upcomingEvent?.activity) {
       postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
       .then((activityPoll) => {
-        console.log("activity poll: ", activityPoll)
+        // console.log("activity poll: ", activityPoll)
         setActiveGroupPoll(activityPoll);
       });
     } else if (!upcomingEvent?.eventLocation) {
       postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
       .then((locationPoll) => {
-        console.log("location poll: ", locationPoll)
+        // console.log("location poll: ", locationPoll)
         setActiveGroupPoll(locationPoll);
       });
     } 
 
-    console.log("upcoming poll: ", upcomingPoll)
+    // console.log("upcoming poll: ", upcomingPoll)
   }
     
   function getUpcomingEvent(group: GroupData) {
@@ -316,7 +316,6 @@ export default function AllGroupsScreen (props: Props) {
     if (activeGroupPoll) {
       let availableOptionsArray = []
       let allOptionsMap = new Map<string, Array<number>>()
-
       for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
         availableOptionsArray.push(option)
       }
@@ -409,7 +408,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Single Group' ? <SingleGroupView /> : ''}
       {groupView === 'New Event' ? <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/> : ''}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType}/> : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType} activeGroupPollId={singleGroup?.id}/> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
       {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} /> : ""}
     </SafeAreaView>
