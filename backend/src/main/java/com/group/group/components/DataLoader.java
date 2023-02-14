@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 
 @Profile("!test") //Run every time EXCEPT Tests
-//    @Component
+    @Component
     public class DataLoader implements ApplicationRunner {
 
         @Autowired
@@ -108,11 +108,13 @@ import java.time.LocalDateTime;
             Group xMen = new Group("X-Men");
             Group marvelGals = new Group("Marvel Gals");
             Group fantastic4 = new Group("Fantastic 4");
+            Group noEventTest = new Group("No Event Test");
 
             groupRepository.save(avengers);
             groupRepository.save(xMen);
             groupRepository.save(marvelGals);
             groupRepository.save(fantastic4);
+            groupRepository.save(noEventTest);
 
             Event tonysBirthday = new Event((LocalDateTime.of(2023,3,5,17,0)), "Tony's Birthday", "Edinburgh", "Laser Quest", avengers);
             Event xMenReunion = new Event((LocalDateTime.of(2023,3,10,17,0)), "X-Men Reunion", "Edinburgh", "Pub", xMen);
@@ -248,10 +250,14 @@ import java.time.LocalDateTime;
 
             fantastic4.addUser(stan);
 
+            noEventTest.addUser(stan);
+
 
             groupRepository.save(avengers);
             groupRepository.save(xMen);
             groupRepository.save(marvelGals);
             groupRepository.save(fantastic4);
+            groupRepository.save(noEventTest);
+
         }
     }
