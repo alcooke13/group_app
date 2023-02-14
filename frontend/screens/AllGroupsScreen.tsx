@@ -395,7 +395,7 @@ export default function AllGroupsScreen (props: Props) {
           header='Next Event' 
           boxHeight='40%'
           boxMarginTop='-5%'
-          smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}
+          smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
           >
           <SingleGroupDetails/>
         </InfoBox>
