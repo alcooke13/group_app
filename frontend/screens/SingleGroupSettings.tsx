@@ -77,45 +77,38 @@ export default function SingleGroupSettings(props: Props) {
 
     function SettingsView() {
         return (
-            <>
-                {/* <View style={{flex: 0.2,
-                }}>
-                    <BackArrow onPress={() => { setState("Single Group")}} />
-                </View>
-                <View style={{ flex: 0.8}}> */}
+            <SafeAreaView style={{ flex: 1 }}>
 
                 <View style={styles.header}>
                     <BackArrow onPress={() => setState("Single Group")}></BackArrow>
                     <ScreenHeaderText>Settings</ScreenHeaderText>
                     <View></View>
                 </View>
-                <View style={styles.container} >
 
-                    <View>
+                <View>
 
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Group")}>
-                            <Text style={styles.settingElements} >Edit Group</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
-                            <Text style={styles.settingElements} >Past Events</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Leave Group")}>
-                            <Text style={styles.settingElements} >Leave Group</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => {
-                            updateCurrentView("Delete Event")
-                        }}>
-                            <Text style={styles.settingElements} >Delete Event</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Group")}>
+                        <Text style={styles.settingElements} >Edit Group</Text>
+                    </TouchableOpacity>
                 </View>
-            </ >
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
+                        <Text style={styles.settingElements} >Past Events</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Leave Group")}>
+                        <Text style={styles.settingElements} >Leave Group</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                        updateCurrentView("Delete Event")
+                    }}>
+                        <Text style={styles.settingElements} >Delete Event</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView >
         )
     }
 
@@ -157,34 +150,50 @@ export default function SingleGroupSettings(props: Props) {
 
         return (
             <>
-                <View style={styles.accountContainer} >
-                    <View style={styles.header}>
-                        <BackArrow onPress={() => { }}></BackArrow>
-                        <ScreenHeaderText>Edit Group</ScreenHeaderText>
-                        <View></View>
+                <View style={styles.header}>
+                    <BackArrow onPress={() => { updateCurrentView("Settings") }}></BackArrow>
+                    <ScreenHeaderText>Edit Group</ScreenHeaderText>
+                    <View></View>
+                </View>
+
+                <BackgroundBox boxHeight='20%' >
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={styles.settingTitle}>Group Name</Text>
+                        <TextInput
+                            style={styles.newGroupNameInput}
+                            defaultValue={groupName}
+                            onChangeText={(value) => setName(value)}
+                        >
+                        </TextInput>
                     </View>
-                    <View style={{ height: '60%'}}>
+                </BackgroundBox>
+                <View style={{ marginTop: 15 }}>
+                    <SmallButton title='Submit' onPress={() => {
+                        setNewGroupTitle()
+                    }} ></SmallButton>
 
-                        <BackgroundBox boxHeight='30%' >
-                            <View style={{ width: 300, alignSelf: 'center' }}>
-                                <Text style={styles.settingTitle}>Group Name</Text>
-                                <TextInput
-                                    style={styles.newGroupNameInput}
-                                    defaultValue={groupName}
-                                    onChangeText={(value) => setName(value)}
-                                >
-                                </TextInput>
-                            </View>
-                        </BackgroundBox>
-                        <View>
-                            <SmallButton title='Submit' onPress={() => {
-                                setNewGroupTitle()
-                            }} ></SmallButton>
+                </View>
+                <InfoBox header='Contacts'
+                    boxHeight='60%'
+                >
+                    <ScrollView showsVerticalScrollIndicator={false} snapToStart={false}>
+                        {memberItems}
+                    </ScrollView>
 
-                        </View>
-                    </View>
+                </InfoBox>
 
+                <View style={styles.membersButton}>
+                    <BigButton
+                        title='Remove Selected'
+                        onPress={() => {
+                            console.log(membersToRemove)
+                            deleteMembersByGroupId(groupId, membersToRemove)
+                            setRefreshing(true);
+                            setTimeout(() => {
+                                setRefreshing(false);
+                            }, 1000);
 
+                        }}></BigButton>
                 </View>
             </>
         )
@@ -209,34 +218,30 @@ export default function SingleGroupSettings(props: Props) {
 
 
             return (
-                <View>
+                <View style={{ alignItems: 'center' }} key={index} >
+                    {/* {index > 0 ? <LineBreak /> : ""} */}
+                    <View style={{ margin: 10 }}></View>
+                    {index > 0 ? <LineBreak /> : ""}
+                    <View style={{ margin: 10 }}></View>
+                    <Text style={styles.eventName} >{event.eventName}</Text>
+                    <Text style={{ paddingVertical: 1 }} >
+                        <Text style={styles.eventCategory}>Date:</Text>
+                        <Text>  {eventDate}</Text>
+                    </Text>
+                    <Text style={{ paddingVertical: 1 }}>
+                        <Text style={styles.eventCategory}>Time:</Text>
+                        <Text>  {eventTime}</Text>
+                    </Text>
+                    <Text style={{ paddingVertical: 1 }}>
+                        <Text style={styles.eventCategory}>Activity:</Text>
+                        <Text>  {event.activity}</Text>
+                    </Text>
+                    <Text style={{ paddingVertical: 1 }}>
+                        <Text style={styles.eventCategory}>Location:</Text>
+                        <Text>  {event.eventLocation}</Text>
+                    </Text>
 
 
-                    <View style={{ width: '90%' }}>
-                        <View style={{ paddingVertical: 5 }}>
-                            {index != 0 ? <LineBreak /> : ""}
-                        </View>
-                        <View key={index} >
-                            <Text style={styles.eventName} >{event.eventName}</Text>
-                            <Text style={{ paddingVertical: 1 }} >
-                                <Text style={styles.eventCategory}>Date:</Text>
-                                <Text>  {eventDate}</Text>
-                            </Text>
-                            <Text style={{ paddingVertical: 1 }}>
-                                <Text style={styles.eventCategory}>Time:</Text>
-                                <Text>  {eventTime}</Text>
-                            </Text>
-                            <Text style={{ paddingVertical: 1 }}>
-                                <Text style={styles.eventCategory}>Activity:</Text>
-                                <Text>  {event.activity}</Text>
-                            </Text>
-                            <Text style={{ paddingVertical: 1 }}>
-                                <Text style={styles.eventCategory}>Location:</Text>
-                                <Text>  {event.eventLocation}</Text>
-                            </Text>
-
-                        </View>
-                    </View>
                 </View>
             )
         });
@@ -244,19 +249,19 @@ export default function SingleGroupSettings(props: Props) {
 
 
         return (
-            <View>
-                <View style={{ flex: 0.2, alignSelf: 'flex-start', }}>
-                    <BackArrow onPress={() => { updateCurrentView("Settings") }} />
+            <>
+                <View style={styles.header}>
+                    <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
+                    <ScreenHeaderText>Past Events</ScreenHeaderText>
+                    <View></View>
                 </View>
-                <View style={{ flex: 0.8, marginBottom: '30%', alignItems: 'center', }}>
-                    <InfoBox header='Past Events' boxHeight='70%' boxMarginTop='5%' >
-                        <ScrollView style={{ padding: 10 }}>
-                            {pastEventItems}
-                        </ScrollView>
-                    </InfoBox>
-                </View>
+                <InfoBox header='Past Events' boxHeight='70%' >
+                    <ScrollView style={{ padding: 30 }}>
+                        {pastEventItems}
+                    </ScrollView>
+                </InfoBox>
 
-            </View>
+            </>
         )
     }
 
@@ -265,29 +270,27 @@ export default function SingleGroupSettings(props: Props) {
 
         return (
 
-            <View>
-
-                <View style={{ flex: 0.2 }}>
-                    <BackArrow onPress={() => { updateCurrentView("Settings") }} />
+            <>
+                <View style={styles.header}>
+                    <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
+                    <ScreenHeaderText>Leave Group</ScreenHeaderText>
+                    <View></View>
                 </View>
-                <View style={{ alignItems: 'center', flex: 0.8 }}>
+                <InfoBox header='Leave Group' boxHeight='30%'>
+                    <View style={{ alignSelf: 'center' }}>
+                        <Text style={styles.settingTitle}>Are you sure you want to leave the group?</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                            <View style={{ marginHorizontal: 5 }}>
+                                <SmallButton title={'Yes'} onPress={() => { deleteMembersByGroupId(groupId, [user]); setState("All Groups"); }} />
+                            </View>
+                            <View style={{ marginHorizontal: 5 }}>
 
-                    <BackgroundBox boxWidth={'80%'} boxHeight={250} boxMarginBottom={'5%'} boxMarginTop={'5%'}>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>Are you sure you want to leave the group?</Text>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <View style={{ marginHorizontal: 5 }}>
-                                    <SmallButton title={'Yes'} onPress={() => {
-                                        deleteMembersByGroupId(groupId, [user]);
-                                        setState("All Groups");
-                                    }} />
-                                </View>
                                 <SmallButton title={'No'} onPress={() => { updateCurrentView("Settings") }} />
                             </View>
                         </View>
-                    </BackgroundBox>
-                </View>
-            </View>
+                    </View>
+                </InfoBox>
+            </>
 
 
         )
@@ -314,50 +317,47 @@ export default function SingleGroupSettings(props: Props) {
 
         return (
 
-            <View>
-                <View style={{ flex: 0.2 }}>
-                    <BackArrow onPress={() => { updateCurrentView("Settings") }} />
+            <>
+                 <View style={styles.header}>
+                    <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
+                    <ScreenHeaderText>Delete Event</ScreenHeaderText>
+                    <View></View>
                 </View>
-                <View style={{ alignItems: 'center', flex: 0.8 }}>
-
-                    <BackgroundBox boxWidth={'80%'} boxHeight={300} boxMarginBottom={'5%'} boxMarginTop={'5%'}>
-                        <View style={{ padding: 15, alignSelf: 'center' }}>
+                    <InfoBox header='Delete Event'>
+                        <>
                             {parentUpcomingEvent ?
-                                <View style={{ alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>Are you sure you want to delete the following? {parentUpcomingEvent?.eventName}</Text>
-                                    <View style={{ marginTop: 15 }}>
-                                        {eventDate ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Date:</Text>  {eventDate}</Text> : ""}
-                                        {eventTime ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Time:</Text>  {eventTime}</Text> : ""}
-                                        {parentUpcomingEvent?.activity ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Activity:</Text>  {parentUpcomingEvent?.activity}</Text> : ""}
-                                        {parentUpcomingEvent?.eventLocation ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Location:</Text>  {parentUpcomingEvent?.eventLocation}</Text> : ""}
-                                    </View>
-                                </View>
-                                :
-                                <View style={{ alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>No upcoming event.</Text>
-                                </View>
-                            }
-                        </View>
-                    </BackgroundBox>
-                    <View style={{ flex: 0.2 }}>
+                                <>
+                                    <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>Are you sure you want to delete the following?</Text>
 
-                        <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <View style={{ marginHorizontal: 5 }}>
-                                <SmallButton title={'Yes'} onPress={() => {
-                                    if (parentUpcomingEvent) {
-                                        deleteEvent(parentUpcomingEvent?.id)
-                                        setState("All Groups");
-                                    }
-                                    updateCurrentView("Settings")
-                                }} />
-                            </View>
-                            <SmallButton title={'No'} onPress={() => { updateCurrentView("Settings") }} />
+                                    {parentUpcomingEvent ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Title:</Text>   {parentUpcomingEvent?.eventName}</Text> : ""}
+                                    {eventDate ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Date:</Text>  {eventDate}</Text> : ""}
+                                    {eventTime ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Time:</Text>  {eventTime}</Text> : ""}
+                                    {parentUpcomingEvent?.activity ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Activity:</Text>  {parentUpcomingEvent?.activity}</Text> : ""}
+                                    {parentUpcomingEvent?.eventLocation ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Location:</Text>  {parentUpcomingEvent?.eventLocation}</Text> : ""}
+                                </>
+                                :
+                                
+                                    <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>No upcoming event.</Text>
+                            }
+                        </>
+                    </InfoBox>
+                    <View style={{ flexDirection: 'row' , margin: '20%' }} >
+                        <View style={{ marginHorizontal: 5 }}>
+                        <SmallButton title={'Yes'} onPress={() => {
+                            if (parentUpcomingEvent) {
+                                deleteEvent(parentUpcomingEvent?.id)
+                                setState("All Groups");
+                            }
+                            updateCurrentView("Settings")
+                        }} />
+                        </View>
+                        <View style={{ marginHorizontal: 5 }}>
+                        <SmallButton title={'No'} onPress={() => { updateCurrentView("Settings") }} />
+
                         </View>
                     </View>
-                </View>
-            </View>
 
-
+            </>
         )
 
     }
@@ -365,14 +365,14 @@ export default function SingleGroupSettings(props: Props) {
 
 
     return (
-        <SafeAreaView >
+        < >
             {currentView === "Settings" ? <SettingsView /> : ""}
             {currentView === "Edit Group" ? <EditGroupView /> : ""}
             {currentView === "Past Events" ? <PastEvents /> : ""}
             {currentView === "Leave Group" ? <LeaveGroup /> : ""}
             {currentView === "Delete Event" ? <DeleteEvent /> : ""}
             {currentView === "loading" ? "" : ""}
-        </SafeAreaView>
+        </>
     )
 }
 
@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
         width: '70%',
         fontSize: 20,
         color: 'black',
+        justifyContent: 'center'
     },
     reviewText: {
         fontSize: 18,
