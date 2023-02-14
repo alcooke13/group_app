@@ -321,21 +321,25 @@ export default function AllGroupsScreen (props: Props) {
       }
 
       return (
-          <>
-            <TextHeader>{upcomingEvent.eventName}</TextHeader>
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDetailsHeader}>
+              <TextHeader>{upcomingEvent.eventName}</TextHeader>
+            </View>
             <Text style={styles.text}>Date:         {eventDate}</Text>
             <Text style={styles.text}>Time:         TBC</Text>
             <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
-          </>
+          </View>
       )
     } else {
       return (
-        <>
-          <TextHeader> No upcoming event </TextHeader>
+        <View style={styles.eventDetails}>
+          <View style={styles.eventDetailsHeader}>
+            <TextHeader> No upcoming event </TextHeader>
+          </View>
           <Text style={styles.text}>Date:        </Text>
           <Text style={styles.text}>Time:        </Text>
           <Text style={styles.text}>Location:   </Text>
-        </>
+        </View>
       )
     }
   }
@@ -441,7 +445,7 @@ export default function AllGroupsScreen (props: Props) {
         </View>
         <InfoBox 
           header='Next Event' 
-          boxHeight='40%'
+          boxHeight='45%'
           boxMarginTop='-5%'
           smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
           >
@@ -454,9 +458,9 @@ export default function AllGroupsScreen (props: Props) {
           boxMarginBottom='15%'
           smallPlus={activeGroupPoll ? <SmallPlus onPress={() => setGroupView('Add Option')} /> : ""}
           >
-          <View>
+          <ScrollView style={styles.pollOptionsInnerBox}>
             <SingleGroupPollDetails/>
-          </View>
+          </ScrollView>
         </InfoBox>
         {activeGroupPoll ? 
           <Text style={styles.totalVoteCount}>Voters: {votingStats["voters"]}/{votingStats["members"]}</Text>
@@ -505,6 +509,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '90%'
   },
+  eventDetails: {
+    padding: 20,
+    paddingLeft: 30
+  },
+  eventDetailsHeader: {
+    paddingBottom: 10
+  },
   header: {
     marginTop: '5%',
     flexDirection: 'row',
@@ -519,19 +530,20 @@ const styles = StyleSheet.create({
     fontSize: 26,
     paddingBottom: '10%',
   },
-  pollOptionCounters: {
+  pollOptionsInnerBox: {
+    paddingTop: 10
   },
   voteCounter: {
     color: '#FF914D',
     fontSize: 36,
     fontFamily:'Ubuntu-Bold',
-    paddingLeft: 10
+    paddingLeft: 25
   },
   pollOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 30,
-    paddingRight: 10,
+    paddingLeft: 20,
+    paddingRight: 50,
     paddingTop: 5
   },
   text: {
