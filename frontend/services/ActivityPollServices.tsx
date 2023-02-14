@@ -16,7 +16,7 @@ export interface ActivityPollData {
             id: number
         }
     }
-    type:string
+    type: string
 }
 
 export function getActivityPollData(): Promise<ActivityPollData[]> {
@@ -89,3 +89,36 @@ export function updateActivityPollDataWithNewOption(
       return response as ActivityPollData;
     });
 }
+
+export function postActivityPoll(payload: Object): Promise<ActivityPollData> {
+    return fetch('http://127.0.0.1:8080/activity-polls', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 
+            "Accept":"application/json",
+            "Content-Type":"application/json",
+         }
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as ActivityPollData;
+        });
+}
+
+export function updateActivityPollTimeout(
+    pollId: number, 
+    payload: Object
+    ): Promise <ActivityPollData> {
+  return fetch(
+        'http://127.0.0.1:8080/activity-polls/' + pollId.toString() + '/update-timeout', 
+    {
+    method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+  }
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as ActivityPollData
+    })
+  }

@@ -94,7 +94,7 @@ export default function EventsScreen(props: Props) {
       }
     }
       const finalEvents: JSX.Element[] = matchedDates.map((event, index) => {
-        return <InfoBox header={event.eventName} key={index}>
+        return <InfoBox header={event.eventName} key={index} boxMarginTop='5%'>
         <View style={styles.filteredBox}>
           <Text>Activity: {event.activity}</Text>
           <Text>Location: {event.eventLocation}</Text>

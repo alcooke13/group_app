@@ -107,10 +107,12 @@ import java.time.LocalDateTime;
             Group avengers = new Group("Avengers");
             Group xMen = new Group("X-Men");
             Group marvelGals = new Group("Marvel Gals");
+            Group fantastic4 = new Group("Fantastic 4");
 
             groupRepository.save(avengers);
             groupRepository.save(xMen);
             groupRepository.save(marvelGals);
+            groupRepository.save(fantastic4);
 
             Event tonysBirthday = new Event((LocalDateTime.of(2023,3,5,17,0)), "Tony's Birthday", "Edinburgh", "Laser Quest", avengers);
             Event xMenReunion = new Event((LocalDateTime.of(2023,3,10,17,0)), "X-Men Reunion", "Edinburgh", "Pub", xMen);
@@ -119,7 +121,7 @@ import java.time.LocalDateTime;
             Event ninjaWarrior = new Event((LocalDateTime.of(2023,2,1,9,0)), "Ninja Warrior", "Glasgow", "Getting Fit", xMen);
             Event girlsNightJan = new Event((LocalDateTime.of(2023,2,3,17,0)), "Girls Night Out", "Edinburgh", "Natasha's House", marvelGals);
             Event avengersassemble = new Event((LocalDateTime.of(2023,1,3,14,0)), "Avengers Assemble", "Glasgow", "Tony's House", avengers);
-
+            Event fantasticReunion = new Event(null, "Fantastic Catch-up", null, null, fantastic4);
 
             eventRepository.save(tonysBirthday);
             eventRepository.save(xMenReunion);
@@ -128,6 +130,7 @@ import java.time.LocalDateTime;
             eventRepository.save(ninjaWarrior);
             eventRepository.save(girlsNightJan);
             eventRepository.save(avengersassemble);
+            eventRepository.save(fantasticReunion);
 
             DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023,9,5,17,0), tonysBirthday);
             DatePoll datePoll2 = new DatePoll(LocalDateTime.of(2023,3,10,17,0), xMenReunion);
@@ -161,8 +164,7 @@ import java.time.LocalDateTime;
             xMenReunion.setActivityPoll(activityPoll2);
             xMenReunion.setLocationPoll(locationPoll2);
 
-            girlsNightFeb.setActivityPoll(activityPoll3);
-            girlsNightFeb.setDatePoll(datePoll3);
+
             girlsNightFeb.setLocationPoll(locationPoll3);
 
             datePoll1.addOption("2023-02-18T18:00");
@@ -193,6 +195,17 @@ import java.time.LocalDateTime;
             locationPoll1.addUserToOption("Edinburgh", 1L);
 
             locationPollRepository.save(locationPoll1);
+
+            locationPoll3.addOption("Edinburgh");
+            locationPoll3.addOption("Glasgow");
+            locationPoll3.addUserToOption("Edinburgh", 1L);
+            locationPoll3.addUserToOption("Edinburgh", 2L);
+            locationPoll3.addUserToOption("Edinburgh", 2L);
+            locationPoll3.addUserToOption("Edinburgh", 3L);
+            locationPoll3.addUserToOption("Edinburgh", 4L);
+
+            locationPollRepository.save(locationPoll1);
+            locationPollRepository.save(locationPoll3);
 
             eventRepository.save(tonysBirthday);
             eventRepository.save(xMenReunion);
@@ -233,9 +246,12 @@ import java.time.LocalDateTime;
             marvelGals.addUser(jennifer);
             marvelGals.addUser(jane);
 
+            fantastic4.addUser(stan);
+
 
             groupRepository.save(avengers);
             groupRepository.save(xMen);
             groupRepository.save(marvelGals);
+            groupRepository.save(fantastic4);
         }
     }

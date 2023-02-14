@@ -9,9 +9,6 @@ export interface GroupData {
         eventName: string
         eventLocation: string
         activity: string
-        activityPoll?: string
-        locationPoll?: string
-        datePoll?: string
     }
 ]
 }
