@@ -8,10 +8,12 @@ interface Props {
 const BurgerIcon = (props: Props) => {
     const {onPress} = props
 
-    return <TouchableOpacity>
+    return (
+    
+    <TouchableOpacity onPress={onPress}>
         <Ionicons name="ios-menu" size={65} color="#FFFFFF" />
     </TouchableOpacity>
-
+    )
 }
 
 export default BurgerIcon;
