@@ -63,9 +63,9 @@ export default function(props: Props){
             setSavedActivityPoll(activityValue)
         }
         return (
-            <>
+            <View style={styles.outer}>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => setState("Single Group")}/>
+                <View style={{marginRight: '12%', marginLeft: '5%'}}><BackArrow onPress={() => setState("Single Group")}/></View>
                 <MenuText>Activity Poll</MenuText>
                 </View>
            
@@ -79,8 +79,10 @@ export default function(props: Props){
                                 onEndEditing={onActivityInputEnd}/>
                 </View>
             </BackgroundBox>
+            <View style={{marginTop: '15%'}}>
             <SmallButton title="Add Option" onPress={changeFromActivityToConfirmation}/></View>
-           </>
+            </View>
+            </View>
     )}
 
     const LocationPollInput = () => {
@@ -89,9 +91,9 @@ export default function(props: Props){
             setSavedLocationPoll(locationValue)
         }
         return (
-        <>
+        <View style={styles.outer}>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => setState("Single Group")}/>
+                <View style={{marginRight: '10%', marginLeft: '5%'}}><BackArrow onPress={() => setState("Single Group")}/></View>
                 <MenuText>Location Poll</MenuText>
                 </View>
            
@@ -105,9 +107,11 @@ export default function(props: Props){
                                 onEndEditing={onLocationInputEnd}/>
                 </View>
             </BackgroundBox>
-
-            <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/></View>
-            </>
+            <View style={{marginTop: '15%'}}>            
+            <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/>
+            </View>
+            </View>
+            </View>
     )};
     let eventDate = new Date(savedDate+savedTime).toLocaleString('en-GB', {
         weekday: 'long',
