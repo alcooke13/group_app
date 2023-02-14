@@ -5,7 +5,7 @@ interface Props {
     children: string;
 }
 
-const ScreenHeaderText = (props: Props) => {
+const GText = (props: Props) => {
 
     const {children} = props;
     
@@ -13,13 +13,10 @@ const ScreenHeaderText = (props: Props) => {
         <Text style={styles.text}>{children}</Text>
     );
 };
-
 const styles = StyleSheet.create({
     text: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        color:"#ff914d",
-        fontFamily:'Ubuntu-Bold'
-    }
+        fontFamily:'Ubuntu-Regular',
+        fontSize:16    
+}
 });
-export default ScreenHeaderText;
+export default GText;

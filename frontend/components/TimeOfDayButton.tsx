@@ -36,6 +36,7 @@ const TimeOfDayButton = (props: Props) => {
             fontSize: 20,
             borderRadius: 5,
             color: 'black',
+            fontFamily:'Ubuntu-Bold'
             }}>{timeOfDayOption}
             </Text>
             </TouchableOpacity>
@@ -48,6 +49,7 @@ const TimeOfDayButton = (props: Props) => {
             alignItems: 'center',
             fontSize: 20,
             borderRadius: 5,
+            fontFamily:'Ubuntu-Bold'
         }
     })
     export default TimeOfDayButton;

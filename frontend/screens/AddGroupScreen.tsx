@@ -133,14 +133,16 @@ const styles = StyleSheet.create({
         justifySelf: 'center',
         alignSelf: 'center',
         fontSize: 24,
-        padding: '10%'
+        padding: '10%',
+        fontFamily:'Ubuntu-Bold'
     },
     groupInput: {
         justifyContent: 'center',
         backgroundColor: 'white',
         alignItems: 'stretch',
         padding: 10,
-        fontSize: 16
+        fontSize: 16,
+        fontFamily:'Ubuntu-Regular'
     },
     members: {
         alignItems: 'center',

@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '90%'
+    width: '90%',
   },
   top: {
     flexDirection: 'row',
@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 26,
     margin: 10,
-    fontWeight: 'bold',
     textAlign: 'center',
     color: '#FF914D',
+    fontFamily:'Ubuntu-Bold' 
   },
   plus: {
     position: 'absolute',
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E1F0',
     width: '100%',
     borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderBottomRightRadius: 10, 
   },
 });
 

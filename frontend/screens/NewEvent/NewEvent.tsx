@@ -124,6 +124,7 @@ export default function NewEvent(props: GroupInfoProps) {
         }
         return (
 
+
             <SafeAreaView>
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 0.2, justifyContent: 'flex-start' }}>
@@ -183,6 +184,7 @@ export default function NewEvent(props: GroupInfoProps) {
                 <View style={{ flex: 0.85 }}>
                     <BackgroundBox boxHeight='75%' boxWidth={'100%'} >
                         <View>
+                     
                             <View>
                                 <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 15, marginHorizontal: 30 }} >Select what you know</Text>
                             </View>
@@ -240,6 +242,8 @@ export default function NewEvent(props: GroupInfoProps) {
                     <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
 
                 </View>
+
+
                 <View style={{ flex: 0.85, alignItems: 'center' }}>
                     <View>
                         <Text style={{
@@ -429,6 +433,7 @@ export default function NewEvent(props: GroupInfoProps) {
         });
 
         return (
+
             <SafeAreaView>
                 <View style={{ flex: 0.8, alignItems: 'center', justifyContent: 'space-evenly' }}>
                     <BackgroundBox boxHeight='80%' >

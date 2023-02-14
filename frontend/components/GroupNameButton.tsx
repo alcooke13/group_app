@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
     text: {
         color: "#FF914D",
         fontSize: 36,
-        alignItems:'center'
+        alignItems:'center',
+        fontFamily:'Ubuntu-Bold'
     },
 
     notificationOn: {
