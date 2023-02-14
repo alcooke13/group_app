@@ -39,7 +39,7 @@ const ButtonSelector = (props: Props) => {
         },
         text: {
             alignItems: 'center',
-            fontSize: 20,
+            fontSize: 18,
             borderRadius: 5,
         },
         selected: {

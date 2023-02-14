@@ -21,10 +21,11 @@ interface Props {
     activePollType?: any
     activeGroupPollId?: any
     setState: React.Dispatch<React.SetStateAction<string>>
+    updatePollChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function(props: Props){
-    const {user, setActivePollType, setState, activePollType, activeGroupPollId} = props;
+    const {user, setActivePollType, setState, activePollType, activeGroupPollId, updatePollChange} = props;
     const [pollView, setPollView] = useState<string>(activePollType);
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
@@ -184,8 +185,8 @@ export default function(props: Props){
                 setSavedDated("");
                 setSavedTime("");    
             
+            updatePollChange(true);
             setState("Single Group")
-          
         
         }
         return (

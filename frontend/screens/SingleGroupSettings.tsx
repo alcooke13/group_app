@@ -77,16 +77,13 @@ export default function SingleGroupSettings(props: Props) {
 
     function SettingsView() {
         return (
-            <SafeAreaView style={{ flex: 1 }}>
-
+            <View style={styles.settingsContainer}>
                 <View style={styles.header}>
                     <BackArrow onPress={() => setState("Single Group")}></BackArrow>
-                    <ScreenHeaderText>Settings</ScreenHeaderText>
                     <View></View>
                 </View>
 
                 <View>
-
                     <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Group")}>
                         <Text style={styles.settingElements} >Edit Group</Text>
                     </TouchableOpacity>
@@ -108,7 +105,7 @@ export default function SingleGroupSettings(props: Props) {
                         <Text style={styles.settingElements} >Delete Event</Text>
                     </TouchableOpacity>
                 </View>
-            </SafeAreaView >
+            </View>
         )
     }
 
@@ -152,8 +149,6 @@ export default function SingleGroupSettings(props: Props) {
             <>
                 <View style={styles.header}>
                     <BackArrow onPress={() => { updateCurrentView("Settings") }}></BackArrow>
-                    <ScreenHeaderText>Edit Group</ScreenHeaderText>
-                    <View></View>
                 </View>
 
                 <BackgroundBox boxHeight='20%' >
@@ -201,7 +196,6 @@ export default function SingleGroupSettings(props: Props) {
     }
 
     function PastEvents() {
-
 
 
         const pastEventItems = pastEvents?.map((event, index) => {
@@ -252,8 +246,6 @@ export default function SingleGroupSettings(props: Props) {
             <>
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
-                    <ScreenHeaderText>Past Events</ScreenHeaderText>
-                    <View></View>
                 </View>
                 <InfoBox header='Past Events' boxHeight='70%' >
                     <ScrollView style={{ padding: 30 }}>
@@ -273,8 +265,6 @@ export default function SingleGroupSettings(props: Props) {
             <>
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
-                    <ScreenHeaderText>Leave Group</ScreenHeaderText>
-                    <View></View>
                 </View>
                 <InfoBox header='Leave Group' boxHeight='30%'>
                     <View style={{ alignSelf: 'center' }}>
@@ -320,8 +310,6 @@ export default function SingleGroupSettings(props: Props) {
             <>
                  <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
-                    <ScreenHeaderText>Delete Event</ScreenHeaderText>
-                    <View></View>
                 </View>
                     <InfoBox header='Delete Event'>
                         <>
@@ -390,7 +378,6 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     settingsContainer: {
-        paddingTop: '10%',
         width: '100%',
         height: '100%'
     },
@@ -404,10 +391,9 @@ const styles = StyleSheet.create({
         paddingBottom: '10%',
         paddingRight: '5%'
     },
-
     settingTitle: {
         paddingTop: 20,
-        paddingBottom: 20,
+        paddingBottom: 0,
         fontSize: 24
     },
     newGroupNameInput: {
@@ -423,20 +409,21 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     eventCategory: {
-        fontStyle: 'italic', color: '#1E1E1E'
+        fontStyle: 'italic', 
+        color: '#1E1E1E'
     },
     eventName: {
         fontSize: 18, color: '#1E1E1E', paddingBottom: 8
     },
     header: {
         marginTop: '5%',
+        marginLeft: '5%',
+        marginBottom: '5%',
         flexDirection: 'row',
-        alignItems: 'center',
-        alignContent: 'space-between',
-        width: '100%',
-        justifyContent: 'space-around',
+        alignSelf: 'flex-start',
         fontFamily: 'Ubuntu-Bold'
-    }, accountContainer: {
+    }, 
+    accountContainer: {
         justifyContent: 'space-evenly',
         alignItems: 'center',
         width: "100%",
