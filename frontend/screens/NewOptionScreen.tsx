@@ -62,7 +62,7 @@ export default function(props: Props){
             setSavedActivityPoll(activityValue)
         }
         return (
-        <>
+            <>
                 <View style ={styles.backButtonHeaderContainer}>
                 <BackArrow onPress={() => setState("Single Group")}/>
                 <MenuText>Activity Poll</MenuText>
@@ -79,7 +79,7 @@ export default function(props: Props){
                 </View>
             </BackgroundBox>
             <SmallButton title="Add Option" onPress={changeFromActivityToConfirmation}/></View>
-            </>
+           </>
     )}
 
     const LocationPollInput = () => {
