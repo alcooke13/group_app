@@ -55,6 +55,22 @@ public class ActivityPollController {
         return ResponseEntity.ok(updatePollVoters);
     }
 
+
+    @PutMapping("/activity-polls/{id}/remove-vote")
+    public ResponseEntity<ActivityPoll> removeVoterFromActivityOption(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        ActivityPoll updatePollVoters = activityPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+        updatePollVoters.removeUserFromOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+
+        activityPollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
+    }
+
     @PutMapping("/activity-polls/{id}/add-option")
     public ResponseEntity<ActivityPoll> addOptionActivityPoll(
             @PathVariable long id,

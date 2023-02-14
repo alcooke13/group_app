@@ -80,6 +80,20 @@ public class DatePollController {
         return ResponseEntity.ok(updatePollVoters);
     }
 
+    @PutMapping("/date-polls/{id}/remove-vote")
+    public ResponseEntity<DatePoll> removeVoterFromDateOption(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        DatePoll updatePollVoters = datePollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+        updatePollVoters.removeUserFromOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+        datePollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
+    }
+
     @PostMapping(path = "/date-polls",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

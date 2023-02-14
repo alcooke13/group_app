@@ -31,7 +31,19 @@ return fetch('http://127.0.0.1:8080/activity-polls', {
     method: 'GET',
     // headers: {
     // },
-})
+    })
+    .then((response) => response.json())
+    .then((response) => {
+        return response as ActivityPollData[];
+    });
+}
+
+export function getActivityPollDataById(pollId: number): Promise<ActivityPollData[]> {
+    return fetch('http://127.0.0.1:8080/activity-polls/' + pollId.toString(), {
+        method: 'GET',
+        // headers: {
+        // },
+    })
     .then((response) => response.json())
     .then((response) => {
         return response as ActivityPollData[];
@@ -68,6 +80,24 @@ export function updateActivityPollWithNewVote(
     ): Promise <ActivityPollData> {
 	return fetch(
         'http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/add-vote', 
+    {
+		method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+	}
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as ActivityPollData
+    })
+}
+
+export function updateActivityPollWithRemovedVote(
+    pollId: number, 
+    payload:{[key: string]: number} 
+    ): Promise <ActivityPollData> {
+	return fetch(
+        'http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/remove-vote', 
     {
 		method: 'PUT',
         body: JSON.stringify(payload),

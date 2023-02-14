@@ -62,6 +62,10 @@ public abstract class Poll {
         this.options.get(option).add(user_id);
     }
 
+    public void removeUserFromOption(String option, Long user_id) {
+        this.options.get(option).remove(user_id);
+    }
+
     public LocalDateTime getTimeout() {
         return this.timeout;
     }

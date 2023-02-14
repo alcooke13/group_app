@@ -1,27 +1,10 @@
 import * as React from 'react'
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-  Pressable,
-  ScrollView
-} from 'react-native'
-import {
-  NavigationContainer,
-  TabRouter,
-  useIsFocused,
-  useRoute
-} from '@react-navigation/native'
+import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native'
+import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useEffect, useRef, useState } from 'react'
-import {
-  getGroupDataByUserId,
-  getGroupDataByGroupId,
-  GroupData
-} from '../services/GroupServices'
+import { getGroupDataByUserId, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
 import GroupNameButton from '../components/GroupNameButton'
 import route from '../navigation'
 import { TabView } from '@rneui/base'
@@ -31,27 +14,9 @@ import ScreenHeaderText from '../components/ScreenHeaderText'
 import BackArrow from '../components/BackArrow'
 import BigPlus from '../components/BigPlus'
 import BurgerIcon from '../components/BurgerIcon'
-import {
-  DatePollData,
-  getDatePollDataByGroupId,
-  postDatePoll,
-  updateDatePollTimeout,
-  updateDatePollToComplete
-} from '../services/DatePollServices'
-import {
-  getLocationPollDataByGroupId,
-  LocationPollData,
-  postLocationPoll,
-  updateLocationPollTimeout,
-  updateLocationPollToComplete
-} from '../services/LocationPollServices'
-import {
-  ActivityPollData,
-  getActivityPollDataByGroupId,
-  postActivityPoll,
-  updateActivityPollTimeout,
-  updateActivityPollToComplete
-} from '../services/ActivityPollServices'
+import { DatePollData, getDatePollDataByGroupId, getDatePollDataById, postDatePoll, updateDatePollTimeout, updateDatePollToComplete, updateDatePollWithRemovedVote } from '../services/DatePollServices'
+import { getLocationPollDataByGroupId, getLocationPollDataById, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete, updateLocationPollWithRemovedVote } from '../services/LocationPollServices'
+import { ActivityPollData, getActivityPollDataByGroupId, getActivityPollDataById, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete, updateActivityPollWithRemovedVote } from '../services/ActivityPollServices'
 import ButtonSelector from '../components/ButtonSelector'
 import NewEvent from './NewEvent/NewEvent'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens'
@@ -60,12 +25,7 @@ import SmallPlus from '../components/SmallPlus'
 import { updateActivityPollWithNewVote } from '../services/ActivityPollServices'
 import { updateDatePollWithNewVote } from '../services/DatePollServices'
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices'
-import {
-  EventData,
-  updateEventActivity,
-  updateEventDate,
-  updateEventLocation
-} from '../services/EventServices'
+import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices'
 import NewOptionScreen from './NewOptionScreen'
 import SingleGroupSettings from './SingleGroupSettings'
 
@@ -74,20 +34,18 @@ interface Props {
 }
 
 export default function AllGroupsScreen (props: Props) {
+
   const { user } = props
   const isFocused = useIsFocused()
 
-  const [groups, setGroups] = useState<GroupData[]>()
-  const [groupChanges, updateGroupChanges] = useState<Object>({})
-  const [singleGroup, setSingleGroup] = useState<GroupData>()
-  const [groupView, setGroupView] = useState<string>('Loading')
-  const [screenChanges, updateScreenChanges] = useState<Boolean>(false)
-  const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null)
-  const [groupPolls, setGroupPolls] =
-    useState<Array<DatePollData | ActivityPollData | LocationPollData>>()
-  const [activeGroupPoll, setActiveGroupPoll] = useState<
-    DatePollData | ActivityPollData | LocationPollData | null
-  >(null)
+  const [groups, setGroups] = useState<GroupData[]>();
+  const [groupChanges, updateGroupChanges] = useState<Object>({});
+  const [singleGroup, setSingleGroup] = useState<GroupData>();
+  const [groupView, setGroupView] = useState<string>("Loading");
+  const [pollVoted, updatePollVoted] = useState<Boolean>(false);
+  const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
+  const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
+  const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
   const [votingStats, setVotingStats] = useState<Object>()
 
   const route = useRoute()
@@ -124,7 +82,37 @@ export default function AllGroupsScreen (props: Props) {
       getSingleGroupData(groupChanges['new group'])
       updateGroupChanges({})
     }
-  }, [groupChanges])
+  }, [groupChanges]);
+
+  useEffect(() => {
+    if (pollVoted) {
+      if (activeGroupPoll?.type === "Date") {
+        getDatePollDataById(activeGroupPoll.id)
+        .then((poll) => {
+          setActiveGroupPoll(poll);
+          getVotingStats(poll);
+        })
+        .then(() => setGroupView("Single Group"));
+      } else if (activeGroupPoll?.type === "Activity") {
+        getActivityPollDataById(activeGroupPoll.id)
+        .then((poll) => {
+          setActiveGroupPoll(poll);
+          getVotingStats(poll);
+        })
+        .then(() => setGroupView("Single Group"));
+      } else if (activeGroupPoll?.type === "Location") {
+        getLocationPollDataById(activeGroupPoll.id)
+        .then((poll) => {
+          setActiveGroupPoll(poll);
+          getVotingStats(poll);
+        })
+        .then(() => setGroupView("Single Group"));
+      }
+      
+      updatePollVoted(false);
+    }
+  }, [pollVoted]);
+  
 
   function getVotingStats (
     poll: ActivityPollData | LocationPollData | DatePollData
@@ -154,7 +142,7 @@ export default function AllGroupsScreen (props: Props) {
   }
 
 
-function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
+  function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
 
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
     const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
@@ -179,8 +167,7 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
     // Check for any past polls that resulted in a winning vote or not
     // If found update the event details with winning option and set poll to complete
     // If not found extend the poll timeout by 48 hours
-    if (pastPolls.length != 0) {
-
+    if (pastPolls.length !== 0) {
       pastPolls.forEach((poll) => {
         if (poll?.completed) return;
        
@@ -219,9 +206,7 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
       })
     }
 
-
-    let generateNewPoll: boolean = false
-
+    let generateNewPoll: boolean = false;
 
     // Check if all members voted on the upcoming poll
     // If all voted update the event details with the winning option and engage generation of new poll
@@ -239,6 +224,8 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
           updateLocationPollToComplete(upcomingPoll.id)
         generateNewPoll = true
       }
+    } else {
+      generateNewPoll = true;
     }
 
     // Create new poll in the order of Date > Activity > Location
@@ -357,50 +344,71 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
       }
 
       return (
-        <>
-          <TextHeader>{upcomingEvent.eventName}</TextHeader>
-          <Text style={styles.text}>Date: {eventDate}</Text>
-          <Text style={styles.text}>Time: TBC</Text>
-          <Text style={styles.text}>
-            Location: {upcomingEvent.eventLocation}
-          </Text>
-        </>
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDetailsHeader}>
+              <TextHeader>{upcomingEvent.eventName}</TextHeader>
+            </View>
+            <Text style={styles.text}>Date:         {eventDate}</Text>
+            <Text style={styles.text}>Time:         TBC</Text>
+            <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
+          </View>
       )
     } else {
       return (
-        <>
-          <TextHeader> No upcoming event </TextHeader>
-          <Text style={styles.text}>Date: </Text>
-          <Text style={styles.text}>Time: </Text>
-          <Text style={styles.text}>Location: </Text>
-        </>
+        <View style={styles.eventDetails}>
+          <View style={styles.eventDetailsHeader}>
+            <TextHeader> No upcoming event </TextHeader>
+          </View>
+          <Text style={styles.text}>Date:        </Text>
+          <Text style={styles.text}>Time:        </Text>
+          <Text style={styles.text}>Location:   </Text>
+        </View>
       )
     }
   }
-
-  function captureChosenVote (selectedOption: string) {
-    console.log('selectedOption:' + selectedOption)
-    let chosenOption: string = ''
+  
+  function captureChosenVote(selectedOption: string) {
     let voter: number = user
     let newData: { [key: string]: number } = {}
+
     for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
-      if (selectedOption === option) {
-        chosenOption = selectedOption
+      if (selectedOption !== option) continue;
+
+      // Remove user from option if already voted on option
+      if (user_ids.includes(user)) {
+        if (activeGroupPoll?.type == 'Location') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateLocationPollWithRemovedVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Activity') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateActivityPollWithRemovedVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Date') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateDatePollWithRemovedVote(activeGroupPoll?.id, newData);
+        }
+      } 
+      // Add user to option if not already voted on option
+      else {
+        if (activeGroupPoll?.type == 'Location') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Activity') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Date') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateDatePollWithNewVote(activeGroupPoll?.id, newData);
+        }
       }
-      if (activeGroupPoll?.type == 'Location') {
-        newData[chosenOption] = voter
-        updateLocationPollWithNewVote(activeGroupPoll?.id, newData)
-        newData = {}
-      } else if (activeGroupPoll?.type == 'Activity') {
-        newData[chosenOption] = voter
-        updateActivityPollWithNewVote(activeGroupPoll?.id, newData)
-        newData = {}
-      } else if (activeGroupPoll?.type == 'Date') {
-        let dateoption: string = chosenOption.toString()
-        newData[dateoption] = voter
-        updateDatePollWithNewVote(activeGroupPoll?.id, newData)
-        newData = {}
-      }
+
+
+      updatePollVoted(true);
     }
   }
 
@@ -463,25 +471,24 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
           <BurgerIcon onPress={() => setGroupView('Settings')}></BurgerIcon>
         </View>
-        <InfoBox
-          header='Next Event'
-          boxHeight='40%'
+        <InfoBox 
+          header='Next Event' 
+          boxHeight='45%'
           boxMarginTop='-5%'
-
           smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
           >
           <SingleGroupDetails/>
         </InfoBox>
-        <InfoBox
-          header={activeGroupPoll ? activeGroupPoll.event.eventName : 'No poll'}
+        <InfoBox 
+          header={activeGroupPoll ? activeGroupPoll.type + " Options" : "No poll active"} 
           boxHeight='100%'
           boxMarginTop='5%'
           boxMarginBottom='15%'
-          smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')} />}
-        >
-          <View>
-            <SingleGroupPollDetails />
-          </View>
+          smallPlus={activeGroupPoll ? <SmallPlus onPress={() => setGroupView('Add Option')} /> : ""}
+          >
+          <ScrollView style={styles.pollOptionsInnerBox}>
+            <SingleGroupPollDetails/>
+          </ScrollView>
         </InfoBox>
         {activeGroupPoll ? (
           <Text style={styles.totalVoteCount}>
@@ -542,6 +549,15 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '90%'
   },
+  eventDetails: {
+    padding: 20,
+    paddingLeft: 30,
+    paddingRight: 30
+  },
+  eventDetailsHeader: {
+    paddingBottom: 15,
+    alignSelf: 'center'
+  },
   header: {
     marginTop: '5%',
     flexDirection: 'row',
@@ -554,20 +570,23 @@ const styles = StyleSheet.create({
   totalVoteCount: {
     color: '#FF914D',
     fontSize: 26,
-    paddingBottom: '10%'
+    paddingBottom: '10%',
+  },
+  pollOptionsInnerBox: {
+    paddingTop: 10
   },
   pollOptionCounters: {},
   voteCounter: {
     color: '#FF914D',
     fontSize: 36,
-    fontFamily: 'Ubuntu-Bold',
-    paddingLeft: 10
+    fontFamily:'Ubuntu-Bold',
+    paddingLeft: 25
   },
   pollOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 30,
-    paddingRight: 10,
+    paddingLeft: 20,
+    paddingRight: 50,
     paddingTop: 5
   },
   text: {
