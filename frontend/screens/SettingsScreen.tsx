@@ -181,18 +181,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FF914D',
     paddingTop: '8%',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Ubuntu-Bold'
   },
   contactsMembers: {
     alignItems: 'center',
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    fontFamily: 'Ubuntu-Regular'
   },
   contactsHeader: {
     flexDirection: 'row',
     alignSelf: 'flex-start',
     paddingTop: '5%',
-    paddingLeft: '5%'
+    paddingLeft: '5%',
+    fontFamily: 'Ubuntu-Bold'
   },
   settingsContainer: {
     paddingTop: '10%',
@@ -213,7 +216,7 @@ const styles = StyleSheet.create({
   contactsButton: {
     alignSelf: 'flex-end',
     paddingBottom: '10%',
-    paddingRight: '5%'
+    paddingRight: '5%',
   },
   accountBox: {
     justifyContent: 'center',
@@ -222,19 +225,22 @@ const styles = StyleSheet.create({
   accountHeader: {
     paddingTop: 20,
     paddingBottom: 20,
-    fontSize: 24
+    fontSize: 24,
+    fontFamily: 'Ubuntu-Bold'
   },
   accountNameInput: {
     padding: 10,
     backgroundColor: 'white',
     width: '70%',
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'Ubuntu-Regular'
   },
   accountPhoneNumber: {
     padding: 10,
     width: '70%',
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Ubuntu-Regular'
   },
   accountAddress: {
     marginTop: 10,
@@ -243,6 +249,7 @@ const styles = StyleSheet.create({
     width: '70%',
     height: '50%',
     fontSize: 20,
+    fontFamily: 'Ubuntu-Regular'
   },
   accountButton: {
     alignSelf: 'flex-end',

@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
       textBox: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: '15%'
+        paddingTop: '15%',
       },
       outer: {
         width: "100%",
@@ -303,23 +303,25 @@ const styles = StyleSheet.create({
         padding: 10,
         width: '80%',
         backgroundColor: 'white',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        fontFamily: 'Ubuntu-Regular'
       },
       title: {
         fontSize: 24,
         padding: 15,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Ubuntu-Bold'
     },
     reviewText: {
         fontSize: 24,
         padding: 10,
-        marginTop: '5%'
+        marginTop: '5%',
+        fontFamily: 'Ubuntu-Regular'
     },
     buttonContainer: {
         flexDirection: 'row',
         padding: 20,
     }
     
-
 
     })

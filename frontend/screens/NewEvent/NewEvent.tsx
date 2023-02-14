@@ -145,7 +145,7 @@ export default function NewEvent(props: GroupInfoProps) {
                 </View>
                 <BackgroundBox boxHeight={250} >
                     <View>
-                        <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
+                        <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center', fontFamily:'Ubuntu-Regular'}} >
                             What is your events name?
                         </Text>
                         <View>
@@ -193,7 +193,7 @@ export default function NewEvent(props: GroupInfoProps) {
                 <BackgroundBox boxHeight='70%' >
                     <View>
                         <View>
-                            <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30 }} >Select what you know</Text>
+                            <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 20, marginHorizontal: 30, fontFamily:'Ubuntu-Regular' }} >Select what you know</Text>
                         </View>
 
                         <View style={styles.checkBoxParent}>
@@ -264,7 +264,8 @@ export default function NewEvent(props: GroupInfoProps) {
                         fontSize: 24,
                         padding: 15,
                         textAlign: 'center',
-                        color: '#FF914D'
+                        color: '#FF914D',
+                        fontFamily:'Ubuntu-Regular'
                     }}
                     >What is the date of your event?</Text>
 
@@ -496,7 +497,8 @@ export default function NewEvent(props: GroupInfoProps) {
                         <Text style={{
                             fontSize: 24,
                             padding: 10,
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontFamily:'Ubuntu-Regular'
                         }} >{eventTitle}</Text>
                         {dateProvided != "" ? <Text style={styles.reviewText} >Date: {eventDate}</Text> : ""}
                         {dateProvided != "" ? <Text style={styles.reviewText} >Time: {eventTime}</Text> : ""}

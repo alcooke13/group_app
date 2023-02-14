@@ -237,18 +237,18 @@ export default function AllGroupsScreen (props: Props) {
       return (
           <>
             <TextHeader>{upcomingEvent.eventName}</TextHeader>
-            <Text>Date:         {eventDate}</Text>
-            <Text>Time:         TBC</Text>
-            <Text>Location:   {upcomingEvent.eventLocation}</Text>
+            <Text style={styles.text}>Date:         {eventDate}</Text>
+            <Text style={styles.text}>Time:         TBC</Text>
+            <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
           </>
       )
     } else {
       return (
         <>
           <TextHeader> No upcoming event </TextHeader>
-          <Text>Date:        </Text>
-          <Text>Time:        </Text>
-          <Text>Location:   </Text>
+          <Text style={styles.text}>Date:        </Text>
+          <Text style={styles.text}>Time:        </Text>
+          <Text style={styles.text}>Location:   </Text>
         </>
       )
     }
@@ -324,7 +324,7 @@ export default function AllGroupsScreen (props: Props) {
       return returnStatement
       
     } else {
-      <Text>No current poll</Text>
+      <Text style={styles.text}>No current poll</Text>
     }
   }
     
@@ -380,7 +380,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
+    fontFamily:'Ubuntu-Bold'
   },
   scroll: {
     flex: 1,
@@ -391,13 +392,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'space-between',
     width: '100%',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    fontFamily:'Ubuntu-Bold'
   },
   voteCounter: {
     color: '#FF914D',
     fontSize: 36,
     alignItems: 'center',
-    marginLeft: 15
+    marginLeft: 15,
+    fontFamily:'Ubuntu-Bold'
   },
   pollOption: {
     flexDirection: 'row',
@@ -405,5 +408,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 30,
     paddingTop: 5
+  },
+  text: {
+    fontFamily:'Ubuntu-Regular'
   }
 })

@@ -17,7 +17,8 @@ const MenuText = (props: Props) => {
 const styles = StyleSheet.create({
     text: {
         fontSize: 36,
-        color:"#ff914d"
+        color:"#ff914d",
+        fontFamily:'Ubuntu-Bold'
     }
-});
+})
 export default MenuText;

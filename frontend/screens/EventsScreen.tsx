@@ -96,9 +96,9 @@ export default function EventsScreen(props: Props) {
       const finalEvents: JSX.Element[] = matchedDates.map((event, index) => {
         return <InfoBox header={event.eventName} key={index} boxMarginTop='5%'>
         <View style={styles.filteredBox}>
-          <Text>Activity: {event.activity}</Text>
-          <Text>Location: {event.eventLocation}</Text>
-          <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
+          <Text style={styles.text}>Activity: {event.activity}</Text>
+          <Text style={styles.text}>Location: {event.eventLocation}</Text>
+          <Text style={styles.text}>Date: {new Date(event.date).toLocaleDateString("en-GB", {
             year: "numeric",
             month: "short",
             day: "2-digit",
@@ -117,9 +117,9 @@ export default function EventsScreen(props: Props) {
         return (
           <InfoBox header={group.groupName} key={index} boxHeight="80%" boxMarginBottom='7%' boxMarginTop='7%'>
           <View style={styles.textBox}>
-            <Text>Activity: {event.activity}</Text>
-            <Text>Location: {event.eventLocation}</Text>
-            <Text>Date: {new Date(event.date).toLocaleDateString("en-GB", {
+            <Text style={styles.text}>Activity: {event.activity}</Text>
+            <Text style={styles.text}>Location: {event.eventLocation}</Text>
+            <Text style={styles.text}>Date: {new Date(event.date).toLocaleDateString("en-GB", {
               year: "numeric",
               month: "short",
               day: "2-digit",
@@ -169,15 +169,14 @@ const styles = StyleSheet.create({
     containerList: {
       backgroundColor: "#25242B",
       flex:1
-      
     },
 
     containerCalendar: {
       backgroundColor: "#25242B",
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center'
-      
+      justifyContent: 'center',
+      fontFamily:'Ubuntu-Regular'
     },
     calendarButtonBox: {
       marginBottom: "5%",
@@ -197,19 +196,20 @@ const styles = StyleSheet.create({
     textBox: {
       justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: '5%'
+      paddingTop: '5%',
+      fontFamily:'Ubuntu-Regular'
     },
     outer: {
       width: "100%",
       height: "100%",
-    },
-    button: {
-      backgroundColor: 'red'
     },
     filteredBox: {
       justifyContent: 'center',
       alignItems: 'center',
       padding: '10%',
     
+    },
+    text: {
+      fontFamily:'Ubuntu-Regular'
     }
   });

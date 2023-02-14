@@ -21,7 +21,7 @@ export default function Navigation(props: Props) {
 
     return (
         <NavigationContainer>
-            <Tab.Navigator     
+            <Tab.Navigator
                 screenOptions={({ route }) => ({                
                     headerShown: false,
                     tabBarShowLabel: false,
@@ -77,6 +77,11 @@ export default function Navigation(props: Props) {
 
     )
 }
+const styles = StyleSheet.create({
+    container: {
+      
+    }
+  });
 
 
 

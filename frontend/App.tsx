@@ -3,17 +3,38 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation from './navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState , useCallback} from 'react';
 import { getGroupData, GroupData } from './services/GroupServices';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+  
+SplashScreen.preventAutoHideAsync();
+  
+  export default function App() {
+    const [user, setUser] = useState(1);
 
-export default function App() {
+    const [fontsLoaded] = useFonts({
+      'Ubuntu-Regular': require('./assets/fonts/Ubuntu-Regular.ttf'),
+      'Ubuntu-Bold': require('./assets/fonts/Ubuntu-Bold.ttf')
+    });
+  
+    const onLayoutRootView = useCallback(async () => {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }, [fontsLoaded]);
+  
+    if (!fontsLoaded) {
+      return null;
+    }
 
-  const [user, setUser] = useState(1);
+
+
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider onLayout={onLayoutRootView} >
       <Navigation user={user} />
-      <StatusBar style="auto"/>
+      <StatusBar style='auto'/>
     </SafeAreaProvider>
   );
 }

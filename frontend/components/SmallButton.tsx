@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 16,
         borderRadius: 5,
+        fontFamily:'Ubuntu-Regular'
     }
 });
 
