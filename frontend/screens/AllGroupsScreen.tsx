@@ -30,16 +30,18 @@ import NewOptionScreen from './NewOptionScreen'
 
 
 interface Props {
-  user: number
+  user: number,
 }
 
 export default function AllGroupsScreen (props: Props) {
+
   const { user } = props
   const isFocused = useIsFocused()
 
   const [groups, setGroups] = useState<GroupData[]>();
+  const [groupChanges, updateGroupChanges] = useState<Object>({});
   const [singleGroup, setSingleGroup] = useState<GroupData>();
-  const [groupView, setGroupView] = useState<string>("loading");
+  const [groupView, setGroupView] = useState<string>("Loading");
   const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
   const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
   const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
@@ -55,8 +57,12 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   useEffect(() => {
-    if (groupId != 0) {
-      setGroupView("loading")
+    if ("new group" in groupChanges) {
+      getSingleGroupData(groupChanges['new group']);
+      updateGroupChanges({});
+
+    } else if (groupId != 0) {
+      setGroupView("Loading")
       getSingleGroupData(groupId);
       route.params.groupId = 0;
 
@@ -65,14 +71,14 @@ export default function AllGroupsScreen (props: Props) {
         setGroups(userGroups);
       })
     } else if (isFocused) {
-      setGroupView("allgroups");
+      setGroupView("All Groups");
 
       getGroupData()
       .then((userGroups) => {
         setGroups(userGroups);
-      }) 
-    } 
-  }, [isFocused]);
+      })
+    }
+  }, [isFocused, groupChanges]);
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
@@ -194,11 +200,11 @@ export default function AllGroupsScreen (props: Props) {
                 pollController(allGroupsPolls, upcomingEventDetails)
               })
               .then(() => {
-                setGroupView("singlegroup")
+                setGroupView("Single Group")
               })
         } else {
           setUpcomingEvent(null);
-          setGroupView("singlegroup");
+          setGroupView("Single Group");
         }
       }
     );
@@ -212,14 +218,6 @@ export default function AllGroupsScreen (props: Props) {
                 onPress={() => getSingleGroupData(group.id)
                 }/>
   })
-
-  function addNewEvent() {
-    setGroupView('newEvent')
-  }
-
-  function addNewOption() {
-    setGroupView('addOption')
-  }
 
   function SingleGroupDetails() {
     if (upcomingEvent) {
@@ -291,13 +289,13 @@ export default function AllGroupsScreen (props: Props) {
         allOptionsMap.set(option, user_ids)
       }
 
-      function AddNewOptionPollView(){
-        return (
-          <View>
-            <NewOptionScreen user={user} setState={setGroupView}/>
-          </View>
-        )
-      }
+      // function AddNewOptionPollView(){
+      //   return (
+      //     <View>
+      //       <NewOptionScreen user={user} setState={setGroupView}/>
+      //     </View>
+      //   )
+      // }
 
       const returnStatement = availableOptionsArray.map(function (val, index) {
         let valToDisplay = val
@@ -334,14 +332,14 @@ export default function AllGroupsScreen (props: Props) {
     return(
       <>
         <View style={styles.header}>
-          <BackArrow onPress={() => setGroupView("allgroups")}></BackArrow>
+          <BackArrow onPress={() => setGroupView("All Groups")}></BackArrow>
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
           <BurgerIcon></BurgerIcon>
         </View>
-        <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=>addNewEvent()} />}>
+        <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}>
           <SingleGroupDetails/>
         </InfoBox>
-        <InfoBox header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} smallPlus={<SmallPlus onPress={() => addNewOption()}/>}>
+        <InfoBox header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')}/>}>
           <View>
             <SingleGroupPollDetails/>
           </View>
@@ -355,48 +353,19 @@ export default function AllGroupsScreen (props: Props) {
       <>
         <Image source={require('../assets/GroupLogo1.png')} />
         <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
-        <BigPlus onPress={() => setGroupView('addgroupview')} />
+        <BigPlus onPress={() => setGroupView('Add Group')} />
       </>
     )
   }
-
-  function AddNewOptionPollView () {
-    return (
-      <>
-        <NewOptionScreen
-          user={user}
-          setState={setGroupView}
-          setActivePollType={setActivePollType}
-          activePollType={activePollType}
-        />
-      </>
-    )
-  }
-
-  function AddEventView () {
-    return (
-      <>
-        <NewEvent
-          singleGroupName={singleGroup.groupName}
-          singleGroupId={singleGroup.id}
-          setState={setGroupView}
-        ></NewEvent>
-      </>
-    )
-  }
-      
-  function AddGroupView () {
-    return <AddGroupScreen user={user} />
-  }
-
+  
   return (
     <SafeAreaView style={styles.container}>
-      {groupView === 'allgroups' ? <AllGroupView /> : ''}
-      {groupView === 'singlegroup' ? <SingleGroupView /> : ''}
-      {groupView === 'addgroupview' ? <AddGroupView /> : ''}
-      {groupView === 'newEvent' ? <AddEventView /> : ''}
-      {groupView === 'loading' ? '' : ''}
-      {groupView === 'addOption' ? <AddNewOptionPollView /> : ''}
+      {groupView === 'All Groups' ? <AllGroupView /> : ''}
+      {groupView === 'Single Group' ? <SingleGroupView /> : ''}
+      {groupView === 'New Event' ? <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/> : ''}
+      {groupView === 'Loading' ? '' : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType}/> : ''}
+      {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
     </SafeAreaView>
   )
 }
@@ -406,7 +375,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#25242B'
+    backgroundColor: '#25242B',
   },
   title: {
     fontSize: 20,

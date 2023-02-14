@@ -121,11 +121,6 @@ export default function HomeScreen(props: Props) {
         )
     });
 
-    function singleGroupView(){
-        setGroupView('singleGroupView')
-        return<AllGroupsScreen user={user} />
-        }
-
     const pollItems = polls?.map((poll, index) => {
         return(
             <>

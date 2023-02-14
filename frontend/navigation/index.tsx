@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AllGroups from '../screens/AllGroupsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import EventsScreen from '../screens/EventsScreen';
+import AddGroupScreen from '../screens/AddGroupScreen';
 
 const Tab = createBottomTabNavigator();
 
