@@ -302,7 +302,6 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   const allUsersGroupsByName = groups?.flatMap(function (group, index) {
-    let status: boolean ;
     const allGroupsPolls: Array< DatePollData | ActivityPollData | LocationPollData > = []
     const filteredList: Array< DatePollData | ActivityPollData | LocationPollData > = [];
     Promise.all([
@@ -324,7 +323,6 @@ export default function AllGroupsScreen (props: Props) {
           }
         })
       })
-      console.log(groupStatus.current)
 
         return (
           <GroupNameButton
