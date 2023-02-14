@@ -91,6 +91,7 @@ export default function AllGroupsScreen (props: Props) {
   }, [groupChanges]);
 
 
+
   function getVotingStats(poll: ActivityPollData | LocationPollData | DatePollData) {
     const memberIds:number[] = []
     const voterIds:number[] = [];
@@ -108,6 +109,7 @@ export default function AllGroupsScreen (props: Props) {
     }
     setVotingStats({"voters": voterIds.length, "members": memberIds.length});
   }
+
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
@@ -410,7 +412,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Loading' ? '' : ''}
       {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType} activeGroupPollId={singleGroup?.id}/> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
-      {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} /> : ""}
+      {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>
   )
 }
