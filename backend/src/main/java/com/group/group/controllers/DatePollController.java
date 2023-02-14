@@ -118,6 +118,20 @@ public class DatePollController {
         datePollRepository.save(updateDatePoll);
         return ResponseEntity.ok(updateDatePoll);
     }
+
+    @PutMapping("/date-polls/{id}/set-completed")
+    public ResponseEntity<DatePoll> updateDatePollToComplete(
+            @PathVariable long id) {
+
+        DatePoll updateDatePoll = datePollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Activity Poll Not Found: " + id));
+
+        updateDatePoll.setCompleted(true);
+
+        datePollRepository.save(updateDatePoll);
+        return ResponseEntity.ok(updateDatePoll);
+    }
 }
 
 

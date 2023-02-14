@@ -6,6 +6,7 @@ export interface LocationPollData {
         ]
     }
     timeout: string
+    completed: boolean
     event: {
         id: number
         date: string

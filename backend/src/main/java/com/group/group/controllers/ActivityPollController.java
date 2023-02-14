@@ -89,6 +89,19 @@ public class ActivityPollController {
         return ResponseEntity.ok(updateActivityPoll);
     }
 
+    @PutMapping("/activity-polls/{id}/set-completed")
+    public ResponseEntity<ActivityPoll> updateActivityPollToComplete(
+            @PathVariable long id) {
+
+        ActivityPoll updateActivityPoll = activityPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Activity Poll Not Found: " + id));
+
+        updateActivityPoll.setCompleted(true);
+
+        activityPollRepository.save(updateActivityPoll);
+        return ResponseEntity.ok(updateActivityPoll);
+    }
 }
 
 

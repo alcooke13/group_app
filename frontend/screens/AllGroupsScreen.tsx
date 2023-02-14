@@ -106,7 +106,14 @@ export default function AllGroupsScreen (props: Props) {
         })
       }
     }
+
     setVotingStats({"voters": voterIds.length, "members": memberIds.length});
+
+    if (voterIds.length == memberIds.length) {
+      return "Vote completed";
+    } else {
+      return "Vote incomplete";
+    }
   }
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
@@ -165,8 +172,13 @@ export default function AllGroupsScreen (props: Props) {
     console.log("type: ", upcomingPoll?.type)
 
     if (upcomingPoll) {
-      setActiveGroupPoll(upcomingPoll);
-      getVotingStats(upcomingPoll);
+      const voteStatus = getVotingStats(upcomingPoll);
+
+      if (voteStatus === "Vote incomplete") {
+        setActiveGroupPoll(upcomingPoll);
+      } else {
+        if (upcomingPoll.type === "Date") 
+      }
 
     } else if (!upcomingEvent?.date) {
       postDatePoll({eventId: upcomingEvent?.id, timeout: 48})

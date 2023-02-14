@@ -6,6 +6,7 @@ export interface DatePollData {
         ]
     }
     timeout: string
+    completed: boolean
     event: {
         id: number
         date: string
