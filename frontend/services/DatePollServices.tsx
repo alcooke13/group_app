@@ -6,6 +6,7 @@ export interface DatePollData {
         ]
     }
     timeout: string
+    completed: boolean
     event: {
         id: number
         date: string
@@ -122,6 +123,21 @@ export function updateDatePollTimeout(
     method: 'PUT',
         body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' }
+  }
+  ).then ((response) => response.json())
+  .then ((response) => {
+      console.log(response)
+      return response as DatePollData
+  })
+}
+
+export function updateDatePollToComplete(pollId: number): Promise <DatePollData> {
+  return fetch(
+      'http://127.0.0.1:8080/date-polls/' + pollId.toString() + '/set-completed', 
+  {
+      method: 'PUT',
+      // body: JSON.stringify(payload),
+      // headers: { 'Content-Type': 'application/json' }
   }
   ).then ((response) => response.json())
   .then ((response) => {

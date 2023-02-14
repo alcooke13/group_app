@@ -6,6 +6,7 @@ export interface ActivityPollData {
         ]
     }
     timeout: string
+    completed: boolean
     event: {
         id: number
         date: string
@@ -128,3 +129,18 @@ export function updateActivityPollTimeout(
         return response as ActivityPollData
     })
   }
+
+export function updateActivityPollToComplete(pollId: number): Promise <ActivityPollData> {
+    return fetch(
+        'http://127.0.0.1:8080/activity-polls/' + pollId.toString() + '/set-completed', 
+    {
+        method: 'PUT',
+        // body: JSON.stringify(payload),
+        // headers: { 'Content-Type': 'application/json' }
+    }
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as ActivityPollData
+    })
+}

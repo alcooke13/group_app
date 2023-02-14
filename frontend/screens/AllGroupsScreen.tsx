@@ -15,9 +15,9 @@ import ScreenHeaderText from '../components/ScreenHeaderText'
 import BackArrow from '../components/BackArrow'
 import BigPlus from '../components/BigPlus'
 import BurgerIcon from '../components/BurgerIcon'
-import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout } from '../services/DatePollServices'
-import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout } from '../services/LocationPollServices'
-import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout } from '../services/ActivityPollServices'
+import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout, updateDatePollToComplete } from '../services/DatePollServices'
+import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete } from '../services/LocationPollServices'
+import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete } from '../services/ActivityPollServices'
 import ButtonSelector from '../components/ButtonSelector'
 import NewEvent from './NewEvent/NewEvent'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens'
@@ -49,7 +49,6 @@ export default function AllGroupsScreen (props: Props) {
   const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
   const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
   const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
-  const [activePollType, setActivePollType] = useState<string>("");
   const [votingStats, setVotingStats] = useState<Object>()
 
   const route = useRoute();
@@ -107,20 +106,19 @@ export default function AllGroupsScreen (props: Props) {
         })
       }
     }
+
     setVotingStats({"voters": voterIds.length, "members": memberIds.length});
+
+    if (voterIds.length == memberIds.length) {
+      return "Vote completed";
+    } else {
+      return "Vote incomplete";
+    }
   }
 
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
-
-    if(upcomingPoll?.type === "Activity"){
-      setActivePollType("Activity")
-    } else if (upcomingPoll?.type === "Location"){
-      setActivePollType("Location")
-    }else if (upcomingPoll?.type === "Date"){
-      setActivePollType("Date")
-    }
 
     const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
 
@@ -163,34 +161,47 @@ export default function AllGroupsScreen (props: Props) {
       })
     }
 
-    // console.log("date: ", upcomingEvent?.date)
-    // console.log("type: ", upcomingPoll?.type)
-    
-    if (upcomingPoll) {
-      setActiveGroupPoll(upcomingPoll);
-      getVotingStats(upcomingPoll);
+    console.log("date: ", upcomingEvent?.date)
+    console.log("type: ", upcomingPoll?.type)
 
-    } else if (!upcomingEvent?.date) {
-      postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
-      .then((datePoll) => {
-        // console.log("date poll: ", datePoll)
-        setActiveGroupPoll(datePoll);
-      });
-    } else if (!upcomingEvent?.activity) {
-      postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
-      .then((activityPoll) => {
-        // console.log("activity poll: ", activityPoll)
-        setActiveGroupPoll(activityPoll);
-      });
-    } else if (!upcomingEvent?.eventLocation) {
-      postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
-      .then((locationPoll) => {
-        // console.log("location poll: ", locationPoll)
-        setActiveGroupPoll(locationPoll);
-      });
+    let generateNewPoll: boolean = false;
+
+    if (upcomingPoll) {
+      const voteStatus = getVotingStats(upcomingPoll);
+
+      if (voteStatus === "Vote incomplete") {
+        setActiveGroupPoll(upcomingPoll);
+      } else {
+        if (upcomingPoll.type === "Date") updateDatePollToComplete(upcomingPoll.id);
+        else if (upcomingPoll.type === "Activity") updateActivityPollToComplete(upcomingPoll.id);
+        else if (upcomingPoll.type === "Date") updateLocationPollToComplete(upcomingPoll.id);
+        generateNewPoll = true;
+      }
+    }
+
+    if (generateNewPoll) {
+      if (!upcomingEvent?.date) {
+        postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((datePoll) => {
+          console.log("date poll: ", datePoll)
+          setActiveGroupPoll(datePoll);
+        });
+      } else if (!upcomingEvent?.activity) {
+        postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((activityPoll) => {
+          console.log("activity poll: ", activityPoll)
+          setActiveGroupPoll(activityPoll);
+        });
+      } else if (!upcomingEvent?.eventLocation) {
+        postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((locationPoll) => {
+          console.log("location poll: ", locationPoll)
+          setActiveGroupPoll(locationPoll);
+        });
+      }
     } 
 
-    // console.log("upcoming poll: ", upcomingPoll)
+    console.log("upcoming poll: ", upcomingPoll)
   }
     
   function getUpcomingEvent(group: GroupData) {
@@ -410,7 +421,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Single Group' ? <SingleGroupView /> : ''}
       {groupView === 'New Event' ? <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/> : ''}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType} activeGroupPollId={singleGroup?.id}/> : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type}/> activeGroupPollId={singleGroup?.id} : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
       {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>

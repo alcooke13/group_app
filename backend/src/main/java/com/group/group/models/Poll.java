@@ -18,12 +18,24 @@ public abstract class Poll {
     @Column(name = "timeout")
     private LocalDateTime timeout;
 
+    @Column(name = "completed")
+    private Boolean completed;
+
     public Poll(LocalDateTime timeout) {
         this.options = new HashMap<String, ArrayList<Long>>();
         this.timeout = timeout;
+        this.completed = false;
     }
 
     public Poll() {
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
     }
 
     public Long getId() {
