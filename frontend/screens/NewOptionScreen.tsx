@@ -187,7 +187,7 @@ export default function(props: Props){
         }
         return (
             <View style={{ flex: 0.8, alignItems: 'center', justifyContent: 'space-evenly' }}>
-            <BackgroundBox boxHeight="80%">
+            <BackgroundBox boxHeight="80%" boxWidth={'90%'}>
                <>
                 <Text style={styles.title}>Check Details</Text>
                 <View style={{ width: '80%', alignSelf: 'center' }}>
@@ -202,7 +202,9 @@ export default function(props: Props){
             </BackgroundBox>
             <View style={styles.backButtonHeaderContainer}>
                 <View style={styles.buttonContainer}>
+            <View style={{marginRight: '27%'}}>
              <SmallButton title='Go Back' onPress={() => detailsReset()}></SmallButton>
+             </View>
              <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
              </View>
              </View>
