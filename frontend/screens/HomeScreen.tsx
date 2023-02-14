@@ -97,19 +97,19 @@ export default function HomeScreen(props: Props) {
 
 
         return(
-            <TouchableOpacity onPress={() => {
+            <TouchableOpacity key={event.eventName + event.id.toString()} onPress={() => {
                 navigation.navigate('Groups', {
                     groupId: event.group.id
                 })
             }}>
-                <View style={styles.eventItem} key={index}>
+                <View style={styles.eventItem}>
                     <View style={styles.eventHeader}>
                         <TextHeader>{event.eventName}</TextHeader>
                     </View>
                     <View style={styles.eventInfo}>
-                    <Text>Date:         {eventDate}</Text>
-                    <Text>Time:         {eventTime}</Text>
-                    <Text>Location:   {event.eventLocation}</Text>
+                    <Text style={styles.text}>Date:         {eventDate}</Text>
+                    <Text style={styles.text}>Time:         {eventTime}</Text>
+                    <Text style={styles.text}>Location:   {event.eventLocation}</Text>
                     </View>
                 </View>
                 {index !== events?.length - 1 ?  
@@ -123,8 +123,8 @@ export default function HomeScreen(props: Props) {
 
     const pollItems = polls?.map((poll, index) => {
         return(
-            <>
-                <View style={styles.pollItem} key={index}>
+            <View key={poll.id.toString() + index.toString()}>
+                <View style={styles.pollItem}>
                     <TextHeader>{poll.event.eventName}</TextHeader>
                     <SmallButton title='Vote' onPress={() => {
                         navigation.navigate('Groups', {
@@ -137,7 +137,7 @@ export default function HomeScreen(props: Props) {
                 : 
                    ""
                 }
-            </>
+            </View>
         )
     });
 
@@ -187,5 +187,8 @@ const styles = StyleSheet.create({
         padding: 15,
         justifyContent: 'space-between',
         alignItems: 'center'
+      },
+      text: {
+        fontFamily:'Ubuntu-Regular'
       }
 });

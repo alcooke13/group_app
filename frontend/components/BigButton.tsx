@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 20,
         borderRadius: 5,
+        fontFamily:'Ubuntu-Bold' 
     }
 });
 

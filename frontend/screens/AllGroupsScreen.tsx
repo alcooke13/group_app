@@ -5,7 +5,7 @@ import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-n
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useEffect, useRef, useState } from 'react'
-import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
+import { getGroupDataByUserId, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
 import GroupNameButton from '../components/GroupNameButton'
 import route from '../navigation'
 import { TabView } from '@rneui/base'
@@ -28,6 +28,7 @@ import { updateDatePollWithNewVote } from '../services/DatePollServices'
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices'
 import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices';
 import NewOptionScreen from './NewOptionScreen'
+import SingleGroupSettings from './SingleGroupSettings'
 
 
 
@@ -67,14 +68,14 @@ export default function AllGroupsScreen (props: Props) {
         getSingleGroupData(groupId);
         route.params.groupId = 0;
   
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((userGroups) => {
           setGroups(userGroups);
         })
       } else {
         setGroupView("All Groups");
 
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((userGroups) => {
           setGroups(userGroups);
         })
@@ -241,7 +242,7 @@ export default function AllGroupsScreen (props: Props) {
 
   const allUsersGroupsByName = groups?.flatMap(function(group, index){
     return <GroupNameButton 
-                key={index} 
+                key={group.id.toString()+index.toString()} 
                 title={group.groupName} 
                 status={false} 
                 onPress={() => getSingleGroupData(group.id)
@@ -266,18 +267,18 @@ export default function AllGroupsScreen (props: Props) {
       return (
           <>
             <TextHeader>{upcomingEvent.eventName}</TextHeader>
-            <Text>Date:         {eventDate}</Text>
-            <Text>Time:         TBC</Text>
-            <Text>Location:   {upcomingEvent.eventLocation}</Text>
+            <Text style={styles.text}>Date:         {eventDate}</Text>
+            <Text style={styles.text}>Time:         TBC</Text>
+            <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
           </>
       )
     } else {
       return (
         <>
           <TextHeader> No upcoming event </TextHeader>
-          <Text>Date:        </Text>
-          <Text>Time:        </Text>
-          <Text>Location:   </Text>
+          <Text style={styles.text}>Date:        </Text>
+          <Text style={styles.text}>Time:        </Text>
+          <Text style={styles.text}>Location:   </Text>
         </>
       )
     }
@@ -329,7 +330,7 @@ export default function AllGroupsScreen (props: Props) {
         }
 
         return (
-          <View style={styles.pollOption}>
+          <View style={styles.pollOption} key={val+index.toString()}>
             <ButtonSelector
               key={index}
               option={optionToDisplay}
@@ -345,7 +346,7 @@ export default function AllGroupsScreen (props: Props) {
       return returnStatement
       
     } else {
-      <Text>No current poll</Text>
+      <Text style={styles.text}>No current poll</Text>
     }
   }
 
@@ -355,7 +356,7 @@ export default function AllGroupsScreen (props: Props) {
         <View style={styles.header}>
           <BackArrow onPress={() => setGroupView("All Groups")}></BackArrow>
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
-          <BurgerIcon></BurgerIcon>
+          <BurgerIcon onPress={()=> setGroupView("Settings")} ></BurgerIcon>
         </View>
         <InfoBox 
           header='Next Event' 
@@ -401,6 +402,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Loading' ? '' : ''}
       {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType}/> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
+      {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} /> : ""}
     </SafeAreaView>
   )
 }
@@ -415,7 +417,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
+    fontFamily:'Ubuntu-Bold'
   },
   scroll: {
     flex: 1,
@@ -427,7 +430,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'space-between',
     width: '100%',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    fontFamily:'Ubuntu-Bold'
   },
   totalVoteCount: {
     color: '#FF914D',
@@ -438,7 +442,8 @@ const styles = StyleSheet.create({
     color: '#FF914D',
     fontSize: 36,
     alignItems: 'center',
-    marginLeft: 15
+    marginLeft: 15,
+    fontFamily:'Ubuntu-Bold'
   },
   pollOption: {
     flexDirection: 'row',
@@ -446,5 +451,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 30,
     paddingTop: 5
+  },
+  text: {
+    fontFamily:'Ubuntu-Regular'
   }
 })

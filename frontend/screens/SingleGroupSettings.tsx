@@ -9,7 +9,7 @@ import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
 import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
-import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData, updateGroupTitle } from '../services/GroupServices';
+import { getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData, updateGroupTitle } from '../services/GroupServices';
 import { EventData } from '../services/EventServices';
 import LineBreak from '../components/LineBreak';
 import SmallButton from '../components/SmallButton';
@@ -263,7 +263,7 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={{ flex: 0.2, alignSelf: 'flex-start' }}>
                     <BackArrow onPress={() => { updateCurrentView("Settings") }} />
                 </View>
-                <View style={{ flex: 0.8, alignItems: 'space-evenly', marginBottom: '30%' }}>
+                <View style={{ flex: 0.8, marginBottom: '30%' }}>
                     <InfoBox header='Past Events' boxHeight='70%' boxMarginTop='5%' >
                         <ScrollView style={{ padding: 10 }}>
                             {pastEventItems}
@@ -295,7 +295,7 @@ export default function SingleGroupSettings(props: Props) {
                                 <View style={{ marginHorizontal: 5 }}>
                                     <SmallButton title={'Yes'} onPress={() => {
                                         deleteMembersByGroupId(groupId, [user]);
-                                        setState("allgroups");
+                                        setState("All Groups");
                                     }} />
                                 </View>
                                 <SmallButton title={'No'} onPress={() => { updateCurrentView("Settings") }} />

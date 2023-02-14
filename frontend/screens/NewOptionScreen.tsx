@@ -12,6 +12,7 @@ import CalendarOption from '../components/CalenderOption';
 import { updateDatePollDataWithNewOption, DatePollData } from '../services/DatePollServices';
 import { updateLocationPollDataWithNewOption, LocationPollData } from '../services/LocationPollServices';
 import { updateActivityPollDataWithNewOption, ActivityPollData } from '../services/ActivityPollServices';
+import LineBreak from '../components/LineBreak';
 
 
 interface Props {
@@ -62,9 +63,9 @@ export default function(props: Props){
             setSavedActivityPoll(activityValue)
         }
         return (
-            <>
+            <View style={styles.outer}>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => setState("Single Group")}/>
+                <View style={{marginRight: '12%', marginLeft: '5%'}}><BackArrow onPress={() => setState("Single Group")}/></View>
                 <MenuText>Activity Poll</MenuText>
                 </View>
            
@@ -78,8 +79,10 @@ export default function(props: Props){
                                 onEndEditing={onActivityInputEnd}/>
                 </View>
             </BackgroundBox>
+            <View style={{marginTop: '15%'}}>
             <SmallButton title="Add Option" onPress={changeFromActivityToConfirmation}/></View>
-           </>
+            </View>
+            </View>
     )}
 
     const LocationPollInput = () => {
@@ -88,9 +91,9 @@ export default function(props: Props){
             setSavedLocationPoll(locationValue)
         }
         return (
-        <>
+        <View style={styles.outer}>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => setState("Single Group")}/>
+                <View style={{marginRight: '10%', marginLeft: '5%'}}><BackArrow onPress={() => setState("Single Group")}/></View>
                 <MenuText>Location Poll</MenuText>
                 </View>
            
@@ -104,9 +107,11 @@ export default function(props: Props){
                                 onEndEditing={onLocationInputEnd}/>
                 </View>
             </BackgroundBox>
-
-            <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/></View>
-            </>
+            <View style={{marginTop: '15%'}}>            
+            <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/>
+            </View>
+            </View>
+            </View>
     )};
     let eventDate = new Date(savedDate+savedTime).toLocaleString('en-GB', {
         weekday: 'long',
@@ -185,10 +190,12 @@ export default function(props: Props){
         
         }
         return (
-            <View>
-            <BackgroundBox boxHeight={250} boxWidth={250}>
+            <View style={{ flex: 0.8, alignItems: 'center', justifyContent: 'space-evenly' }}>
+            <BackgroundBox boxHeight="80%" boxWidth={'90%'}>
                <>
                 <Text style={styles.title}>Check Details</Text>
+                <View style={{ width: '80%', alignSelf: 'center' }}>
+                </View>
                 {savedActivityPoll !== "" ? <Text style={styles.reviewText}>Activity: {savedActivityPoll}</Text> : ""}
                 {savedLocationPoll !== "" ? <Text style={styles.reviewText}>Location: {savedLocationPoll}</Text> : ""}
                 {savedTime !== "" && savedDate ? <>
@@ -199,8 +206,10 @@ export default function(props: Props){
             </BackgroundBox>
             <View style={styles.backButtonHeaderContainer}>
                 <View style={styles.buttonContainer}>
-             <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
+            <View style={{marginRight: '27%'}}>
              <SmallButton title='Go Back' onPress={() => detailsReset()}></SmallButton>
+             </View>
+             <SmallButton title='Submit' onPress={() => prepareBundle()}></SmallButton>
              </View>
              </View>
            </View>  
@@ -221,8 +230,10 @@ export default function(props: Props){
             {/* DATEPOLL CALENDER */}
 
             {pollView === "Date" ? 
-            <View style={styles.outer}>
+            <View style={styles.outer}><View style={styles.backButtonHeaderContainer}>
             <BackArrow onPress={() => setState("Single Group")}/>
+            <View style={{marginLeft: '20%'}}><MenuText>Date Poll</MenuText></View>
+        </View>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
             <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>
@@ -232,20 +243,22 @@ export default function(props: Props){
 
             {/* DAY VIEW */}
 
-        {pollView === "dayOption" ? <>
+        {pollView === "dayOption" ? <View style={styles.outer}>
+        <View>
         <View style={styles.backButtonHeaderContainer}>
             <BackArrow onPress={() => changeViewToCalender()}/>
-            <MenuText>Date Poll</MenuText>
+            <View style={{marginLeft: '20%'}}><MenuText>Date Poll</MenuText></View>
         </View>
-        <View>
+        </View>
+        <View style={{marginTop: '25%', alignItems: 'center',justifyContent: 'center'}}>
             <TimeOfDayButton timeOfDayOption='Morning' selected={savedTime === "T09:00" ? true : false} onPress={() => setSavedTime("T09:00")}/>
             <TimeOfDayButton timeOfDayOption='Afternoon' selected={savedTime === "T12:00" ? true : false} onPress={() => setSavedTime("T12:00")}/>
             <TimeOfDayButton timeOfDayOption='Evening' selected={savedTime === "T18:00" ? true : false} onPress={() => setSavedTime("T18:00")}/>
         </View>
-        <View>
+        <View style={{marginTop: "25%" , marginLeft: '10%'}}>
         <SmallButton title="Done" onPress={() => changeConfirmationScreen()}/>
         </View>
-        </> : ""}
+        </View> : ""}
         {pollView === "confirmation" ? <>
         <ConfirmationScreen />
         </> : ""}
@@ -262,7 +275,7 @@ const styles = StyleSheet.create({
     backButtonHeaderContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
     },
 
     innerContainer: {
@@ -283,7 +296,7 @@ const styles = StyleSheet.create({
       textBox: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: '15%'
+        paddingTop: '15%',
       },
       outer: {
         width: "100%",
@@ -303,23 +316,25 @@ const styles = StyleSheet.create({
         padding: 10,
         width: '80%',
         backgroundColor: 'white',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        fontFamily: 'Ubuntu-Regular'
       },
       title: {
         fontSize: 24,
         padding: 15,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Ubuntu-Bold'
     },
     reviewText: {
         fontSize: 24,
         padding: 10,
-        marginTop: '5%'
+        marginTop: '5%',
+        fontFamily: 'Ubuntu-Regular'
     },
     buttonContainer: {
         flexDirection: 'row',
         padding: 20,
     }
     
-
 
     })

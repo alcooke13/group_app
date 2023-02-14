@@ -19,7 +19,7 @@ const BackgroundBox = (props: Props) => {
             marginTop: boxMarginTop || "0%",
             marginBottom: boxMarginBottom|| "0%",
             backgroundColor: "#E0E1F0",
-            borderRadius: 15, 
+            borderRadius: 15,
         }}>
             {children}
         </View>
