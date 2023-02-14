@@ -63,7 +63,7 @@ export function updateGroupDataWithNewUsers(groupId: number, payload: Array<numb
     })
 }
 
-export function updateGroupTitle(groupId: number, payload: string): Promise<Response> {
+export function updateGroupTitle(groupId: number, payload: Object): Promise<Response> {
     return fetch('http://127.0.0.1:8080/groups/' + groupId.toString() + '/modify-title', {
         method: 'PUT',
         body: JSON.stringify(payload),

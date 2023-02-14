@@ -13,10 +13,12 @@ import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, delet
 import { EventData } from '../services/EventServices';
 import LineBreak from '../components/LineBreak';
 import SmallButton from '../components/SmallButton';
+
 interface Props {
     user: number,
     groupId: number;
     groupName: string;
+    setState: React.Dispatch<React.SetStateAction<string>>;
 
 }
 
@@ -24,7 +26,7 @@ interface Props {
 
 export default function SingleGroupSettings(props: Props) {
 
-    const { user, groupId, groupName } = props;
+    const { user, groupId, groupName, setState } = props;
     const isFocused = useIsFocused();
 
     const [currentView, updateCurrentView] = useState<String>("Settings");
@@ -35,7 +37,7 @@ export default function SingleGroupSettings(props: Props) {
     const [singleGroup, setSingleGroup] = useState<any>({})
     const [refreshing, setRefreshing] = useState(false);
     const [pastEvents, setPastEvents] = useState<EventData[]>()
-    const [title, setTitle] = useState<string >("")
+    const [title, setTitle] = useState<string>("")
 
     useEffect(() => {
         const newPastEvents: any[] = [];
@@ -63,13 +65,7 @@ export default function SingleGroupSettings(props: Props) {
         }
     }, [isFocused, settingsUpdated, refreshing]);
 
-    function TitleUpdate(){
-        if (title){
-            updateGroupTitle(groupId, title)
-        }
-       
-        
-    }
+    
 
 
 
@@ -117,27 +113,23 @@ export default function SingleGroupSettings(props: Props) {
         )
     }
 
-    
+
     function EditGroupView() {
-        // let newAddressValue: string;
-        let newGroupTitle : string  
-        
-        
-        
-        function setNewGroupTitle(){
-            
-            if(newGroupTitle){
-                
-                setTitle(newGroupTitle)
-                TitleUpdate()
+        const [name, setName] = useState("");
+
+        function setNewGroupTitle() {
+            const payload : {[key: string] : any} = {}
+            if (name) {
+                payload["title"] =name;
+                updateGroupTitle(groupId, payload);
+                payload["title"] = "";
+                updateCurrentView("Settings") 
             }
-            console.log(newGroupTitle, "title_check")
-            
         }
         const memberItems = members?.map((member, index) => {
             return (
                 <ButtonSelector option={member.userName}
-                onPress={() => {
+                    onPress={() => {
                         if (!membersToRemove.includes(member.id)) {
                             const newMembersToRemove = [...membersToRemove];
                             newMembersToRemove.push(member.id);
@@ -154,11 +146,11 @@ export default function SingleGroupSettings(props: Props) {
                     }}
                     selected={membersToRemove.includes(member.id)}
                     key={index}></ButtonSelector>
-                    )
-                });
-                
+            )
+        });
+
         return (
-            <View style={{ flex: 1 }} >
+            <SafeAreaView style={styles.container}>
                 <View style={{ flex: 0.1 }}>
                     <BackArrow onPress={() => {
                         updateCurrentView("Settings")
@@ -167,26 +159,22 @@ export default function SingleGroupSettings(props: Props) {
                 </View>
                 <View style={{ width: 300, flex: 0.3 }}>
                     <BackgroundBox boxHeight={'100%'}>
-                        <View >
+                        <View style={{ alignItems: 'center' }}>
                             <Text style={styles.accountHeader}>Group Name</Text>
                             <TextInput
                                 style={styles.accountNameInput}
                                 defaultValue={groupName}
-                                onChangeText={(text) => {newGroupTitle = text}}
-                                onEndEditing={() => {
-                                    setTitle(newGroupTitle)
-                            
-                                }}
+                                onChangeText={(value) => setName(value)}  
                             >
-
                             </TextInput>
-                    <SmallButton title='Submit' onPress={() => {
-                        setNewGroupTitle()
-                        TitleUpdate()
+                    
+                            <View style={{ marginTop: '10%' }}>
 
-
-                    }} ></SmallButton>
-                    </View>
+                                <SmallButton title='Submit' onPress={() => {
+                                    setNewGroupTitle()
+                                }} ></SmallButton>
+                            </View>
+                        </View>
                     </BackgroundBox>
                 </View>
 
@@ -196,9 +184,9 @@ export default function SingleGroupSettings(props: Props) {
                         boxHeight='70%'
                     // smallPlus={<SmallPlus onPress={() => { }} />} 
                     >
-                        <ScrollView showsVerticalScrollIndicator={false}>
+                        <ScrollView>
                             <View style={styles.contactsMembers}>
-                                <ScrollView>
+                                <ScrollView showsVerticalScrollIndicator={false} snapToStart={false}>
 
                                     {memberItems}
                                 </ScrollView>
@@ -214,12 +202,12 @@ export default function SingleGroupSettings(props: Props) {
                                 setRefreshing(true);
                                 setTimeout(() => {
                                     setRefreshing(false);
-                                }, 500);
+                                }, 1000);
 
                             }}></BigButton>
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         )
 
     }
@@ -241,7 +229,7 @@ export default function SingleGroupSettings(props: Props) {
 
             return (
                 <View style={{ width: '90%' }}>
-                    <View style={{}}>
+                    <View style={{ paddingVertical: 5 }}>
                         {index != 0 ? <LineBreak /> : ""}
                     </View>
                     <View key={index} style={{}} >
@@ -271,30 +259,64 @@ export default function SingleGroupSettings(props: Props) {
 
 
         return (
-            <SafeAreaView style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
-                backgroundColor: '#25242B',
-            }}>
+            <View style={{ flex: 1 }}>
+                <View style={{ flex: 0.2, alignSelf: 'flex-start' }}>
+                    <BackArrow onPress={() => { updateCurrentView("Settings") }} />
+                </View>
+                <View style={{ flex: 0.8, alignItems: 'space-evenly', marginBottom: '30%' }}>
+                    <InfoBox header='Past Events' boxHeight='70%' boxMarginTop='5%' >
+                        <ScrollView style={{ padding: 10 }}>
+                            {pastEventItems}
+                        </ScrollView>
+                    </InfoBox>
+                </View>
 
-                <InfoBox header='Past Events' boxHeight='60%' boxMarginTop='5%' >
-                    <ScrollView style={{ padding: 10 }}>
-                        {pastEventItems}
-                    </ScrollView>
-                </InfoBox>
+            </View>
+        )
+    }
 
+    function LeaveGroup() {
+
+
+
+
+        return (
+
+            <SafeAreaView>
+                <View style={{ alignSelf: 'flex-start', flex: 0.2 }}>
+                    <BackArrow onPress={() => { updateCurrentView("Settings") }} />
+                </View>
+                <View style={{ alignItems: 'center', flex: 0.8 }}>
+
+                    <BackgroundBox boxWidth={'80%'} boxHeight={"30%"} boxMarginBottom={'5%'} boxMarginTop={'5%'}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>Are you sure you want to leave the group?</Text>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <View style={{ marginHorizontal: 5 }}>
+                                    <SmallButton title={'Yes'} onPress={() => {
+                                        deleteMembersByGroupId(groupId, [user]);
+                                        setState("allgroups");
+                                    }} />
+                                </View>
+                                <SmallButton title={'No'} onPress={() => { updateCurrentView("Settings") }} />
+                            </View>
+                        </View>
+                    </BackgroundBox>
+                </View>
             </SafeAreaView>
+
+
         )
     }
 
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView>
             {currentView === "Settings" ? <SettingsView /> : ""}
             {currentView === "Edit Group" ? <EditGroupView /> : ""}
             {currentView === "Past Events" ? <PastEvents /> : ""}
+            {currentView === "Leave Group" ? <LeaveGroup /> : ""}
             {currentView === "loading" ? "" : ""}
         </SafeAreaView>
     )

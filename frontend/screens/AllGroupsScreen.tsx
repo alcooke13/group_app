@@ -303,7 +303,7 @@ export default function AllGroupsScreen(props: Props) {
           {groupView === "newEvent" ? <AddEventView/>: ""}
           {groupView === "loading" ? "" : ""}
           {groupView === "addOption" ? <AddNewOptionPollView/> : ""}
-          {groupView === "groupSettings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} /> : ""}
+          {groupView === "groupSettings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} /> : ""}
         </SafeAreaView>
     )
 }

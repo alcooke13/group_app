@@ -114,12 +114,12 @@ public class GroupController {
     @PutMapping("/groups/{id}/modify-title")
     public ResponseEntity<Group> changeGroupTitle(
             @PathVariable long id,
-            @RequestBody String newTitle ){
+            @RequestBody HashMap<String, String> newTitle){
 
         Group groupToUpdate = groupRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("Event Not Found: " + id));
-        groupToUpdate.setGroupName(newTitle.toString());
+        groupToUpdate.setGroupName(newTitle.get("title"));
 
         groupRepository.save(groupToUpdate);
 
