@@ -115,6 +115,7 @@ export default function NewEvent(props: GroupInfoProps) {
         updateStage("Details Known")
     }
 
+
     // Step 1: Ask user for the Events name
     const EventName = () => {
         let titleValue: string;
@@ -122,10 +123,10 @@ export default function NewEvent(props: GroupInfoProps) {
             setEventTitle(titleValue)
         }
         return (
+
             <SafeAreaView>
                 <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
                     <View style={{ flex: 0.2, justifyContent: 'flex-start' }}>
-
                         <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
                     </View>
                     <View style={{ flex: 0.8, alignItems: 'center' }}>
@@ -160,10 +161,13 @@ export default function NewEvent(props: GroupInfoProps) {
                                 }
                             }} ></SmallButton>
 
+                            </View>
                         </View>
+
                     </View>
                 </View>
             </SafeAreaView>
+
         );
     };
 
@@ -171,6 +175,7 @@ export default function NewEvent(props: GroupInfoProps) {
     // Step 2: Get the known details of the event
     function KnownDetails() {
         return (
+
             <SafeAreaView style={{ justifyContent: 'space-between' }}>
 
                 <View style={{ flex: 0.15, justifyContent: 'flex-start', marginLeft: -20 }} >
@@ -212,11 +217,14 @@ export default function NewEvent(props: GroupInfoProps) {
                             setLocation("")
                             setDate("")
                             StageController();
+
                         }} ></SmallButton>
                     </View>
 
                 </View>
+
             </SafeAreaView>
+
         )
     }
 
@@ -229,9 +237,11 @@ export default function NewEvent(props: GroupInfoProps) {
             setDateQuestionStage("dayView")
         }
         return (
+
             <SafeAreaView style={{ justifyContent: 'space-between' }}>
                 <View style={{ flex: 0.15, justifyContent: 'flex-start' }} >
                     <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+
                 </View>
                 <View style={{ flex: 0.85, alignItems: 'center' }}>
                     <View>
@@ -257,9 +267,11 @@ export default function NewEvent(props: GroupInfoProps) {
 
     function DayViewDateQuestion() {
         return (
+
             <SafeAreaView>
                 <View style={{ flex: 0.15, justifyContent: 'flex-start' }}>
                     <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+
                 </View>
                 <View style={{ flex: 0.85, justifyContent: 'space-around' }} >
                     <View style={{ alignSelf: 'center' }}>
@@ -297,8 +309,10 @@ export default function NewEvent(props: GroupInfoProps) {
         }
         return (
 
+
             <View style={{ flex: 1, justifyContent: 'space-around' }}>
                 <View style={{ flex: 0.2 }}>
+
                     <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
                 </View>
                 <View style={{ flex: 0.8, alignItems: 'center' }}>
@@ -488,7 +502,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     container: {
-        flex: 1, alignItems: 'center', justifyContent: 'center', width: '80%'
+        width: '80%'
+        // flex: 1, alignItems: 'center', justifyContent: 'center', width: '80%'
     },
     title: {
         fontSize: 24,
@@ -548,6 +563,21 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
 
     },
+
+    containerArea : {
+        flex: 1,
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'space-evenly'
+    },
+    backButtonheader : {
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        // paddingTop: '5%',
+        // paddingLeft: '5%'
+    }
+
 })
 
 

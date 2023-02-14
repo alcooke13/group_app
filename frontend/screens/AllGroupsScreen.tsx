@@ -1,3 +1,4 @@
+
 import * as React from 'react'
 import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native'
 import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native'
@@ -27,6 +28,7 @@ import { updateDatePollWithNewVote } from '../services/DatePollServices'
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices'
 import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices';
 import NewOptionScreen from './NewOptionScreen'
+
 
 
 interface Props {
@@ -252,6 +254,7 @@ export default function AllGroupsScreen (props: Props) {
         </>
       )
     }
+
   }
   
   function captureChosenVote (val: string) {
@@ -350,11 +353,13 @@ export default function AllGroupsScreen (props: Props) {
 
   function AllGroupView () {
     return (
+
       <>
         <Image source={require('../assets/GroupLogo1.png')} />
         <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
         <BigPlus onPress={() => setGroupView('Add Group')} />
       </>
+
     )
   }
   
