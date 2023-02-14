@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,22 @@ public class ActivityPollController {
         return ResponseEntity.ok(updatePollOptions);
     }
 
+    @PutMapping("/activity-polls/{id}/update-timeout")
+    public ResponseEntity<ActivityPoll> updateActivityPollTimeout(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        ActivityPoll updateActivityPoll = activityPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Activity Poll Not Found: " + id));
+
+        LocalDateTime timeout = LocalDateTime.now().withNano(0).plusHours(body.get("timeout"));
+
+        updateActivityPoll.setTimeout(timeout);
+
+        activityPollRepository.save(updateActivityPoll);
+        return ResponseEntity.ok(updateActivityPoll);
+    }
 
 }
 

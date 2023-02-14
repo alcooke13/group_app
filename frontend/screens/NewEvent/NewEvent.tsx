@@ -100,7 +100,7 @@ export default function NewEvent(props: GroupInfoProps) {
         setDate("");
         setActivity("");
         setLocation("");
-        setState("singlegroup")
+        setState("Single Group")
     }
 
     function goBackToEventName() {
@@ -401,7 +401,7 @@ export default function NewEvent(props: GroupInfoProps) {
         postEvent(newBundle).then((data) => {
             setBundle(data)
         })
-        setState("singlegroup")
+        setState("Single Group")
 
     }
 
