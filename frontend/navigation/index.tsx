@@ -9,6 +9,8 @@ import SettingsScreen from '../screens/SettingsScreen';
 import EventsScreen from '../screens/EventsScreen';
 import AddGroupScreen from '../screens/AddGroupScreen';
 
+
+
 const Tab = createBottomTabNavigator();
 
 interface Props {
@@ -32,14 +34,17 @@ export default function Navigation(props: Props) {
                             size = 48;
                             useIsFocused()
                         } else if (route.name === "Groups") {
-                            iconName = focused ? 'people' : 'people-outline'
+                            // iconName = focused ? 'people' : 'people-outline'
                             size = 48;
                             useIsFocused()
-                            // return (
-
-                            // This is to add our group logo, once we have resized and got a green logo, add this back in.
-                            //     <Image source={require('../assets/GroupLogo1.png')}/>
-                            //     )
+                            if(focused){
+                                return (
+                                    <Image style={styles.tinyLogo} source={require('../assets/logo-onFocus.png')}/>
+                                )
+                            }
+                            return (
+                                    <Image style={styles.tinyLogo} source={require('../assets/logo-normal.png')}/>
+                            )
 
                         } else if (route.name === "Events") {
                             iconName = focused ? 'ios-calendar' : 'ios-calendar-outline'
@@ -79,8 +84,11 @@ export default function Navigation(props: Props) {
 }
 const styles = StyleSheet.create({
     container: {
-      
-    }
+    },
+    tinyLogo: {
+        width: 50,
+        height: 50,
+      },
   });
 
 
