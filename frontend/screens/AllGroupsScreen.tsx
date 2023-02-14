@@ -354,7 +354,8 @@ export default function AllGroupsScreen (props: Props) {
               key={index}
               option={optionToDisplay}
               onPress={() => captureChosenVote(option)}
-              selected={false}
+              selected={allOptionsMap.get(option)?.includes(user)}
+
             ></ButtonSelector>
             <View style={styles.pollOptionCounters}>
               <Text style={styles.voteCounter}>
