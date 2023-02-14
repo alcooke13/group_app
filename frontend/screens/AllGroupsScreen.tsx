@@ -153,21 +153,11 @@ export default function AllGroupsScreen (props: Props) {
     }
   }
 
-  function pollController (
-    allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[],
-    upcomingEvent: EventData
-  ) {
-    const upcomingPoll:
-      | DatePollData
-      | ActivityPollData
-      | LocationPollData
-      | undefined = allGroupPolls?.find(
-      poll => Date.parse(poll.timeout) - Date.now() > 0
-    )
 
-    const pastPolls: Array<
-      DatePollData | ActivityPollData | LocationPollData | undefined
-    > = allGroupPolls?.filter(poll => Date.parse(poll.timeout) - Date.now() < 0)
+function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
+
+    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
+    const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
 
     function mostPollVotes (
       poll: DatePollData | ActivityPollData | LocationPollData
@@ -184,39 +174,59 @@ export default function AllGroupsScreen (props: Props) {
       return winningOption
     }
 
+    let upcomingPollFound: boolean = false;
+
+    // Check for any past polls that resulted in a winning vote or not
+    // If found update the event details with winning option and set poll to complete
+    // If not found extend the poll timeout by 48 hours
     if (pastPolls.length != 0) {
-      pastPolls.forEach(poll => {
-        const winningOption = mostPollVotes(poll)
+
+      pastPolls.forEach((poll) => {
+        if (poll?.completed) return;
+       
+        const winningOption = mostPollVotes(poll);
 
         if (poll?.type === 'Date' && !upcomingEvent.date) {
           if (!winningOption) {
-            updateDatePollTimeout(poll.id, { timeout: 48 })
+            updateDatePollTimeout(poll.id, {'timeout': 48});
+            setActiveGroupPoll(poll);
+            upcomingPollFound = true;
           } else {
-            updateEventDate(upcomingEvent.id, { new: winningOption })
+            updateEventDate(upcomingEvent.id, {'new': winningOption});
+            updateDatePollToComplete(poll.id);
           }
         } else if (poll?.type === 'Activity' && !upcomingEvent.activity) {
           if (!winningOption) {
-            updateActivityPollTimeout(poll.id, { timeout: 48 })
+
+            updateActivityPollTimeout(poll.id, {'timeout': 48});
+            setActiveGroupPoll(poll);
+            upcomingPollFound = true;
           } else {
-            updateEventActivity(upcomingEvent.id, { new: winningOption })
+            updateEventActivity(upcomingEvent.id, {'new': winningOption});
+            updateDatePollToComplete(poll.id);
           }
         } else if (poll?.type === 'Location' && !upcomingEvent.eventLocation) {
           if (!winningOption) {
-            updateLocationPollTimeout(poll.id, { timeout: 48 })
+
+            updateLocationPollTimeout(poll.id, {'timeout': 48});
+            setActiveGroupPoll(poll);
+            upcomingPollFound = true;
           } else {
-            updateEventLocation(upcomingEvent.id, { new: winningOption })
+            updateEventLocation(upcomingEvent.id, {'new': winningOption});
+            updateDatePollToComplete(poll.id);
           }
         }
       })
     }
 
-    console.log('date: ', upcomingEvent?.date)
-    console.log('type: ', upcomingPoll?.type)
 
     let generateNewPoll: boolean = false
 
-    if (upcomingPoll) {
-      const voteStatus = getVotingStats(upcomingPoll)
+
+    // Check if all members voted on the upcoming poll
+    // If all voted update the event details with the winning option and engage generation of new poll
+    if (upcomingPoll && !upcomingPollFound) {
+      const voteStatus = getVotingStats(upcomingPoll);
 
       if (voteStatus === 'Vote incomplete') {
         setActiveGroupPoll(upcomingPoll)
@@ -231,32 +241,26 @@ export default function AllGroupsScreen (props: Props) {
       }
     }
 
+    // Create new poll in the order of Date > Activity > Location
     if (generateNewPoll) {
       if (!upcomingEvent?.date) {
-        postDatePoll({ eventId: upcomingEvent?.id, timeout: 48 }).then(
-          datePoll => {
-            console.log('date poll: ', datePoll)
-            setActiveGroupPoll(datePoll)
-          }
-        )
-      } else if (!upcomingEvent?.activity) {
-        postActivityPoll({ eventId: upcomingEvent?.id, timeout: 48 }).then(
-          activityPoll => {
-            console.log('activity poll: ', activityPoll)
-            setActiveGroupPoll(activityPoll)
-          }
-        )
-      } else if (!upcomingEvent?.eventLocation) {
-        postLocationPoll({ eventId: upcomingEvent?.id, timeout: 48 }).then(
-          locationPoll => {
-            console.log('location poll: ', locationPoll)
-            setActiveGroupPoll(locationPoll)
-          }
-        )
-      }
-    }
 
-    console.log('upcoming poll: ', upcomingPoll)
+        postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((datePoll) => {
+          setActiveGroupPoll(datePoll);
+        });
+      } else if (!upcomingEvent?.activity) {
+        postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((activityPoll) => {
+          setActiveGroupPoll(activityPoll);
+        });
+      } else if (!upcomingEvent?.eventLocation) {
+        postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
+        .then((locationPoll) => {
+          setActiveGroupPoll(locationPoll);
+        });
+      }
+    } 
   }
 
   function getUpcomingEvent (group: GroupData) {
@@ -463,9 +467,10 @@ export default function AllGroupsScreen (props: Props) {
           header='Next Event'
           boxHeight='40%'
           boxMarginTop='-5%'
-          smallPlus={<SmallPlus onPress={() => setGroupView('New Event')} />}
-        >
-          <SingleGroupDetails />
+
+          smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
+          >
+          <SingleGroupDetails/>
         </InfoBox>
         <InfoBox
           header={activeGroupPoll ? activeGroupPoll.event.eventName : 'No poll'}
@@ -513,36 +518,9 @@ export default function AllGroupsScreen (props: Props) {
         ''
       )}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? (
-        <NewOptionScreen
-          user={user}
-          setState={setGroupView}
-          activePollType={activeGroupPoll?.type}
-          activeGroupPollId={singleGroup?.id}
-        />
-      ) : (
-        ''
-      )}
-      {groupView === 'Add Group' ? (
-        <AddGroupScreen
-          user={user}
-          setState={setGroupView}
-          newGroup={updateGroupChanges}
-        />
-      ) : (
-        ''
-      )}
-      {groupView === 'Settings' ? (
-        <SingleGroupSettings
-          user={props.user}
-          groupName={singleGroup.groupName}
-          groupId={singleGroup.id}
-          setState={setGroupView}
-          parentUpcomingEvent={upcomingEvent}
-        />
-      ) : (
-        ''
-      )}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={singleGroup?.id} /> : ''}
+      {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
+      {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>
   )
 }
