@@ -55,6 +55,20 @@ public class LocationPollController {
         return ResponseEntity.ok(updatePollVoters);
     }
 
+    @PutMapping("/location-polls/{id}/remove-vote")
+    public ResponseEntity<LocationPoll> removeVoterFromLocationOption(
+            @PathVariable long id,
+            @RequestBody HashMap<String, Long> body ) {
+
+        LocationPoll updatePollVoters = locationPollRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + id));
+
+        updatePollVoters.removeUserFromOption(body.keySet().toArray()[0].toString(), body.get(body.keySet().toArray()[0].toString()));
+        locationPollRepository.save(updatePollVoters);
+        return ResponseEntity.ok(updatePollVoters);
+    }
+
     @PutMapping("/location-polls/{id}/add-option")
     public ResponseEntity<LocationPoll> addOptionToLocationPoll(
             @PathVariable long id,

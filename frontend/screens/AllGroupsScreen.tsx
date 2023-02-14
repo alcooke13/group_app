@@ -1,4 +1,3 @@
-
 import * as React from 'react'
 import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native'
 import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native'
@@ -312,27 +311,43 @@ export default function AllGroupsScreen (props: Props) {
   }
   
   function captureChosenVote(selectedOption: string) {
-    console.log("selectedOption:" + selectedOption)
-    let chosenOption: string = "";
     let voter: number = user
     let newData: { [key: string]: number } = {}
+
     for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
-      if (selectedOption === option) {
-        chosenOption = selectedOption;
-      }
-      if (activeGroupPoll?.type == 'Location') {
-        newData[chosenOption] = voter;
-        updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
-        newData = {};
-      } else if (activeGroupPoll?.type == 'Activity') {
-        newData[chosenOption] = voter;
-        updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
-        newData = {};
-      } else if (activeGroupPoll?.type == 'Date') {
-        let dateoption: string = chosenOption.toString();
-        newData[dateoption] = voter;
-        updateDatePollWithNewVote(activeGroupPoll?.id, newData);
-        newData = {};
+      if (selectedOption !== option) continue;
+
+      // Remove user from option if already voted on option
+      if (user_ids.includes(user)) {
+        if (activeGroupPoll?.type == 'Location') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Activity') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Date') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateDatePollWithNewVote(activeGroupPoll?.id, newData);
+        }
+      } 
+      // Add user to option if not already voted on option
+      else {
+        if (activeGroupPoll?.type == 'Location') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Activity') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
+        } else if (activeGroupPoll?.type == 'Date') {
+          newData = {};
+          newData[selectedOption] = voter;
+          updateDatePollWithNewVote(activeGroupPoll?.id, newData);
+        }
       }
     }
   }
