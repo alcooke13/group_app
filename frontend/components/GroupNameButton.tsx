@@ -13,10 +13,8 @@ const GroupNameButton = (props: Props) => {
       <TouchableOpacity onPress={onPress} style={styles.insideButton}>
         <View style={styles.container}>
           <Text style={styles.text}>{title}</Text>
-          <View
-            style={[
-              styles.notificationOn,
-              status ? styles.notificationOn : styles.notifationOff
+          <View style={[
+            status ? styles.notificationOn : styles.notifationOff
             ]}
           >
             <Text></Text>
@@ -54,11 +52,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 40,
     position: 'absolute',
-    right: -30,
-    top: -4
+    right: '5%',
+    top: '5%'
   },
 
   notifationOff: {
+    borderRadius: 50,
+    height: 10,
+    width: 10,
+    marginTop: 10,
+    marginLeft: 40,
+    position: 'absolute',
+    right: '5%',
+    top: '5%',
     backgroundColor: '#E0E1F0'
   },
 
