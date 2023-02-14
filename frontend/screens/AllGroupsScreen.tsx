@@ -14,9 +14,9 @@ import ScreenHeaderText from '../components/ScreenHeaderText'
 import BackArrow from '../components/BackArrow'
 import BigPlus from '../components/BigPlus'
 import BurgerIcon from '../components/BurgerIcon'
-import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout, updateDatePollToComplete, updateDatePollWithRemovedVote } from '../services/DatePollServices'
-import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete, updateLocationPollWithRemovedVote } from '../services/LocationPollServices'
-import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete, updateActivityPollWithRemovedVote } from '../services/ActivityPollServices'
+import { DatePollData, getDatePollDataByGroupId, getDatePollDataById, postDatePoll, updateDatePollTimeout, updateDatePollToComplete, updateDatePollWithRemovedVote } from '../services/DatePollServices'
+import { getLocationPollDataByGroupId, getLocationPollDataById, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete, updateLocationPollWithRemovedVote } from '../services/LocationPollServices'
+import { ActivityPollData, getActivityPollDataByGroupId, getActivityPollDataById, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete, updateActivityPollWithRemovedVote } from '../services/ActivityPollServices'
 import ButtonSelector from '../components/ButtonSelector'
 import NewEvent from './NewEvent/NewEvent'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens'
@@ -44,7 +44,7 @@ export default function AllGroupsScreen (props: Props) {
   const [groupChanges, updateGroupChanges] = useState<Object>({});
   const [singleGroup, setSingleGroup] = useState<GroupData>();
   const [groupView, setGroupView] = useState<string>("Loading");
-  const [screenChanges, updateScreenChanges] = useState<Boolean>(false);
+  const [pollVoted, updatePollVoted] = useState<Boolean>(false);
   const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
   const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
   const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
@@ -87,6 +87,35 @@ export default function AllGroupsScreen (props: Props) {
       updateGroupChanges({});
     }
   }, [groupChanges]);
+
+  useEffect(() => {
+    if (pollVoted) {
+      if (activeGroupPoll?.type === "Date") {
+        getDatePollDataById(activeGroupPoll.id)
+        .then((poll) => {
+          setActiveGroupPoll(poll);
+          getVotingStats(poll);
+        })
+        .then(() => setGroupView("Single Group"));
+      } else if (activeGroupPoll?.type === "Activity") {
+        getActivityPollDataById(activeGroupPoll.id)
+        .then((poll) => {
+          setActiveGroupPoll(poll);
+          getVotingStats(poll);
+        })
+        .then(() => setGroupView("Single Group"));
+      } else if (activeGroupPoll?.type === "Location") {
+        getLocationPollDataById(activeGroupPoll.id)
+        .then((poll) => {
+          setActiveGroupPoll(poll);
+          getVotingStats(poll);
+        })
+        .then(() => setGroupView("Single Group"));
+      }
+      
+      updatePollVoted(false);
+    }
+  }, [pollVoted]);
 
 
 
@@ -349,6 +378,9 @@ export default function AllGroupsScreen (props: Props) {
           updateDatePollWithNewVote(activeGroupPoll?.id, newData);
         }
       }
+
+
+      updatePollVoted(true);
     }
   }
  
@@ -381,7 +413,7 @@ export default function AllGroupsScreen (props: Props) {
               key={index}
               option={optionToDisplay}
               onPress={() => captureChosenVote(option)}
-              selected={false}
+              selected={allOptionsMap.get(option)?.includes(user)}
             ></ButtonSelector>
             <View style={styles.pollOptionCounters}>
               <Text style={styles.voteCounter}>

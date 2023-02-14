@@ -38,6 +38,18 @@ return fetch('http://127.0.0.1:8080/location-polls', {
     });
 }
 
+export function getLocationPollDataById(pollId: number): Promise<LocationPollData[]> {
+    return fetch('http://127.0.0.1:8080/location-polls/' + pollId.toString(), {
+        method: 'GET',
+        // headers: {
+        // },
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            return response as LocationPollData[];
+        });
+    }
+
 export function getLocationPollDataByGroupId(id: number): Promise<LocationPollData[]> {
     return fetch('http://127.0.0.1:8080/location-polls?group_id=' + id.toString(), {
         method: 'GET',

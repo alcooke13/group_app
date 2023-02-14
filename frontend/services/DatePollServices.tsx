@@ -38,6 +38,18 @@ export function getDatePollData(): Promise<DatePollData[]> {
     });
 }
 
+export function getDatePollDataById(pollId: number): Promise<DatePollData[]> {
+  return fetch("http://127.0.0.1:8080/date-polls/" + pollId.toString(), {
+    method: "GET",
+    // headers: {
+    // },
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      return response as DatePollData[];
+    });
+}
+
 export function getDatePollDataByUserId(id: number): Promise<DatePollData[]> {
   return fetch("http://127.0.0.1:8080/date-polls?user_id=" + id.toString(), {
     method: "GET",
