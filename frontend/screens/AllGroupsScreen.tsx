@@ -57,28 +57,34 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   useEffect(() => {
+    if (isFocused) {
+      if (groupId != 0) {
+        setGroupView("Loading");
+        getSingleGroupData(groupId);
+        route.params.groupId = 0;
+  
+        getGroupData()
+        .then((userGroups) => {
+          setGroups(userGroups);
+        }) 
+      } else {
+        setGroupView("All Groups");
+
+        getGroupData()
+        .then((userGroups) => {
+          setGroups(userGroups);
+        })
+      }
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
     if ("new group" in groupChanges) {
       getSingleGroupData(groupChanges['new group']);
       updateGroupChanges({});
 
-    } else if (groupId != 0) {
-      setGroupView("Loading")
-      getSingleGroupData(groupId);
-      route.params.groupId = 0;
-
-      getGroupData()
-      .then((userGroups) => {
-        setGroups(userGroups);
-      })
-    } else if (isFocused) {
-      setGroupView("All Groups");
-
-      getGroupData()
-      .then((userGroups) => {
-        setGroups(userGroups);
-      })
     }
-  }, [isFocused, groupChanges]);
+  }, [groupChanges]);
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
