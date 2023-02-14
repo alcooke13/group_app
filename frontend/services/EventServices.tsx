@@ -93,3 +93,10 @@ export function updateEventLocation(eventId: number, payload: Object): Promise<E
     });
 }
 
+
+export function deleteEvent(eventId: number): Promise<Response> {
+    return fetch('http://127.0.0.1:8080/events/' + eventId.toString() + "/delete", {
+        method: 'DELETE'
+    });
+}
+
