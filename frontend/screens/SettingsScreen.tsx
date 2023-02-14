@@ -57,9 +57,6 @@ export default function SettingsScreen(props: Props) {
           </TouchableOpacity>
         </View>
         <View>
-          {/* <TouchableOpacity activeOpacity={0.7} onPress={onPressNotificationSetting}>
-            <Text style={styles.settingElements}>Notifications</Text>
-          </TouchableOpacity> */}
         </View>
       </View>
     )
@@ -71,7 +68,10 @@ export default function SettingsScreen(props: Props) {
 
     return (
       <View style={styles.accountContainer}>
-        <BackgroundBox boxHeight={"20%"}>
+        <View style={styles.settingsHeader}>
+          <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
+        </View>
+        <BackgroundBox boxHeight={"18%"} boxMarginTop="5%">
           <View style={styles.accountBox}>
             <Text style={styles.accountHeader}>Username</Text>
             <TextInput 
@@ -81,13 +81,13 @@ export default function SettingsScreen(props: Props) {
             </TextInput>
           </View>
         </BackgroundBox>
-        <BackgroundBox boxHeight={"20%"}>
+        <BackgroundBox boxHeight={"18%"} boxMarginTop="10%">
           <View style={styles.accountBox}>
             <Text style={styles.accountHeader}>Phone Number</Text>
             <Text  style={styles.accountPhoneNumber}>{userDetails?.phoneNumber}</Text>
           </View>
         </BackgroundBox>
-        <BackgroundBox boxHeight={"30%"}>
+        <BackgroundBox boxHeight={"25%"} boxMarginTop="10%" boxMarginBottom='10%'>
           <View style={styles.accountBox}>
             <Text style={styles.accountHeader}>Address</Text>
             <TextInput 
@@ -136,7 +136,7 @@ export default function SettingsScreen(props: Props) {
 
     return (
       <View style={styles.contactContainer}>
-        <View style={styles.contactsHeader}>
+        <View style={styles.settingsHeader}>
           <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
         </View>
         <InfoBox header='Contacts'
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontFamily: 'Ubuntu-Regular'
   },
-  contactsHeader: {
+  settingsHeader: {
     flexDirection: 'row',
     alignSelf: 'flex-start',
     paddingTop: '5%',
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   accountContainer: {
-    justifyContent: 'space-evenly',
+    // justifyContent: 'space-evenly',
     alignItems: 'center',
     width: "100%",
     height: "100%"

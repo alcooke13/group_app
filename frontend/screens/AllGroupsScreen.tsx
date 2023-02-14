@@ -42,7 +42,7 @@ export default function AllGroupsScreen (props: Props) {
   const [groupChanges, updateGroupChanges] = useState<Object>({});
   const [singleGroup, setSingleGroup] = useState<GroupData>();
   const [groupView, setGroupView] = useState<string>("Loading");
-  const [pollVoted, updatePollVoted] = useState<Boolean>(false);
+  const [pollChange, updatePollChange] = useState<Boolean>(false);
   const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
   const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
   const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
@@ -86,7 +86,7 @@ export default function AllGroupsScreen (props: Props) {
   }, [groupChanges]);
 
   useEffect(() => {
-    if (pollVoted) {
+    if (pollChange) {
       if (activeGroupPoll?.type === "Date") {
         getDatePollDataById(activeGroupPoll.id)
         .then((poll) => {
@@ -110,9 +110,9 @@ export default function AllGroupsScreen (props: Props) {
         .then(() => setGroupView("Single Group"));
       }
       
-      updatePollVoted(false);
+      updatePollChange(false);
     }
-  }, [pollVoted]);
+  }, [pollChange]);
   
 
   function getVotingStats (
@@ -413,7 +413,7 @@ export default function AllGroupsScreen (props: Props) {
       }
 
 
-      updatePollVoted(true);
+      updatePollChange(true);
     }
   }
 
@@ -433,17 +433,19 @@ export default function AllGroupsScreen (props: Props) {
         allOptionsMap.set(option, user_ids)
       }
 
-      const returnStatement = availableOptionsArray.map(function (
-        option,
-        index
-      ) {
-        let optionToDisplay = option
+      const returnStatement = availableOptionsArray.map(function (option, index) {
+        let optionToDisplay = option;
+        let timeOfDay: string = "";
+
         if (activeGroupPoll?.type == 'Date') {
-          optionToDisplay = new Date(option).toLocaleString('en-GB', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long'
-          })
+          const optionDateTime = new Date(option);
+
+          const optionTime =  optionDateTime.getHours();
+          if (optionTime === 9) timeOfDay = ' Morning, ';
+          if (optionTime === 12) timeOfDay = ' Afternoon, ';
+          if (optionTime === 18) timeOfDay = ' Evening, ';
+
+          optionToDisplay = optionDateTime.toLocaleString('en-GB', {weekday: 'long'}) + timeOfDay + optionDateTime.toLocaleString('en-GB', {day: 'numeric', month: 'long'});
         }
 
         return (
@@ -530,7 +532,7 @@ export default function AllGroupsScreen (props: Props) {
         ''
       )}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={singleGroup?.id} /> : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={singleGroup?.id} updatePollChange={updatePollChange} /> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
       {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>
@@ -580,18 +582,17 @@ const styles = StyleSheet.create({
   pollOptionsInnerBox: {
     paddingTop: 10
   },
-  pollOptionCounters: {},
   voteCounter: {
     color: '#FF914D',
-    fontSize: 36,
+    fontSize: 34,
     fontFamily:'Ubuntu-Bold',
-    paddingLeft: 25
+    paddingLeft: 20
   },
   pollOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 50,
+    paddingLeft: 10,
+    paddingRight: 40,
     paddingTop: 5
   },
   text: {
