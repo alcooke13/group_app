@@ -511,10 +511,12 @@ const styles = StyleSheet.create({
   },
   eventDetails: {
     padding: 20,
-    paddingLeft: 30
+    paddingLeft: 30,
+    paddingRight: 30
   },
   eventDetailsHeader: {
-    paddingBottom: 10
+    paddingBottom: 15,
+    alignSelf: 'center'
   },
   header: {
     marginTop: '5%',
