@@ -221,7 +221,7 @@ export default function AllGroupsScreen (props: Props) {
 
   const allUsersGroupsByName = groups?.flatMap(function(group, index){
     return <GroupNameButton 
-                key={index} 
+                key={group.id.toString()+index.toString()} 
                 title={group.groupName} 
                 status={false} 
                 onPress={() => getSingleGroupData(group.id)
@@ -318,9 +318,8 @@ export default function AllGroupsScreen (props: Props) {
         }
 
         return (
-          <View style={styles.pollOption}>
+          <View style={styles.pollOption} key={val+index.toString()}>
             <ButtonSelector
-              key={index}
               option={valToDisplay}
               onPress={() => captureChosenVote(val)}
               selected={false}
