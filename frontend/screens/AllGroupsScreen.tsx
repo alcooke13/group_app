@@ -177,7 +177,7 @@ export default function AllGroupsScreen (props: Props) {
       if (voteStatus === "Vote incomplete") {
         setActiveGroupPoll(upcomingPoll);
       } else {
-        if (upcomingPoll.type === "Date") 
+        if (upcomingPoll.type === "Date") update
       }
 
     } else if (!upcomingEvent?.date) {
