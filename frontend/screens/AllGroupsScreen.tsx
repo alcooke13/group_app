@@ -28,6 +28,7 @@ import { updateDatePollWithNewVote } from '../services/DatePollServices'
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices'
 import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices';
 import NewOptionScreen from './NewOptionScreen'
+import SingleGroupSettings from './SingleGroupSettings'
 
 
 
@@ -343,7 +344,7 @@ export default function AllGroupsScreen (props: Props) {
         <View style={styles.header}>
           <BackArrow onPress={() => setGroupView("All Groups")}></BackArrow>
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
-          <BurgerIcon></BurgerIcon>
+          <BurgerIcon onPress={()=> setGroupView("Settings")} ></BurgerIcon>
         </View>
         <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}>
           <SingleGroupDetails/>
@@ -377,6 +378,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Loading' ? '' : ''}
       {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType}/> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
+      {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} /> : ""}
     </SafeAreaView>
   )
 }

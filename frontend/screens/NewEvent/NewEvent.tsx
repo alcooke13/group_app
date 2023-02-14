@@ -125,7 +125,7 @@ export default function NewEvent(props: GroupInfoProps) {
         return (
 
             <SafeAreaView>
-                <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
+                <View style={{ flex: 1 }}>
                     <View style={{ flex: 0.2, justifyContent: 'flex-start' }}>
                         <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
                     </View>
