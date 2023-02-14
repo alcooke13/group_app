@@ -1,5 +1,6 @@
 package com.group.group.controllers;
 
+import com.group.group.models.Event;
 import com.group.group.models.Group;
 import com.group.group.models.User;
 import com.group.group.repositories.GroupRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,38 @@ public class GroupController {
     public ResponseEntity getGroup(@PathVariable Long id) {
         return new ResponseEntity<>(groupRepository.findById(id), HttpStatus.OK);
     }
+
+    @PutMapping("/groups/{id}/remove-members")
+    public ResponseEntity<Group> deleteMembers(
+            @PathVariable long id,
+            @RequestBody List<Long> userIds) {
+
+        Group updateUser = groupRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Group Not Found: " + id));
+
+        List<User> members = updateUser.getUsers();
+
+        for (Long userId : userIds) {
+            User member = userRepository
+                    .findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Group Not Found: " + userId));
+
+            if (members.contains(member)) {
+                updateUser.removeMember(member);
+            }
+        }
+
+        groupRepository.save(updateUser);
+
+        return ResponseEntity.ok(updateUser);
+    }
+
+//    @GetMapping(value = "/groups/{id}/members")
+//    public ResponseEntity getGroupMembers(@PathVariable Long id) {
+//        return new ResponseEntity<>(groupRepository.findByGroupId(id), HttpStatus.OK);
+//    }
+
 
     @PostMapping(path = "/groups",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -75,5 +109,21 @@ public class GroupController {
         groupRepository.save(updateGroup);
 
         return ResponseEntity.ok(updateGroup);
+    }
+
+    @PutMapping("/groups/{id}/modify-title")
+    public ResponseEntity<Group> changeGroupTitle(
+            @PathVariable long id,
+            @RequestBody HashMap<String, String> newTitle){
+
+        Group groupToUpdate = groupRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Event Not Found: " + id));
+        groupToUpdate.setGroupName(newTitle.get("title"));
+
+        groupRepository.save(groupToUpdate);
+
+
+        return ResponseEntity.ok(groupToUpdate);
     }
 }

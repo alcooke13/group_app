@@ -1,10 +1,11 @@
+
 import * as React from 'react'
 import { Text, View, Image, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native'
 import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useEffect, useRef, useState } from 'react'
-import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
+import { getGroupDataByUserId, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
 import GroupNameButton from '../components/GroupNameButton'
 import route from '../navigation'
 import { TabView } from '@rneui/base'
@@ -27,6 +28,8 @@ import { updateDatePollWithNewVote } from '../services/DatePollServices'
 import { updateLocationPollWithNewVote } from '../services/LocationPollServices'
 import { EventData, updateEventActivity, updateEventDate, updateEventLocation } from '../services/EventServices';
 import NewOptionScreen from './NewOptionScreen'
+import SingleGroupSettings from './SingleGroupSettings'
+
 
 
 interface Props {
@@ -57,28 +60,34 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   useEffect(() => {
+    if (isFocused) {
+      if (groupId != 0) {
+        setGroupView("Loading");
+        getSingleGroupData(groupId);
+        route.params.groupId = 0;
+  
+        getGroupDataByUserId(user)
+        .then((userGroups) => {
+          setGroups(userGroups);
+        }) 
+      } else {
+        setGroupView("All Groups");
+
+        getGroupDataByUserId(user)
+        .then((userGroups) => {
+          setGroups(userGroups);
+        })
+      }
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
     if ("new group" in groupChanges) {
       getSingleGroupData(groupChanges['new group']);
       updateGroupChanges({});
 
-    } else if (groupId != 0) {
-      setGroupView("Loading")
-      getSingleGroupData(groupId);
-      route.params.groupId = 0;
-
-      getGroupData()
-      .then((userGroups) => {
-        setGroups(userGroups);
-      })
-    } else if (isFocused) {
-      setGroupView("All Groups");
-
-      getGroupData()
-      .then((userGroups) => {
-        setGroups(userGroups);
-      })
     }
-  }, [isFocused, groupChanges]);
+  }, [groupChanges]);
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
     const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
@@ -212,7 +221,7 @@ export default function AllGroupsScreen (props: Props) {
 
   const allUsersGroupsByName = groups?.flatMap(function(group, index){
     return <GroupNameButton 
-                key={index} 
+                key={group.id.toString()+index.toString()} 
                 title={group.groupName} 
                 status={false} 
                 onPress={() => getSingleGroupData(group.id)
@@ -252,6 +261,7 @@ export default function AllGroupsScreen (props: Props) {
         </>
       )
     }
+
   }
   
   function captureChosenVote (val: string) {
@@ -308,9 +318,8 @@ export default function AllGroupsScreen (props: Props) {
         }
 
         return (
-          <View style={styles.pollOption}>
+          <View style={styles.pollOption} key={val+index.toString()}>
             <ButtonSelector
-              key={index}
               option={valToDisplay}
               onPress={() => captureChosenVote(val)}
               selected={false}
@@ -334,7 +343,7 @@ export default function AllGroupsScreen (props: Props) {
         <View style={styles.header}>
           <BackArrow onPress={() => setGroupView("All Groups")}></BackArrow>
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
-          <BurgerIcon></BurgerIcon>
+          <BurgerIcon onPress={()=> setGroupView("Settings")} ></BurgerIcon>
         </View>
         <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}>
           <SingleGroupDetails/>
@@ -350,11 +359,13 @@ export default function AllGroupsScreen (props: Props) {
 
   function AllGroupView () {
     return (
+
       <>
         <Image source={require('../assets/GroupLogo1.png')} />
         <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
         <BigPlus onPress={() => setGroupView('Add Group')} />
       </>
+
     )
   }
   
@@ -366,6 +377,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Loading' ? '' : ''}
       {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType}/> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
+      {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} /> : ""}
     </SafeAreaView>
   )
 }

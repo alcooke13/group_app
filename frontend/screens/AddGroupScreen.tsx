@@ -32,6 +32,10 @@ export default function AddGroupScreen(props: Props) {
         .then((userFriends) => {
             setFriends(userFriends);
         })
+
+        const newFriendsToAdd = [... friendsToAdd];
+        newFriendsToAdd.push(user);
+        updateFriendsToAdd(newFriendsToAdd);
     }, []);
 
     function createGroup() {
@@ -39,11 +43,7 @@ export default function AddGroupScreen(props: Props) {
 
         postGroup(groupDetails)
         .then((group) => {
-            const newFriendsToAdd = [... friendsToAdd];
-            newFriendsToAdd.push(user);
-            updateFriendsToAdd(newFriendsToAdd);
             updateGroupDataWithNewUsers(group.id, friendsToAdd);
-
             newGroup({"new group": group.id});
         });
     }
@@ -82,7 +82,7 @@ export default function AddGroupScreen(props: Props) {
                     <Text style={styles.groupHeader}>Group name</Text>
                     <TextInput 
                         style={styles.groupInput}
-                        placeholder="Type your new group name here"
+                        placeholder="Enter group name (max. 11 characters)"
                         onChangeText={groupName => setGroupName(groupName)}>
                     </TextInput>
                 </View>
@@ -99,7 +99,13 @@ export default function AddGroupScreen(props: Props) {
                 <BigButton 
                     title='Done' 
                     onPress={() => {
-                        createGroup()                        
+                        if (!groupName) {
+                            alert('Please enter a group name');
+                        } else if (groupName.length > 11) {
+                            alert('Group names should be less than 12 characters');
+                        } else {
+                            createGroup();
+                        }                     
                     }}
                     ></BigButton>
             </View>

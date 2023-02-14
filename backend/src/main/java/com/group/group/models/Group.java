@@ -84,4 +84,9 @@ public class Group {
         this.events.add(event);
     }
 
+    public void removeMember(User member) {
+        if (this.users.contains(member)){
+            this.users.remove(member);
+        }
+    }
 }
