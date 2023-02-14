@@ -118,8 +118,8 @@ export default function AllGroupsScreen (props: Props) {
 
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
-    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
 
+    const upcomingPoll: DatePollData | ActivityPollData | LocationPollData | undefined = allGroupPolls?.find(poll => (Date.parse(poll.timeout) - Date.now() > 0));
     const pastPolls: Array<DatePollData | ActivityPollData | LocationPollData | undefined> = allGroupPolls?.filter(poll => (Date.parse(poll.timeout) - Date.now() < 0));
 
     function mostPollVotes(poll: DatePollData | ActivityPollData | LocationPollData) {
@@ -135,38 +135,54 @@ export default function AllGroupsScreen (props: Props) {
       return winningOption;
     }
 
+    let upcomingPollFound: boolean = false;
+
+    // Check for any past polls that resulted in a winning vote or not
+    // If found update the event details with winning option and set poll to complete
+    // If not found extend the poll timeout by 48 hours
     if (pastPolls.length != 0) {
       pastPolls.forEach((poll) => {
+        if (poll?.completed) return;
+        
         const winningOption = mostPollVotes(poll);
 
         if (poll?.type === "Date" && !upcomingEvent.date) {
           if (!winningOption) {
             updateDatePollTimeout(poll.id, {'timeout': 48});
+            setActiveGroupPoll(poll);
+            upcomingPollFound = true;
           } else {
             updateEventDate(upcomingEvent.id, {'new': winningOption});
+            updateDatePollToComplete(poll.id);
           }
         } else if (poll?.type === "Activity" && !upcomingEvent.activity) {
           if (!winningOption) {
             updateActivityPollTimeout(poll.id, {'timeout': 48});
+            setActiveGroupPoll(poll);
+            upcomingPollFound = true;
           } else {
             updateEventActivity(upcomingEvent.id, {'new': winningOption});
+            updateDatePollToComplete(poll.id);
           }
         } else if (poll?.type === "Location" && !upcomingEvent.eventLocation) {
           if (!winningOption) {
             updateLocationPollTimeout(poll.id, {'timeout': 48});
+            setActiveGroupPoll(poll);
+            upcomingPollFound = true;
           } else {
             updateEventLocation(upcomingEvent.id, {'new': winningOption});
+            updateDatePollToComplete(poll.id);
           }
         }
       })
     }
 
-    console.log("date: ", upcomingEvent?.date)
-    console.log("type: ", upcomingPoll?.type)
 
     let generateNewPoll: boolean = false;
 
-    if (upcomingPoll) {
+    // Check if all members voted on the upcoming poll
+    // If all voted update the event details with the winning option and engage generation of new poll
+    if (upcomingPoll && !upcomingPollFound) {
       const voteStatus = getVotingStats(upcomingPoll);
 
       if (voteStatus === "Vote incomplete") {
@@ -179,29 +195,25 @@ export default function AllGroupsScreen (props: Props) {
       }
     }
 
+    // Create new poll in the order of Date > Activity > Location
     if (generateNewPoll) {
       if (!upcomingEvent?.date) {
         postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
         .then((datePoll) => {
-          console.log("date poll: ", datePoll)
           setActiveGroupPoll(datePoll);
         });
       } else if (!upcomingEvent?.activity) {
         postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
         .then((activityPoll) => {
-          console.log("activity poll: ", activityPoll)
           setActiveGroupPoll(activityPoll);
         });
       } else if (!upcomingEvent?.eventLocation) {
         postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
         .then((locationPoll) => {
-          console.log("location poll: ", locationPoll)
           setActiveGroupPoll(locationPoll);
         });
       }
     } 
-
-    console.log("upcoming poll: ", upcomingPoll)
   }
     
   function getUpcomingEvent(group: GroupData) {
@@ -421,7 +433,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Single Group' ? <SingleGroupView /> : ''}
       {groupView === 'New Event' ? <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/> : ''}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type}/> activeGroupPollId={singleGroup?.id} : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={singleGroup?.id} /> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
       {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>
