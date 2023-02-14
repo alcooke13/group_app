@@ -97,12 +97,12 @@ export default function HomeScreen(props: Props) {
 
 
         return(
-            <TouchableOpacity onPress={() => {
+            <TouchableOpacity key={event.eventName + event.id.toString()} onPress={() => {
                 navigation.navigate('Groups', {
                     groupId: event.group.id
                 })
             }}>
-                <View style={styles.eventItem} key={index}>
+                <View style={styles.eventItem}>
                     <View style={styles.eventHeader}>
                         <TextHeader>{event.eventName}</TextHeader>
                     </View>
@@ -123,8 +123,8 @@ export default function HomeScreen(props: Props) {
 
     const pollItems = polls?.map((poll, index) => {
         return(
-            <>
-                <View style={styles.pollItem} key={index}>
+            <View key={poll.id.toString() + index.toString()}>
+                <View style={styles.pollItem}>
                     <TextHeader>{poll.event.eventName}</TextHeader>
                     <SmallButton title='Vote' onPress={() => {
                         navigation.navigate('Groups', {
@@ -137,7 +137,7 @@ export default function HomeScreen(props: Props) {
                 : 
                    ""
                 }
-            </>
+            </View>
         )
     });
 
