@@ -14,6 +14,12 @@ export interface LocationPollData {
         activity: string
         group: {
             id: number
+            users: [{
+                id: number
+                userName: string
+                phoneNumber: string
+                address: string
+            }]
         }
     }
     type:string

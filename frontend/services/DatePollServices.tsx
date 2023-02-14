@@ -13,7 +13,13 @@ export interface DatePollData {
         eventLocation: string
         Date: string
         group: {
-            id: number
+          id: number
+          users: [{
+              id: number
+              userName: string
+              phoneNumber: string
+              address: string
+          }]
         }
     }
     type:string
