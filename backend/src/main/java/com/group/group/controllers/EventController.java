@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.rmi.ServerException;
 
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EventController {
@@ -39,7 +41,13 @@ public class EventController {
         return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
     }
 
-
+    @DeleteMapping(value= "/events/{id}/delete")
+    public void deleteEvent(@PathVariable Long id){
+        Event eventToDelete = eventRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        eventRepository.delete(eventToDelete);
+    }
 
 
     @PostMapping(path = "/events",

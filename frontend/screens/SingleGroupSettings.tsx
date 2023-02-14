@@ -9,8 +9,10 @@ import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
 import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
-import { getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData, updateGroupTitle } from '../services/GroupServices';
-import { EventData } from '../services/EventServices';
+
+import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData, updateGroupTitle } from '../services/GroupServices';
+import { EventData, deleteEvent } from '../services/EventServices';
+
 import LineBreak from '../components/LineBreak';
 import SmallButton from '../components/SmallButton';
 
@@ -19,6 +21,8 @@ interface Props {
     groupId: number;
     groupName: string;
     setState: React.Dispatch<React.SetStateAction<string>>;
+    parentUpcomingEvent?: EventData;
+
 
 }
 
@@ -26,7 +30,7 @@ interface Props {
 
 export default function SingleGroupSettings(props: Props) {
 
-    const { user, groupId, groupName, setState } = props;
+    const { user, groupId, groupName, setState, parentUpcomingEvent } = props;
     const isFocused = useIsFocused();
 
     const [currentView, updateCurrentView] = useState<String>("Settings");
@@ -38,8 +42,10 @@ export default function SingleGroupSettings(props: Props) {
     const [refreshing, setRefreshing] = useState(false);
     const [pastEvents, setPastEvents] = useState<EventData[]>()
     const [title, setTitle] = useState<string>("")
+    const [upcomingEvent, setUpcomingEvent] = useState<EventData>()
 
     useEffect(() => {
+
         const newPastEvents: any[] = [];
         if (isFocused || settingsUpdated) {
             updateCurrentView("Settings");
@@ -51,6 +57,7 @@ export default function SingleGroupSettings(props: Props) {
                         if (Date.parse(event.date) < Date.now()) {
                             newPastEvents.push(event);
                         }
+
                     })
                     setPastEvents(newPastEvents)
                 }
@@ -65,51 +72,41 @@ export default function SingleGroupSettings(props: Props) {
         }
     }, [isFocused, settingsUpdated, refreshing]);
 
-    
 
-
-
-
-    function onPressAccountSetting() {
-        return console.log("Account settings pressed")
-    }
-    function onPressContactsSetting() {
-        return console.log("Contacts settings pressed")
-    }
-    function onPressNotificationSetting() {
-        return console.log("Notification settings pressed")
-    }
 
 
     function SettingsView() {
         return (
-            <View style={styles.settingsContainer}>
-                <View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Group")}>
-                        <Text style={styles.settingElements} >Edit Group</Text>
-                    </TouchableOpacity>
+            <View>
+                <View style={{flex: 0.2,
+                }}>
+                    <BackArrow onPress={() => { setState("Single Group")}} />
                 </View>
-                <View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
-                        <Text style={styles.settingElements} >Past Events</Text>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Leave Group")}>
-                        <Text style={styles.settingElements} >Leave Group</Text>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Event")}>
-                        <Text style={styles.settingElements} >Edit Event</Text>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Archive Event")}>
-                        <Text style={styles.settingElements} >Archive Event</Text>
-                    </TouchableOpacity>
-                </View>
-            </View >
+                <View style={{ flex: 0.8}}>
+                    <View>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Edit Group")}>
+                            <Text style={styles.settingElements} >Edit Group</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
+                            <Text style={styles.settingElements} >Past Events</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Leave Group")}>
+                            <Text style={styles.settingElements} >Leave Group</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                            updateCurrentView("Delete Event")
+                        }}>
+                            <Text style={styles.settingElements} >Delete Event</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View >
+            </View>
         )
     }
 
@@ -118,17 +115,17 @@ export default function SingleGroupSettings(props: Props) {
         const [name, setName] = useState("");
 
         function setNewGroupTitle() {
-            const payload : {[key: string] : any} = {}
+            const payload: { [key: string]: any } = {}
             if (name) {
-                payload["title"] =name;
+                payload["title"] = name;
                 updateGroupTitle(groupId, payload);
                 payload["title"] = "";
-                updateCurrentView("Settings") 
+                updateCurrentView("Settings")
             }
         }
         const memberItems = members?.map((member, index) => {
             return (
-                <ButtonSelector option={member.userName}
+                <ButtonSelector option={member.userName} key={member.id}
                     onPress={() => {
                         if (!membersToRemove.includes(member.id)) {
                             const newMembersToRemove = [...membersToRemove];
@@ -145,29 +142,29 @@ export default function SingleGroupSettings(props: Props) {
                         }
                     }}
                     selected={membersToRemove.includes(member.id)}
-                    key={index}></ButtonSelector>
+                ></ButtonSelector>
             )
         });
 
         return (
-            <SafeAreaView style={styles.container}>
-                <View style={{ flex: 0.1 }}>
+            <View>
+                <View style={{ flex: 0.2, alignSelf:'flex-start' }}>
                     <BackArrow onPress={() => {
                         updateCurrentView("Settings")
                     }} />
 
                 </View>
-                <View style={{ width: 300, flex: 0.3 }}>
+                <View style={{ width: 300, flex: 0.3, alignItems: 'center', }}>
                     <BackgroundBox boxHeight={'100%'}>
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={styles.accountHeader}>Group Name</Text>
+                            <Text style={styles.settingTitle}>Group Name</Text>
                             <TextInput
-                                style={styles.accountNameInput}
+                                style={styles.newGroupNameInput}
                                 defaultValue={groupName}
-                                onChangeText={(value) => setName(value)}  
+                                onChangeText={(value) => setName(value)}
                             >
                             </TextInput>
-                    
+
                             <View style={{ marginTop: '10%' }}>
 
                                 <SmallButton title='Submit' onPress={() => {
@@ -178,7 +175,7 @@ export default function SingleGroupSettings(props: Props) {
                     </BackgroundBox>
                 </View>
 
-                <View style={{ flex: 0.7 }}>
+                <View style={{ flex: 0.7, alignItems: 'center', }}>
 
                     <InfoBox header='Contacts'
                         boxHeight='70%'
@@ -193,7 +190,7 @@ export default function SingleGroupSettings(props: Props) {
                             </View>
                         </ScrollView>
                     </InfoBox>
-                    <View style={styles.contactsButton}>
+                    <View style={styles.membersButton}>
                         <BigButton
                             title='Remove Selected'
                             onPress={() => {
@@ -207,12 +204,14 @@ export default function SingleGroupSettings(props: Props) {
                             }}></BigButton>
                     </View>
                 </View>
-            </SafeAreaView>
+            </View>
         )
 
     }
 
     function PastEvents() {
+
+
 
         const pastEventItems = pastEvents?.map((event, index) => {
             let eventDate = new Date(event.date).toLocaleString('en-GB', {
@@ -228,30 +227,34 @@ export default function SingleGroupSettings(props: Props) {
 
 
             return (
+                <View>
+
+                
                 <View style={{ width: '90%' }}>
                     <View style={{ paddingVertical: 5 }}>
                         {index != 0 ? <LineBreak /> : ""}
                     </View>
-                    <View key={index} style={{}} >
-                        <Text style={{ fontSize: 18, color: '#1E1E1E', paddingBottom: 8 }} >{event.eventName}</Text>
+                    <View key={index} >
+                        <Text style={styles.eventName} >{event.eventName}</Text>
                         <Text style={{ paddingVertical: 1 }} >
-                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Date:</Text>
+                            <Text style={styles.eventCategory}>Date:</Text>
                             <Text>  {eventDate}</Text>
                         </Text>
                         <Text style={{ paddingVertical: 1 }}>
-                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Time:</Text>
+                            <Text style={styles.eventCategory}>Time:</Text>
                             <Text>  {eventTime}</Text>
                         </Text>
                         <Text style={{ paddingVertical: 1 }}>
-                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Activity:</Text>
+                            <Text style={styles.eventCategory}>Activity:</Text>
                             <Text>  {event.activity}</Text>
                         </Text>
                         <Text style={{ paddingVertical: 1 }}>
-                            <Text style={{ fontStyle: 'italic', color: '#1E1E1E' }}>Location:</Text>
+                            <Text style={styles.eventCategory}>Location:</Text>
                             <Text>  {event.eventLocation}</Text>
                         </Text>
 
                     </View>
+                </View>
                 </View>
             )
         });
@@ -259,11 +262,11 @@ export default function SingleGroupSettings(props: Props) {
 
 
         return (
-            <View style={{ flex: 1 }}>
-                <View style={{ flex: 0.2, alignSelf: 'flex-start' }}>
+            <View>
+                <View style={{ flex: 0.2, alignSelf: 'flex-start',  }}>
                     <BackArrow onPress={() => { updateCurrentView("Settings") }} />
                 </View>
-                <View style={{ flex: 0.8, marginBottom: '30%' }}>
+                <View style={{ flex: 0.8, marginBottom: '30%', alignItems: 'center', }}>
                     <InfoBox header='Past Events' boxHeight='70%' boxMarginTop='5%' >
                         <ScrollView style={{ padding: 10 }}>
                             {pastEventItems}
@@ -278,17 +281,16 @@ export default function SingleGroupSettings(props: Props) {
     function LeaveGroup() {
 
 
-
-
         return (
 
-            <SafeAreaView>
-                <View style={{ alignSelf: 'flex-start', flex: 0.2 }}>
+            <View>
+                
+                <View style={{ flex: 0.2}}>
                     <BackArrow onPress={() => { updateCurrentView("Settings") }} />
                 </View>
                 <View style={{ alignItems: 'center', flex: 0.8 }}>
 
-                    <BackgroundBox boxWidth={'80%'} boxHeight={"30%"} boxMarginBottom={'5%'} boxMarginTop={'5%'}>
+                    <BackgroundBox boxWidth={'80%'} boxHeight={250} boxMarginBottom={'5%'} boxMarginTop={'5%'}>
                         <View style={{ alignItems: 'center' }}>
                             <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>Are you sure you want to leave the group?</Text>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -303,20 +305,90 @@ export default function SingleGroupSettings(props: Props) {
                         </View>
                     </BackgroundBox>
                 </View>
-            </SafeAreaView>
+            </View>
 
 
         )
     }
 
+    function DeleteEvent() {
+
+        let eventDate: string = ""
+        let eventTime: string = ""
+        if (parentUpcomingEvent != undefined) {
+            eventDate = new Date(parentUpcomingEvent.date).toLocaleString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+            });
+
+            eventTime = new Date(parentUpcomingEvent.date).toLocaleTimeString("en-US", {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+        }
+
+
+        return (
+
+            <View>
+                  <View style={{ flex: 0.2}}>
+                    <BackArrow onPress={() => { updateCurrentView("Settings") }} />
+                </View>
+                <View style={{ alignItems: 'center', flex: 0.8 }}>
+
+                    <BackgroundBox boxWidth={'80%'} boxHeight={300} boxMarginBottom={'5%'} boxMarginTop={'5%'}>
+                        <View style={{ padding: 15, alignSelf: 'center' }}>
+                        {parentUpcomingEvent ? 
+                            <View style={{ alignItems: 'center' }}>
+                                <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>Are you sure you want to delete the following? {parentUpcomingEvent?.eventName}</Text>
+                                <View style={{ marginTop: 15 }}>
+                                    {eventDate ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Date:</Text>  {eventDate}</Text> : ""}
+                                    {eventTime ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Time:</Text>  {eventTime}</Text> : ""}
+                                    {parentUpcomingEvent?.activity ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Activity:</Text>  {parentUpcomingEvent?.activity}</Text> : ""}
+                                    {parentUpcomingEvent?.eventLocation ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Location:</Text>  {parentUpcomingEvent?.eventLocation}</Text> : ""}
+                                </View>
+                            </View>
+                            :
+                            <View style={{ alignItems: 'center' }}>
+                            <Text style={{ fontSize: 24, paddingHorizontal: 10, paddingVertical: 15, textAlign: 'center' }}>No upcoming event.</Text>
+                            </View>
+    }
+                        </View>
+                    </BackgroundBox>
+                    <View style={{ flex: 0.2 }}>
+
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <View style={{ marginHorizontal: 5 }}>
+                                <SmallButton title={'Yes'} onPress={() => {
+                                    if (parentUpcomingEvent) {
+                                        deleteEvent(parentUpcomingEvent?.id)
+                                        setState("All Groups");
+                                    }
+                                    updateCurrentView("Settings")
+                                }} />
+                            </View>
+                            <SmallButton title={'No'} onPress={() => { updateCurrentView("Settings") }} />
+                        </View>
+                    </View>
+                </View>
+            </View>
+
+
+        )
+
+    }
+
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView >
             {currentView === "Settings" ? <SettingsView /> : ""}
             {currentView === "Edit Group" ? <EditGroupView /> : ""}
             {currentView === "Past Events" ? <PastEvents /> : ""}
             {currentView === "Leave Group" ? <LeaveGroup /> : ""}
+            {currentView === "Delete Event" ? <DeleteEvent /> : ""}
             {currentView === "loading" ? "" : ""}
         </SafeAreaView>
     )
@@ -335,70 +407,43 @@ const styles = StyleSheet.create({
         paddingTop: '8%',
         textAlign: 'center'
     },
-    contactsMembers: {
-        alignItems: 'center',
-        paddingTop: 10,
-        paddingBottom: 10
-    },
-    contactsHeader: {
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
-        paddingTop: '5%',
-        paddingLeft: '5%'
-    },
     settingsContainer: {
         paddingTop: '10%',
         width: '100%',
         height: '100%'
     },
-    accountContainer: {
-        justifyContent: 'space-evenly',
+    groupMembers: {
         alignItems: 'center',
-        // width: "100%",
-        // height: "100%"
+        paddingTop: 10,
+        paddingBottom: 10
     },
-    contactContainer: {
-        alignItems: 'center',
-        width: '100%',
-        height: '100%'
-    },
-    contactsButton: {
+    membersButton: {
         alignSelf: 'flex-end',
         paddingBottom: '10%',
         paddingRight: '5%'
     },
-    accountBox: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    accountHeader: {
+
+    settingTitle: {
         paddingTop: 20,
         paddingBottom: 20,
         fontSize: 24
     },
-    accountNameInput: {
+    newGroupNameInput: {
         padding: 10,
         backgroundColor: 'white',
         width: '70%',
         fontSize: 20,
         color: 'black',
     },
-    accountPhoneNumber: {
+    reviewText: {
+        fontSize: 18,
         padding: 10,
-        width: '70%',
-        fontSize: 20,
-        textAlign: 'center'
     },
-    accountAddress: {
-        marginTop: 10,
-        padding: 10,
-        backgroundColor: 'white',
-        width: '70%',
-        height: '50%',
-        fontSize: 20,
+    eventCategory: {
+        fontStyle: 'italic', color: '#1E1E1E'
     },
-    accountButton: {
-        alignSelf: 'flex-end',
-        paddingRight: '5%'
+    eventName: {
+        fontSize: 18, color: '#1E1E1E', paddingBottom: 8
     }
+
 });

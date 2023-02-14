@@ -19,11 +19,12 @@ interface Props {
     user: number
     setActivePollType?: any
     activePollType?: any
+    activeGroupPollId?: any
     setState: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function(props: Props){
-    const {user, setActivePollType, setState, activePollType} = props;
+    const {user, setActivePollType, setState, activePollType, activeGroupPollId} = props;
     const [pollView, setPollView] = useState<string>(activePollType);
     const [savedActivityPoll, setSavedActivityPoll] = useState<string>("");
     const [savedLocationPoll, setSavedLocationPoll] = useState<string>("");
@@ -56,7 +57,6 @@ export default function(props: Props){
     const changeConfirmationScreen = () => {
         setPollView("confirmation")
     }
-
     const ActivityPollInput = () => {
         let activityValue: string;
         const onActivityInputEnd = () => {
@@ -159,22 +159,21 @@ export default function(props: Props){
             newActivityBundle[activityStringKey] = []
 
             // Making the put requests:
-           
+           let pollId: number= activeGroupPollId;
             // Activity Data
             if(dateStringKey === "" && locationStringKey === "") {  
-            updateActivityPollDataWithNewOption(user, newActivityBundle).then((data) => {
+            updateActivityPollDataWithNewOption(pollId, newActivityBundle).then((data) => {
                 setActivityBundle(data)
             })
-
             //Location Data
             } else if (dateStringKey === "" && activityStringKey === "") {
-                updateLocationPollDataWithNewOption(user, newLocationBundle).then((data) => {
+                updateLocationPollDataWithNewOption(pollId, newLocationBundle).then((data) => {
                         setLocationBundle(data)
                     })
             
             // Date/Time        
             } else if (activityStringKey === "" && locationStringKey === "") {
-                 updateDatePollDataWithNewOption(user, newBundle).then((data) => {
+                 updateDatePollDataWithNewOption(pollId, newBundle).then((data) => {
                 setDateBundle(data)
            
             })
