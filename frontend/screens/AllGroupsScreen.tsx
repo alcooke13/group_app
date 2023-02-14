@@ -297,14 +297,17 @@ export default function AllGroupsScreen (props: Props) {
       }
       if (activeGroupPoll?.type == 'Location') {
         newData[chosenOption] = voter;
-        updateLocationPollWithNewVote(activeGroupPoll?.id, newData)
+        updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
+        newData = {};
       } else if (activeGroupPoll?.type == 'Activity') {
         newData[chosenOption] = voter;
-        updateActivityPollWithNewVote(activeGroupPoll?.id, newData)
+        updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
+        newData = {};
       } else if (activeGroupPoll?.type == 'Date') {
         let dateoption: string = chosenOption.toString();
         newData[dateoption] = voter;
-        updateDatePollWithNewVote(activeGroupPoll?.id, newData)
+        updateDatePollWithNewVote(activeGroupPoll?.id, newData);
+        newData = {};
       }
     }
   }
@@ -334,15 +337,18 @@ export default function AllGroupsScreen (props: Props) {
 
         return (
           <View style={styles.pollOption} key={option+index.toString()}>
+
             <ButtonSelector
               key={index}
               option={optionToDisplay}
               onPress={() => captureChosenVote(option)}
               selected={false}
             ></ButtonSelector>
-            <Text style={styles.voteCounter}>
-              {allOptionsMap.get(option)?.length}
-            </Text>
+            <View style={styles.pollOptionCounters}>
+              <Text style={styles.voteCounter}>
+                {allOptionsMap.get(option)?.length}
+              </Text>
+            </View>
           </View>
         )
       })
@@ -382,7 +388,7 @@ export default function AllGroupsScreen (props: Props) {
         </InfoBox>
         {activeGroupPoll ? 
           <Text style={styles.totalVoteCount}>Voters: {votingStats["voters"]}/{votingStats["members"]}</Text>
-        : ""} 
+          : ""} 
       </>
     )
   }
@@ -441,12 +447,13 @@ const styles = StyleSheet.create({
     fontSize: 26,
     paddingBottom: '10%',
   },
+  pollOptionCounters: {
+  },
   voteCounter: {
     color: '#FF914D',
     fontSize: 36,
-    alignItems: 'center',
-    marginLeft: 15,
-    fontFamily:'Ubuntu-Bold'
+    fontFamily:'Ubuntu-Bold',
+    paddingLeft: 10
   },
   pollOption: {
     flexDirection: 'row',
