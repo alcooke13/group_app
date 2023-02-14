@@ -168,7 +168,7 @@ export default function AllGroupsScreen (props: Props) {
     // Check for any past polls that resulted in a winning vote or not
     // If found update the event details with winning option and set poll to complete
     // If not found extend the poll timeout by 48 hours
-    if (pastPolls.length != 0) {
+    if (pastPolls.length !== 0) {
       pastPolls.forEach((poll) => {
         if (poll?.completed) return;
         
@@ -205,7 +205,6 @@ export default function AllGroupsScreen (props: Props) {
       })
     }
 
-
     let generateNewPoll: boolean = false;
 
     // Check if all members voted on the upcoming poll
@@ -221,6 +220,8 @@ export default function AllGroupsScreen (props: Props) {
         else if (upcomingPoll.type === "Date") updateLocationPollToComplete(upcomingPoll.id);
         generateNewPoll = true;
       }
+    } else {
+      generateNewPoll = true;
     }
 
     // Create new poll in the order of Date > Activity > Location
@@ -447,11 +448,11 @@ export default function AllGroupsScreen (props: Props) {
           <SingleGroupDetails/>
         </InfoBox>
         <InfoBox 
-          header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} 
+          header={activeGroupPoll ? activeGroupPoll.type + " Options" : "No poll active"} 
           boxHeight='100%'
           boxMarginTop='5%'
           boxMarginBottom='15%'
-          smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')}/>}
+          smallPlus={activeGroupPoll ? <SmallPlus onPress={() => setGroupView('Add Option')} /> : ""}
           >
           <View>
             <SingleGroupPollDetails/>
