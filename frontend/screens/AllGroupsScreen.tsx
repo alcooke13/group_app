@@ -241,10 +241,12 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   const allUsersGroupsByName = groups?.flatMap(function(group, index){
+    let status = false;
+    if (activeGroupPoll) status = true
     return <GroupNameButton 
                 key={group.id.toString()+index.toString()} 
                 title={group.groupName} 
-                status={false} 
+                status={status} 
                 onPress={() => getSingleGroupData(group.id)
                 }/>
   })
@@ -285,6 +287,7 @@ export default function AllGroupsScreen (props: Props) {
   }
   
   function captureChosenVote(selectedOption: string) {
+    console.log("selectedOption:" + selectedOption)
     let chosenOption: string = "";
     let voter: number = user
     let newData: { [key: string]: number } = {}
@@ -330,7 +333,7 @@ export default function AllGroupsScreen (props: Props) {
         }
 
         return (
-          <View style={styles.pollOption} key={val+index.toString()}>
+          <View style={styles.pollOption} key={option+index.toString()}>
             <ButtonSelector
               key={index}
               option={optionToDisplay}
@@ -448,8 +451,8 @@ const styles = StyleSheet.create({
   pollOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 30,
+    paddingLeft: 30,
+    paddingRight: 10,
     paddingTop: 5
   },
   text: {
