@@ -78,6 +78,24 @@ export function updateLocationPollWithNewVote(
         console.log(response)
         return response as LocationPollData
     })
+}
+
+export function updateLocationPollWithRemovedVote(
+    pollId: number, 
+    payload:{[key: string]: number} 
+    ): Promise <LocationPollData> {
+    return fetch(
+        'http://127.0.0.1:8080/location-poll/' + pollId.toString() + '/remove-vote', 
+    {
+    method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+    }
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as LocationPollData
+    })
     }
 
 export function updateLocationPollDataWithNewOption(

@@ -80,6 +80,24 @@ export function updateActivityPollWithNewVote(
     })
 }
 
+export function updateActivityPollWithRemovedVote(
+    pollId: number, 
+    payload:{[key: string]: number} 
+    ): Promise <ActivityPollData> {
+	return fetch(
+        'http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/remove-vote', 
+    {
+		method: 'PUT',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+	}
+    ).then ((response) => response.json())
+    .then ((response) => {
+        console.log(response)
+        return response as ActivityPollData
+    })
+}
+
 export function updateActivityPollDataWithNewOption(
     activityPollId: number,
     payload: { [key: string]: [] }

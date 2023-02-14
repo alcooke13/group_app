@@ -14,9 +14,9 @@ import ScreenHeaderText from '../components/ScreenHeaderText'
 import BackArrow from '../components/BackArrow'
 import BigPlus from '../components/BigPlus'
 import BurgerIcon from '../components/BurgerIcon'
-import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout, updateDatePollToComplete } from '../services/DatePollServices'
-import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete } from '../services/LocationPollServices'
-import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete } from '../services/ActivityPollServices'
+import { DatePollData, getDatePollDataByGroupId, postDatePoll, updateDatePollTimeout, updateDatePollToComplete, updateDatePollWithRemovedVote } from '../services/DatePollServices'
+import { getLocationPollDataByGroupId, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete, updateLocationPollWithRemovedVote } from '../services/LocationPollServices'
+import { ActivityPollData, getActivityPollDataByGroupId, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete, updateActivityPollWithRemovedVote } from '../services/ActivityPollServices'
 import ButtonSelector from '../components/ButtonSelector'
 import NewEvent from './NewEvent/NewEvent'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens'
@@ -322,15 +322,15 @@ export default function AllGroupsScreen (props: Props) {
         if (activeGroupPoll?.type == 'Location') {
           newData = {};
           newData[selectedOption] = voter;
-          updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
+          updateLocationPollWithRemovedVote(activeGroupPoll?.id, newData);
         } else if (activeGroupPoll?.type == 'Activity') {
           newData = {};
           newData[selectedOption] = voter;
-          updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
+          updateActivityPollWithRemovedVote(activeGroupPoll?.id, newData);
         } else if (activeGroupPoll?.type == 'Date') {
           newData = {};
           newData[selectedOption] = voter;
-          updateDatePollWithNewVote(activeGroupPoll?.id, newData);
+          updateDatePollWithRemovedVote(activeGroupPoll?.id, newData);
         }
       } 
       // Add user to option if not already voted on option
