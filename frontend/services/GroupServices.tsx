@@ -1,16 +1,23 @@
 export interface GroupData {
     id:number
     groupName: string,
-    users: [],
+    users: [
+        {
+            id: number
+            userName: string
+            phoneNumber: string
+            address: string
+        }
+    ],
     events: [
         {
-        id: number
-        date: string
-        eventName: string
-        eventLocation: string
-        activity: string
-    }
-]
+            id: number
+            date: string
+            eventName: string
+            eventLocation: string
+            activity: string
+        }
+    ]
 }
 
 export function getGroupData(): Promise<GroupData[]> {
