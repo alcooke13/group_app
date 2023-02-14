@@ -89,6 +89,7 @@ export default function AllGroupsScreen (props: Props) {
     DatePollData | ActivityPollData | LocationPollData | null
   >(null)
   const [votingStats, setVotingStats] = useState<Object>()
+  const groupStatus = useRef <Object>({}) 
 
   const route = useRoute()
   let groupId: number
@@ -314,10 +315,9 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
   }
 
   const allUsersGroupsByName = groups?.flatMap(function (group, index) {
-    let status : boolean = true;
-    const allGroupsPolls: Array<
-      DatePollData | ActivityPollData | LocationPollData
-    > = []
+    let status: boolean ;
+    const allGroupsPolls: Array< DatePollData | ActivityPollData | LocationPollData > = []
+    const filteredList: Array< DatePollData | ActivityPollData | LocationPollData > = [];
     Promise.all([
       getDatePollDataByGroupId(group.id),
       getActivityPollDataByGroupId(group.id),
@@ -329,19 +329,24 @@ function pollController(allGroupPolls: (DatePollData | ActivityPollData | Locati
         })
       })
       .then(() => {
-        status = allGroupsPolls.some(poll => {
-          (poll.completed===false)
+        allGroupsPolls.filter(poll => {
+          if (poll.completed === false){
+            groupStatus.current[group.id]= true
+          } else{
+            groupStatus.current[group.id]= false
+          }
         })
       })
+      console.log(groupStatus.current)
 
-    return (
-      <GroupNameButton
-        key={group.id.toString() + index.toString()}
-        title={group.groupName}
-        status={status}
-        onPress={() => getSingleGroupData(group.id)}
-      />
-    )
+        return (
+          <GroupNameButton
+            key={group.id.toString() + index.toString()}
+            title={group.groupName}
+            status={groupStatus.current[group.id]}
+            onPress={() => getSingleGroupData(group.id)}
+          />
+        )
   })
 
   function SingleGroupDetails (): JSX.Element {
