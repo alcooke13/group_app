@@ -260,7 +260,6 @@ export default function AllGroupsScreen (props: Props) {
         </>
       )
     }
-
   }
   
   function captureChosenVote (val: string) {
@@ -297,14 +296,6 @@ export default function AllGroupsScreen (props: Props) {
       for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
         allOptionsMap.set(option, user_ids)
       }
-
-      // function AddNewOptionPollView(){
-      //   return (
-      //     <View>
-      //       <NewOptionScreen user={user} setState={setGroupView}/>
-      //     </View>
-      //   )
-      // }
 
       const returnStatement = availableOptionsArray.map(function (val, index) {
         let valToDisplay = val
@@ -345,27 +336,37 @@ export default function AllGroupsScreen (props: Props) {
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
           <BurgerIcon></BurgerIcon>
         </View>
-        <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}>
+        <InfoBox 
+          header='Next Event' 
+          boxHeight='40%'
+          boxMarginTop='-5%'
+          smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}
+          >
           <SingleGroupDetails/>
         </InfoBox>
-        <InfoBox header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')}/>}>
+        <InfoBox 
+          header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} 
+          boxHeight='100%'
+          boxMarginTop='5%'
+          boxMarginBottom='15%'
+          smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')}/>}
+          >
           <View>
             <SingleGroupPollDetails/>
           </View>
         </InfoBox>
+        <Text style={styles.totalVoteCount}>Voters: 12/20</Text>
       </>
     )
   }
 
   function AllGroupView () {
     return (
-
       <>
         <Image source={require('../assets/GroupLogo1.png')} />
         <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
         <BigPlus onPress={() => setGroupView('Add Group')} />
       </>
-
     )
   }
   
@@ -398,11 +399,17 @@ const styles = StyleSheet.create({
     width: '90%'
   },
   header: {
+    marginTop: '5%',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'space-between',
     width: '100%',
     justifyContent: 'space-around'
+  },
+  totalVoteCount: {
+    color: '#FF914D',
+    fontSize: 26,
+    paddingBottom: '10%',
   },
   voteCounter: {
     color: '#FF914D',
