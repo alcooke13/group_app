@@ -62,9 +62,9 @@ export default function(props: Props){
             setSavedActivityPoll(activityValue)
         }
         return (
-        <>
+            <>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => setState("singlegroup")}/>
+                <BackArrow onPress={() => setState("Single Group")}/>
                 <MenuText>Activity Poll</MenuText>
                 </View>
            
@@ -79,7 +79,7 @@ export default function(props: Props){
                 </View>
             </BackgroundBox>
             <SmallButton title="Add Option" onPress={changeFromActivityToConfirmation}/></View>
-            </>
+           </>
     )}
 
     const LocationPollInput = () => {
@@ -90,7 +90,7 @@ export default function(props: Props){
         return (
         <>
                 <View style ={styles.backButtonHeaderContainer}>
-                <BackArrow onPress={() => setState("singlegroup")}/>
+                <BackArrow onPress={() => setState("Single Group")}/>
                 <MenuText>Location Poll</MenuText>
                 </View>
            
@@ -180,7 +180,7 @@ export default function(props: Props){
                 setSavedDated("");
                 setSavedTime("");    
             
-            setState("singlegroup")
+            setState("Single Group")
           
         
         }
@@ -222,7 +222,7 @@ export default function(props: Props){
 
             {pollView === "Date" ? 
             <View style={styles.outer}>
-            <BackArrow onPress={() => setState("singlegroup")}/>
+            <BackArrow onPress={() => setState("Single Group")}/>
           <View style={styles.containerCalendar}>
             <InfoBox header='Calendar'>
             <CalendarOption onPress={(changeViewToDay)} changeViewToDay={changeViewToDay} setSavedDate={setSavedDated}/>

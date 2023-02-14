@@ -165,10 +165,7 @@ export default function NewEvent(props: GroupInfoProps) {
                         </View>
 
                     </View>
-                </View>
-            </SafeAreaView>
-
-        );
+            </SafeAreaView> );
     };
 
 
@@ -490,7 +487,6 @@ export default function NewEvent(props: GroupInfoProps) {
     )
 
 }
-
 
 const styles = StyleSheet.create({
     input: {
