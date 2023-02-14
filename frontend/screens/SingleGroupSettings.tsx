@@ -9,8 +9,10 @@ import ButtonSelector from '../components/ButtonSelector';
 import InfoBox from '../components/InfoBox';
 import SmallPlus from '../components/SmallPlus';
 import { deleteFriendsByUserId, getFriendsByUserId, getUserDataByUserId, updateUserAddress, updateUserName, UserData } from '../services/UserServices';
+
 import { getGroupData, getGroupDataByGroupId, updateGroupDataWithNewUsers, deleteMembersByGroupId, GroupData, updateGroupTitle } from '../services/GroupServices';
 import { EventData, deleteEvent } from '../services/EventServices';
+
 import LineBreak from '../components/LineBreak';
 import SmallButton from '../components/SmallButton';
 

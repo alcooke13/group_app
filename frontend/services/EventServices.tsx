@@ -8,7 +8,12 @@ export interface EventData {
 		events: []
 		groupName: string
 		id: number
-		users: []
+		users: [{
+			id: number
+			userName: string
+			phoneNumber: string
+			address: string
+		}]
 	}
 }
 

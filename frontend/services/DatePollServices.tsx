@@ -13,7 +13,13 @@ export interface DatePollData {
         eventLocation: string
         Date: string
         group: {
-            id: number
+          id: number
+          users: [{
+              id: number
+              userName: string
+              phoneNumber: string
+              address: string
+          }]
         }
     }
     type:string
@@ -76,6 +82,7 @@ export function updateDatePollWithNewVote(
   pollId: number, 
   payload:{[key: string]: number} 
   ): Promise <DatePollData> {
+  console.log("payload", payload)
 return fetch(
       'http://127.0.0.1:8080/date-polls/' + pollId.toString() + '/add-vote', 
   {

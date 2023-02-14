@@ -1,20 +1,27 @@
 export interface GroupData {
     id:number
     groupName: string,
-    users: [],
+    users: [
+        {
+            id: number
+            userName: string
+            phoneNumber: string
+            address: string
+        }
+    ],
     events: [
         {
-        id: number
-        date: string
-        eventName: string
-        eventLocation: string
-        activity: string
-    }
-]
+            id: number
+            date: string
+            eventName: string
+            eventLocation: string
+            activity: string
+        }
+    ]
 }
 
-export function getGroupData(): Promise<GroupData[]> {
-    return fetch('http://127.0.0.1:8080/groups', {
+export function getGroupDataByUserId(userId: number): Promise<GroupData[]> {
+    return fetch('http://127.0.0.1:8080/groups?user_id=' + userId.toString(), {
         method: 'GET',
         // headers: {
         // },

@@ -5,7 +5,7 @@ import { NavigationContainer, TabRouter, useIsFocused, useRoute } from '@react-n
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useEffect, useRef, useState } from 'react'
-import { getGroupData, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
+import { getGroupDataByUserId, getGroupDataByGroupId, GroupData } from '../services/GroupServices'
 import GroupNameButton from '../components/GroupNameButton'
 import route from '../navigation'
 import { TabView } from '@rneui/base'
@@ -45,10 +45,12 @@ export default function AllGroupsScreen (props: Props) {
   const [groupChanges, updateGroupChanges] = useState<Object>({});
   const [singleGroup, setSingleGroup] = useState<GroupData>();
   const [groupView, setGroupView] = useState<string>("Loading");
+  const [screenChanges, updateScreenChanges] = useState<Boolean>(false);
   const [upcomingEvent, setUpcomingEvent] = useState<EventData | null>(null);
   const [groupPolls, setGroupPolls] = useState<Array<DatePollData | ActivityPollData | LocationPollData>>();
   const [activeGroupPoll, setActiveGroupPoll] = useState<(DatePollData | ActivityPollData | LocationPollData | null)>(null);
-  const [activePollType, setActivePollType] = useState<string>("")
+  const [activePollType, setActivePollType] = useState<string>("");
+  const [votingStats, setVotingStats] = useState<Object>()
 
   const route = useRoute();
   let groupId: number;
@@ -66,14 +68,14 @@ export default function AllGroupsScreen (props: Props) {
         getSingleGroupData(groupId);
         route.params.groupId = 0;
   
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((userGroups) => {
           setGroups(userGroups);
-        }) 
+        })
       } else {
         setGroupView("All Groups");
 
-        getGroupData()
+        getGroupDataByUserId(user)
         .then((userGroups) => {
           setGroups(userGroups);
         })
@@ -85,9 +87,28 @@ export default function AllGroupsScreen (props: Props) {
     if ("new group" in groupChanges) {
       getSingleGroupData(groupChanges['new group']);
       updateGroupChanges({});
-
     }
   }, [groupChanges]);
+
+
+
+  function getVotingStats(poll: ActivityPollData | LocationPollData | DatePollData) {
+    const memberIds:number[] = []
+    const voterIds:number[] = [];
+
+    if (poll) {
+      poll.event.group.users.forEach((user) => memberIds.push(user.id));
+    }
+
+    if (poll?.options) {
+      for (const [option, user_ids] of Object.entries(poll.options)) {
+        user_ids.forEach((user_id) => {
+          voterIds.includes(user_id) ? "" : voterIds.push(user_id);
+        })
+      }
+    }
+    setVotingStats({"voters": voterIds.length, "members": memberIds.length});
+  }
 
 
   function pollController(allGroupPolls: (DatePollData | ActivityPollData | LocationPollData)[], upcomingEvent: EventData) {
@@ -95,9 +116,9 @@ export default function AllGroupsScreen (props: Props) {
 
     if(upcomingPoll?.type === "Activity"){
       setActivePollType("Activity")
-    } else if(upcomingPoll?.type === "Location"){
+    } else if (upcomingPoll?.type === "Location"){
       setActivePollType("Location")
-    }else if(upcomingPoll?.type === "Date"){
+    }else if (upcomingPoll?.type === "Date"){
       setActivePollType("Date")
     }
 
@@ -142,34 +163,36 @@ export default function AllGroupsScreen (props: Props) {
       })
     }
 
-    console.log("date: ", upcomingEvent?.date)
-    console.log("type: ", upcomingPoll?.type)
-
+    // console.log("date: ", upcomingEvent?.date)
+    // console.log("type: ", upcomingPoll?.type)
+    
     if (upcomingPoll) {
       setActiveGroupPoll(upcomingPoll);
+      getVotingStats(upcomingPoll);
+
     } else if (!upcomingEvent?.date) {
       postDatePoll({eventId: upcomingEvent?.id, timeout: 48})
       .then((datePoll) => {
-        console.log("date poll: ", datePoll)
+        // console.log("date poll: ", datePoll)
         setActiveGroupPoll(datePoll);
       });
     } else if (!upcomingEvent?.activity) {
       postActivityPoll({eventId: upcomingEvent?.id, timeout: 48})
       .then((activityPoll) => {
-        console.log("activity poll: ", activityPoll)
+        // console.log("activity poll: ", activityPoll)
         setActiveGroupPoll(activityPoll);
       });
     } else if (!upcomingEvent?.eventLocation) {
       postLocationPoll({eventId: upcomingEvent?.id, timeout: 48})
       .then((locationPoll) => {
-        console.log("location poll: ", locationPoll)
+        // console.log("location poll: ", locationPoll)
         setActiveGroupPoll(locationPoll);
       });
     } 
 
-    console.log("upcoming poll: ", upcomingPoll)
+    // console.log("upcoming poll: ", upcomingPoll)
   }
-
+    
   function getUpcomingEvent(group: GroupData) {
     if (group.events.length > 0) {
       const filteredEvents = group?.events?.filter((event) => {
@@ -207,13 +230,12 @@ export default function AllGroupsScreen (props: Props) {
                 }})
               })
               .then(() => {
-                pollController(allGroupsPolls, upcomingEventDetails)
+                pollController(allGroupsPolls, upcomingEventDetails);
               })
               .then(() => {
-                setGroupView("Single Group")
+                setGroupView("Single Group");
               })
         } else {
-          setUpcomingEvent(null);
           setGroupView("Single Group");
         }
       }
@@ -221,10 +243,12 @@ export default function AllGroupsScreen (props: Props) {
   }
 
   const allUsersGroupsByName = groups?.flatMap(function(group, index){
+    let status = false;
+    if (activeGroupPoll) status = true
     return <GroupNameButton 
                 key={group.id.toString()+index.toString()} 
                 title={group.groupName} 
-                status={false} 
+                status={status} 
                 onPress={() => getSingleGroupData(group.id)
                 }/>
   })
@@ -247,51 +271,53 @@ export default function AllGroupsScreen (props: Props) {
       return (
           <>
             <TextHeader>{upcomingEvent.eventName}</TextHeader>
-            <Text>Date:         {eventDate}</Text>
-            <Text>Time:         TBC</Text>
-            <Text>Location:   {upcomingEvent.eventLocation}</Text>
+            <Text style={styles.text}>Date:         {eventDate}</Text>
+            <Text style={styles.text}>Time:         TBC</Text>
+            <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
           </>
       )
     } else {
       return (
         <>
           <TextHeader> No upcoming event </TextHeader>
-          <Text>Date:        </Text>
-          <Text>Time:        </Text>
-          <Text>Location:   </Text>
+          <Text style={styles.text}>Date:        </Text>
+          <Text style={styles.text}>Time:        </Text>
+          <Text style={styles.text}>Location:   </Text>
         </>
       )
     }
-
   }
   
-  function captureChosenVote (val: string) {
-    let chosenOption: string
+  function captureChosenVote(selectedOption: string) {
+    console.log("selectedOption:" + selectedOption)
+    let chosenOption: string = "";
     let voter: number = user
     let newData: { [key: string]: number } = {}
     for (const [option, user_ids] of Object.entries(activeGroupPoll.options)) {
-      if (val === option) {
-        chosenOption = val
+      if (selectedOption === option) {
+        chosenOption = selectedOption;
       }
-      if (activeGroupPoll.type == 'Location') {
-        newData[chosenOption] = voter
-        updateLocationPollWithNewVote(activeGroupPoll?.id, newData)
-      } else if (activeGroupPoll.type == 'Activity') {
-        newData[chosenOption] = voter
-        updateActivityPollWithNewVote(activeGroupPoll?.id, newData)
-      } else if (activeGroupPoll.type == 'Date') {
-        let dateoption = chosenOption.toString()
-        newData[dateoption] = voter
-        updateDatePollWithNewVote(activeGroupPoll?.id, newData)
+      if (activeGroupPoll?.type == 'Location') {
+        newData[chosenOption] = voter;
+        updateLocationPollWithNewVote(activeGroupPoll?.id, newData);
+        newData = {};
+      } else if (activeGroupPoll?.type == 'Activity') {
+        newData[chosenOption] = voter;
+        updateActivityPollWithNewVote(activeGroupPoll?.id, newData);
+        newData = {};
+      } else if (activeGroupPoll?.type == 'Date') {
+        let dateoption: string = chosenOption.toString();
+        newData[dateoption] = voter;
+        updateDatePollWithNewVote(activeGroupPoll?.id, newData);
+        newData = {};
       }
     }
   }
  
-  function SingleGroupPollDetails () {
+  function SingleGroupPollDetails() {
     if (activeGroupPoll) {
       let availableOptionsArray = []
       let allOptionsMap = new Map<string, Array<number>>()
-
       for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
         availableOptionsArray.push(option)
       }
@@ -300,18 +326,10 @@ export default function AllGroupsScreen (props: Props) {
         allOptionsMap.set(option, user_ids)
       }
 
-      // function AddNewOptionPollView(){
-      //   return (
-      //     <View>
-      //       <NewOptionScreen user={user} setState={setGroupView}/>
-      //     </View>
-      //   )
-      // }
-
-      const returnStatement = availableOptionsArray.map(function (val, index) {
-        let valToDisplay = val
+      const returnStatement = availableOptionsArray.map(function (option, index) {
+        let optionToDisplay = option;
         if (activeGroupPoll?.type == 'Date') {
-          valToDisplay = new Date(val).toLocaleString('en-GB', {
+          optionToDisplay = new Date(option).toLocaleString('en-GB', {
             weekday: 'long',
             day: 'numeric',
             month: 'long'
@@ -319,25 +337,29 @@ export default function AllGroupsScreen (props: Props) {
         }
 
         return (
-          <View style={styles.pollOption} key={val+index.toString()}>
+          <View style={styles.pollOption} key={option+index.toString()}>
+
             <ButtonSelector
-              option={valToDisplay}
-              onPress={() => captureChosenVote(val)}
+              key={index}
+              option={optionToDisplay}
+              onPress={() => captureChosenVote(option)}
               selected={false}
             ></ButtonSelector>
-            <Text style={styles.voteCounter}>
-              {allOptionsMap.get(val)?.length}
-            </Text>
+            <View style={styles.pollOptionCounters}>
+              <Text style={styles.voteCounter}>
+                {allOptionsMap.get(option)?.length}
+              </Text>
+            </View>
           </View>
         )
       })
       return returnStatement
       
     } else {
-      <Text>No current poll</Text>
+      <Text style={styles.text}>No current poll</Text>
     }
   }
-    
+
   function SingleGroupView(){
     return(
       <>
@@ -346,27 +368,39 @@ export default function AllGroupsScreen (props: Props) {
           <ScreenHeaderText>{singleGroup.groupName}</ScreenHeaderText>
           <BurgerIcon onPress={()=> setGroupView("Settings")} ></BurgerIcon>
         </View>
-        <InfoBox header='Next Event' boxHeight='60%' smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}>
+        <InfoBox 
+          header='Next Event' 
+          boxHeight='40%'
+          boxMarginTop='-5%'
+          smallPlus={<SmallPlus onPress={()=> setGroupView('New Event')} />}
+          >
           <SingleGroupDetails/>
         </InfoBox>
-        <InfoBox header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')}/>}>
+        <InfoBox 
+          header={activeGroupPoll ? activeGroupPoll.event.eventName : "No poll"} 
+          boxHeight='100%'
+          boxMarginTop='5%'
+          boxMarginBottom='15%'
+          smallPlus={<SmallPlus onPress={() => setGroupView('Add Option')}/>}
+          >
           <View>
             <SingleGroupPollDetails/>
           </View>
         </InfoBox>
+        {activeGroupPoll ? 
+          <Text style={styles.totalVoteCount}>Voters: {votingStats["voters"]}/{votingStats["members"]}</Text>
+          : ""} 
       </>
     )
   }
 
   function AllGroupView () {
     return (
-
       <>
         <Image source={require('../assets/GroupLogo1.png')} />
         <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
         <BigPlus onPress={() => setGroupView('Add Group')} />
       </>
-
     )
   }
   
@@ -376,7 +410,7 @@ export default function AllGroupsScreen (props: Props) {
       {groupView === 'Single Group' ? <SingleGroupView /> : ''}
       {groupView === 'New Event' ? <NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView}/> : ''}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType}/> : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} setActivePollType={setActivePollType} activePollType={activePollType} activeGroupPollId={singleGroup?.id}/> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
       {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>
@@ -393,30 +427,43 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
+    fontFamily:'Ubuntu-Bold'
   },
   scroll: {
     flex: 1,
     width: '90%'
   },
   header: {
+    marginTop: '5%',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'space-between',
     width: '100%',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    fontFamily:'Ubuntu-Bold'
+  },
+  totalVoteCount: {
+    color: '#FF914D',
+    fontSize: 26,
+    paddingBottom: '10%',
+  },
+  pollOptionCounters: {
   },
   voteCounter: {
     color: '#FF914D',
     fontSize: 36,
-    alignItems: 'center',
-    marginLeft: 15
+    fontFamily:'Ubuntu-Bold',
+    paddingLeft: 10
   },
   pollOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 30,
+    paddingLeft: 30,
+    paddingRight: 10,
     paddingTop: 5
+  },
+  text: {
+    fontFamily:'Ubuntu-Regular'
   }
 })
