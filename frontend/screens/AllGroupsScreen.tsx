@@ -349,7 +349,6 @@ export default function AllGroupsScreen (props: Props) {
 
         return (
           <View style={styles.pollOption} key={option+index.toString()}>
-
             <ButtonSelector
               key={index}
               option={optionToDisplay}
