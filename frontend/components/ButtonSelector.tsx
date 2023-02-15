@@ -41,6 +41,7 @@ const ButtonSelector = (props: Props) => {
             alignItems: 'center',
             fontSize: 18,
             borderRadius: 5,
+            fontFamily: 'Ubuntu-Regular'
         },
         selected: {
             backgroundColor: '#FF914D',

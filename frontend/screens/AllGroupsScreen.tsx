@@ -589,6 +589,7 @@ const styles = StyleSheet.create({
     color: '#FF914D',
     fontSize: 26,
     paddingBottom: '10%',
+    fontFamily: 'Ubuntu-Bold'
   },
   pollOptionsInnerBox: {
     paddingTop: 10
