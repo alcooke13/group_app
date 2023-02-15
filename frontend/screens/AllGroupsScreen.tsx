@@ -361,8 +361,8 @@ export default function AllGroupsScreen (props: Props) {
             <View style={styles.eventDetailsHeader}>
               <TextHeader>{upcomingEvent.eventName}</TextHeader>
             </View>
-            <Text style={styles.text}>Date:         {eventDate}</Text>
-            <Text style={styles.text}>Time:         {eventTime}</Text>
+            <Text style={styles.text}>Date:          {eventDate}</Text>
+            <Text style={styles.text}>Time:          {eventTime}</Text>
             <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
           </View>
       )
@@ -489,8 +489,8 @@ export default function AllGroupsScreen (props: Props) {
         </View>
         <InfoBox 
           header='Next Event' 
-          boxHeight='45%'
-          boxMarginTop='-5%'
+          boxHeight='60%'
+          boxMarginBottom='5%'
           smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
           >
           <SingleGroupDetails/>
@@ -577,7 +577,8 @@ const styles = StyleSheet.create({
   eventDetails: {
     padding: 20,
     paddingLeft: 30,
-    paddingRight: 30
+    paddingRight: 30,
+    alignSelf: 'center'
   },
   eventDetailsHeader: {
     paddingBottom: 15,
@@ -615,6 +616,8 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   text: {
-    fontFamily: 'Ubuntu-Regular'
-  },
+    fontFamily: 'Ubuntu-Regular',
+    fontSize: 18,
+    lineHeight: 30
+  }
 })

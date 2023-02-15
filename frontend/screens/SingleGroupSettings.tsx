@@ -201,13 +201,15 @@ export default function SingleGroupSettings(props: Props) {
             return (
                 <>
                     <View style={styles.eventItem} key={index.toString + event.eventName}>
+                        <View style={styles.eventItem}>
                         <View style={styles.eventHeader}>
                             <TextHeader>{event.eventName}</TextHeader>
                         </View>
                         <View style={styles.eventInfo}>
-                            <Text style={styles.text}>Date: {eventDate}</Text>
-                            <Text style={styles.text}>Time: {eventTime}</Text>
-                            <Text style={styles.text}>Location: {event.eventLocation}</Text>
+                            <Text style={styles.text}>Date:          {eventDate}</Text>
+                            <Text style={styles.text}>Time:          {eventTime}</Text>
+                            <Text style={styles.text}>Location:   {event.eventLocation}</Text>
+                        </View>
                         </View>
                     </View>
                     {index !== pastEvents?.length - 1 ? <LineBreak /> : ''}
@@ -341,7 +343,8 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: 'Ubuntu-Regular',
-        fontSize: 18
+        fontSize: 18,
+        lineHeight: 30
     },
     settingsContainer: {
         width: '100%',
@@ -387,7 +390,8 @@ const styles = StyleSheet.create({
     },
     eventItem: {
         padding: 15,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignSelf: 'center'
     },
     eventHeader: {
         alignItems: 'center'

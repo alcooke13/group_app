@@ -95,18 +95,24 @@ export default function EventsScreen(props: Props) {
       }
     }
       const finalEvents: JSX.Element[] = matchedDates.map((event, index) => {
-        return <InfoBox header={event.eventName} key={index} boxMarginTop='5%'>
-        <View style={styles.filteredBox}>
-          <Text style={styles.text}>Activity: {event.activity}</Text>
-          <Text style={styles.text}>Location: {event.eventLocation}</Text>
-          <Text style={styles.text}>Date: {new Date(event.date).toLocaleDateString("en-GB", {
-            year: "numeric",
-            month: "short",
-            day: "2-digit",
-            weekday: "long"
-            })}</Text>
-        </View>
-      </InfoBox>
+        return (
+          <InfoBox header={event.eventName} key={index} boxHeight="90%" boxMarginBottom='7%' boxMarginTop='7%'>
+          <View style={styles.textBox}>
+            <Text style={styles.text}>Date:           {new Date(event.date).toLocaleDateString("en-GB", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+              weekday: "long"
+              })}</Text>
+            <Text style={styles.text}>Time:           {new Date(event.date).toLocaleTimeString("en-US", {
+              hour: '2-digit',
+              minute: '2-digit'
+              })}</Text>
+            <Text style={styles.text}>Location:    {event.eventLocation}</Text>
+            <Text style={styles.text}>Activity:      {event.activity}</Text>
+          </View>
+        </InfoBox>
+        )
       })
     return finalEvents
     }
@@ -116,20 +122,23 @@ export default function EventsScreen(props: Props) {
   const eventList: JSX.Element[][] | undefined = groups?.map((group)=>  {
       return group.events.map((event, index) => {
         return (
-          <InfoBox header={group.groupName} key={index} boxHeight="80%" boxMarginBottom='7%' boxMarginTop='7%'>
+          <InfoBox header={group.groupName} key={index} boxHeight="90%" boxMarginBottom='7%' boxMarginTop='7%'>
           <View style={styles.textBox}>
             <View style={styles.eventHeader}>
               <TextHeader>{event.eventName}</TextHeader>
             </View>
-            <Text style={styles.text}>Location: {event.eventLocation}</Text>
-            <Text style={styles.text}>Activity: {event.activity}</Text>
-            <Text style={styles.text}>Location: {event.eventLocation}</Text>
-            <Text style={styles.text}>Date: {new Date(event.date).toLocaleDateString("en-GB", {
+            <Text style={styles.text}>Date:           {new Date(event.date).toLocaleDateString("en-GB", {
               year: "numeric",
               month: "short",
               day: "2-digit",
               weekday: "long"
               })}</Text>
+            <Text style={styles.text}>Time:           {new Date(event.date).toLocaleTimeString("en-US", {
+              hour: '2-digit',
+              minute: '2-digit'
+              })}</Text>
+            <Text style={styles.text}>Location:    {event.eventLocation}</Text>
+            <Text style={styles.text}>Activity:      {event.activity}</Text>
           </View>
         </InfoBox>
       )})
@@ -210,7 +219,9 @@ const styles = StyleSheet.create({
       padding: '10%',
     },
     text: {
-      fontFamily:'Ubuntu-Regular'
+      fontFamily: 'Ubuntu-Regular',
+      fontSize: 18,
+      lineHeight: 30
     },
     eventHeader: {
       alignItems: 'center',

@@ -128,9 +128,9 @@ const filteredList: Array<DatePollData | ActivityPollData | LocationPollData> = 
             <TextHeader>{event.eventName}</TextHeader>
           </View>
           <View style={styles.eventInfo}>
-            <Text style={styles.text}>Date: {eventDate}</Text>
-            <Text style={styles.text}>Time: {eventTime}</Text>
-            <Text style={styles.text}>Location: {event.eventLocation}</Text>
+            <Text style={styles.text}>Date:          {eventDate}</Text>
+            <Text style={styles.text}>Time:          {eventTime}</Text>
+            <Text style={styles.text}>Location:   {event.eventLocation}</Text>
           </View>
         </View>
         {index !== events?.length - 1 ? <LineBreak /> : ''}
