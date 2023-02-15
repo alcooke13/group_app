@@ -123,7 +123,6 @@ public class DataLoader implements ApplicationRunner {
         Event ninjaWarrior = new Event((LocalDateTime.of(2023,2,1,9,0)), "Ninja Warrior", "Glasgow", "Getting Fit", xMen);
         Event girlsNightJan = new Event((LocalDateTime.of(2023,2,3,17,0)), "Girls Night Out", "Edinburgh", "Natasha's House", marvelGals);
         Event avengersassemble = new Event((LocalDateTime.of(2023,1,3,14,0)), "Avengers Assemble", "Glasgow", "Tony's House", avengers);
-        Event fantasticReunion = new Event(null, "Fantastic Catch-up", null, null, fantastic4);
 
         eventRepository.save(tonysBirthday);
         eventRepository.save(xMenReunion);
@@ -132,7 +131,6 @@ public class DataLoader implements ApplicationRunner {
         eventRepository.save(ninjaWarrior);
         eventRepository.save(girlsNightJan);
         eventRepository.save(avengersassemble);
-        eventRepository.save(fantasticReunion);
 
         DatePoll datePoll1 = new DatePoll(LocalDateTime.of(2023,9,5,17,0), tonysBirthday);
 

@@ -79,7 +79,7 @@ export function updateLocationPollWithNewVote(
     payload:{[key: string]: number} 
     ): Promise <LocationPollData> {
     return fetch(
-        'http://127.0.0.1:8080/location-poll/' + pollId.toString() + '/add-vote', 
+        'http://127.0.0.1:8080/location-polls/' + pollId.toString() + '/add-vote', 
     {
     method: 'PUT',
         body: JSON.stringify(payload),
@@ -97,7 +97,7 @@ export function updateLocationPollWithRemovedVote(
     payload:{[key: string]: number} 
     ): Promise <LocationPollData> {
     return fetch(
-        'http://127.0.0.1:8080/location-poll/' + pollId.toString() + '/remove-vote', 
+        'http://127.0.0.1:8080/location-polls/' + pollId.toString() + '/remove-vote', 
     {
     method: 'PUT',
         body: JSON.stringify(payload),
@@ -117,7 +117,7 @@ export function updateLocationPollDataWithNewOption(
 
     console.log("payload: ", JSON.stringify(payload))
     return fetch(
-        "http://127.0.0.1:8080/location-polls/" + locationPollId.toString() + "/add-option",
+        "http://127.0.0.1:8080/locations-polls/" + locationPollId.toString() + "/add-option",
         {
         method: "PUT",
         body: JSON.stringify(payload),
