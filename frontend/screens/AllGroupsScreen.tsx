@@ -80,12 +80,13 @@ export default function AllGroupsScreen (props: Props) {
 
   useEffect(() => {
     if ('new group' in groupChanges) {
-      getSingleGroupData(groupChanges['new group'])
-      updateGroupChanges({})
+      getSingleGroupData(groupChanges['new group']);
+      updateGroupChanges({});
     } 
     
     if ('new event' in groupChanges) {
-      getSingleGroupData(singleGroup.id)
+      getSingleGroupData(singleGroup.id);
+      updateGroupChanges({});
     }
   }, [groupChanges]);
 
@@ -519,9 +520,15 @@ export default function AllGroupsScreen (props: Props) {
   function AllGroupView () {
     return (
       <>
-        <Image source={require('../assets/GroupLogo1.png')} />
-        <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
-        <BigPlus onPress={() => setGroupView('Add Group')} />
+        <View style={styles.groupsHeader}>
+          <ScreenHeaderText>Your Groups</ScreenHeaderText>
+        </View>
+        <View style={styles.groupsMain}>
+          <ScrollView style={styles.scroll}>{allUsersGroupsByName}</ScrollView>
+        </View>
+        <View style={styles.groupsFooter}>
+          <BigPlus onPress={() => setGroupView('Add Group')} />
+        </View>
       </>
     )
   }
@@ -545,6 +552,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#25242B'
+  },
+  groupsHeader: {
+    height: '10%',
+    paddingTop: '5%'
+  },
+  groupsMain: {
+    height: '80%'
+  },
+  groupsFooter: {
+    marginTop: '2%',
+    height: '10%',
   },
   title: {
     fontSize: 20,
@@ -578,6 +596,7 @@ const styles = StyleSheet.create({
     color: '#FF914D',
     fontSize: 26,
     paddingBottom: '10%',
+    fontFamily: 'Ubuntu-Bold'
   },
   pollOptionsInnerBox: {
     paddingTop: 10
@@ -597,5 +616,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Ubuntu-Regular'
-  }
+  },
 })

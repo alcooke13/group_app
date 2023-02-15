@@ -202,7 +202,8 @@ const styles = StyleSheet.create({
   eventInfo: {
     paddingTop: 10,
     paddingBottom: 5,
-    paddingLeft: 10
+    paddingLeft: 10,
+    alignSelf: 'center'
   },
   pollItem: {
     flexDirection: 'row',
@@ -211,6 +212,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   text: {
-    fontFamily: 'Ubuntu-Regular'
+    fontFamily: 'Ubuntu-Regular',
+    fontSize: 18,
+    lineHeight: 30
   }
 })

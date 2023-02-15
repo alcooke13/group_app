@@ -76,7 +76,7 @@ export default function SettingsScreen(props: Props) {
             <Text style={styles.accountHeader}>Username</Text>
             <TextInput 
                 style={styles.accountNameInput}
-                placeholder={userDetails?.userName}
+                defaultValue={userDetails?.userName}
                 onChangeText={(text) => newUserNameValue = text}>
             </TextInput>
           </View>
@@ -93,7 +93,7 @@ export default function SettingsScreen(props: Props) {
             <TextInput 
                 style={styles.accountAddress}
                 multiline={true}
-                placeholder={userDetails?.address}
+                defaultValue={userDetails?.address}
                 onChangeText={(text) => newAddressValue = text}>
             </TextInput>
           </View>

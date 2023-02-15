@@ -10,6 +10,7 @@ import SmallButton from '../components/SmallButton';
 import BackArrow from '../components/BackArrow';
 import { useIsFocused } from "@react-navigation/native";
 import BigButton from '../components/BigButton';
+import TextHeader from '../components/TextHeader';
 
 
 interface Props {
@@ -117,6 +118,10 @@ export default function EventsScreen(props: Props) {
         return (
           <InfoBox header={group.groupName} key={index} boxHeight="80%" boxMarginBottom='7%' boxMarginTop='7%'>
           <View style={styles.textBox}>
+            <View style={styles.eventHeader}>
+              <TextHeader>{event.eventName}</TextHeader>
+            </View>
+            <Text style={styles.text}>Location: {event.eventLocation}</Text>
             <Text style={styles.text}>Activity: {event.activity}</Text>
             <Text style={styles.text}>Location: {event.eventLocation}</Text>
             <Text style={styles.text}>Date: {new Date(event.date).toLocaleDateString("en-GB", {
@@ -141,13 +146,12 @@ export default function EventsScreen(props: Props) {
             </ScrollView></> : ""}
 
         {/* CALENDAR VIEW */}
-
           {view === "calendar" ? <View style={styles.outer}>
             <View style={styles.calendarButtonBox}> 
             <BigButton title="List View" onPress={toggleListView} style={styles.button}/>
           </View>
           <View style={styles.containerCalendar}>
-            <InfoBox header='Calendar'>
+            <InfoBox header='Calendar' boxMarginBottom='15%'>
               <CalendarMonth onPress={chooseDate} calendarEvents={events} chooseDate={chooseDate} setDate={setDate} resultDates={resultDates}/>
             </InfoBox>
             </View>
@@ -159,7 +163,6 @@ export default function EventsScreen(props: Props) {
           {/* {eventList} */}
           <><FilteredEvents/></>
         </ScrollView></> : ""}
-
         </SafeAreaView>
     )    
 }
@@ -170,7 +173,6 @@ const styles = StyleSheet.create({
       backgroundColor: "#25242B",
       flex:1
     },
-
     containerCalendar: {
       backgroundColor: "#25242B",
       flex: 1,
@@ -183,9 +185,8 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'flex-end',
       marginRight: '5%',
-      marginTop: '5%'
+      marginTop: '10%'
     },
-    
     singleBackBox: {
       marginBottom: "5%",
       justifyContent: 'center',
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
     },
     textBox: {
       justifyContent: 'center',
-      alignItems: 'center',
+      alignSelf: 'center',
       paddingTop: '5%',
       fontFamily:'Ubuntu-Regular'
     },
@@ -207,9 +208,12 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       padding: '10%',
-    
     },
     text: {
       fontFamily:'Ubuntu-Regular'
-    }
+    },
+    eventHeader: {
+      alignItems: 'center',
+      paddingBottom: 10
+    },
   });
