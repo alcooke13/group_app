@@ -107,7 +107,8 @@ export default function (props: Props) {
             <BigButton
               title='Add Option'
               onPress={() => {
-                setSavedActivityPoll(activityValue)
+                setSavedActivityPoll(activityValue);
+                updateSettingsUpdated(true);
               }}
             />
           </View>

@@ -79,7 +79,7 @@ export function updateActivityPollWithNewVote(
     payload:{[key: string]: number} 
     ): Promise <ActivityPollData> {
 	return fetch(
-        'http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/add-vote', 
+        'http://127.0.0.1:8080/activity-polls/' + pollId.toString() + '/add-vote', 
     {
 		method: 'PUT',
         body: JSON.stringify(payload),
@@ -97,7 +97,7 @@ export function updateActivityPollWithRemovedVote(
     payload:{[key: string]: number} 
     ): Promise <ActivityPollData> {
 	return fetch(
-        'http://127.0.0.1:8080/activity-poll/' + pollId.toString() + '/remove-vote', 
+        'http://127.0.0.1:8080/activity-polls/' + pollId.toString() + '/remove-vote', 
     {
 		method: 'PUT',
         body: JSON.stringify(payload),
