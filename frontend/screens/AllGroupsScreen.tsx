@@ -115,30 +115,28 @@ export default function AllGroupsScreen (props: Props) {
   }, [pollChange]);
   
 
-  function getVotingStats (
-    poll: ActivityPollData | LocationPollData | DatePollData
-  ) {
+  function getVotingStats (poll: ActivityPollData | LocationPollData | DatePollData) {
     const memberIds: number[] = []
     const voterIds: number[] = []
 
     if (poll) {
       poll.event.group.users.forEach(user => memberIds.push(user.id))
-    }
 
-    if (poll?.options) {
-      for (const [option, user_ids] of Object.entries(poll.options)) {
-        user_ids.forEach(user_id => {
-          voterIds.includes(user_id) ? '' : voterIds.push(user_id)
-        })
+      if (poll?.options) {
+        for (const [option, user_ids] of Object.entries(poll.options)) {
+          user_ids.forEach(user_id => {
+            voterIds.includes(user_id) ? '' : voterIds.push(user_id)
+          })
+        }
       }
-    }
 
-    setVotingStats({ voters: voterIds.length, members: memberIds.length })
+      setVotingStats({ voters: voterIds.length, members: memberIds.length })
 
-    if (voterIds.length == memberIds.length) {
-      return 'Vote completed'
-    } else {
-      return 'Vote incomplete'
+      if (voterIds.length == memberIds.length) {
+        return 'Vote completed'
+      } else {
+        return 'Vote incomplete'
+      }
     }
   }
 
@@ -417,6 +415,7 @@ export default function AllGroupsScreen (props: Props) {
 
   function SingleGroupPollDetails () {
     if (activeGroupPoll) {
+      console.log(activeGroupPoll)
       let availableOptionsArray = []
       let allOptionsMap = new Map<string, Array<number>>()
       for (const [option, user_ids] of Object.entries(
@@ -530,7 +529,7 @@ export default function AllGroupsScreen (props: Props) {
         ''
       )}
       {groupView === 'Loading' ? '' : ''}
-      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={singleGroup?.id} updatePollChange={updatePollChange} /> : ''}
+      {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={activeGroupPoll?.id} updatePollChange={updatePollChange} /> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}
       {groupView === "Settings" ? <SingleGroupSettings user = {props.user} groupName={singleGroup.groupName} groupId={singleGroup.id} setState={setGroupView} parentUpcomingEvent={upcomingEvent} /> : ""}
     </SafeAreaView>

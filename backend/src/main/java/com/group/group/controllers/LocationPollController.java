@@ -2,13 +2,17 @@ package com.group.group.controllers;
 
 import com.group.group.models.ActivityPoll;
 import com.group.group.models.DatePoll;
+import com.group.group.models.Event;
 import com.group.group.models.LocationPoll;
+import com.group.group.repositories.EventRepository;
 import com.group.group.repositories.LocationPollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.ServerException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +23,9 @@ public class LocationPollController {
 
     @Autowired
     LocationPollRepository locationPollRepository;
+
+    @Autowired
+    EventRepository eventRepository;
 
     @GetMapping(value = "/location-polls")
     public ResponseEntity<List<LocationPoll>> getAllLocationPolls(
@@ -115,5 +122,27 @@ public class LocationPollController {
 
         locationPollRepository.save(updateLocationPoll);
         return ResponseEntity.ok(updateLocationPoll);
+    }
+
+    @PostMapping(path = "/location-polls",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LocationPoll> createLocationPoll(@RequestBody HashMap<String, Long> body) throws ServerException {
+
+        Event updateEvent = eventRepository.findById(body.get("eventId"))
+                .orElseThrow(() -> new RuntimeException("Poll Option Not Found: " + body.get("eventId")));
+
+        LocalDateTime timeout = LocalDateTime.now().withNano(0).plusHours(body.get("timeout"));
+        LocationPoll locationPoll = new LocationPoll(timeout, updateEvent);
+
+        if (updateEvent.getDatePoll() == null) {
+            locationPollRepository.save(locationPoll);
+        }
+
+        if (locationPoll != null) {
+            return new ResponseEntity<>(locationPoll, HttpStatus.CREATED);
+        } else {
+            throw new ServerException("error: could not create event");
+        }
     }
 }

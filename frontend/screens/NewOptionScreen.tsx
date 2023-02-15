@@ -60,9 +60,7 @@ export default function(props: Props){
     }
     const ActivityPollInput = () => {
         let activityValue: string;
-        const onActivityInputEnd = () => {
-            setSavedActivityPoll(activityValue)
-        }
+        
         return (
             <View style={styles.outer}>
                 <View style ={styles.backButtonHeaderContainer}>
@@ -74,23 +72,23 @@ export default function(props: Props){
             <BackgroundBox  boxHeight='35%' >
                 <View style={styles.textBox}>
                     <TextHeader>Add Activity Option</TextHeader>
-                    <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
-                                    activityValue = inputText;
-                                }}
-                                onEndEditing={onActivityInputEnd}/>
+                    <TextInput style={styles.inputBox} 
+                                onChangeText={(inputText: string) => activityValue = inputText}
+                                />
                 </View>
             </BackgroundBox>
             <View style={{marginTop: '15%'}}>
-            <SmallButton title="Add Option" onPress={changeFromActivityToConfirmation}/></View>
+            <SmallButton title="Add Option" onPress={ () => {
+                setSavedActivityPoll(activityValue);
+                changeFromActivityToConfirmation()
+                }}/></View>
             </View>
             </View>
     )}
 
     const LocationPollInput = () => {
         let locationValue: string;
-        const onLocationInputEnd = () => {
-            setSavedLocationPoll(locationValue)
-        }
+
         return (
         <View style={styles.outer}>
                 <View style ={styles.backButtonHeaderContainer}>
@@ -102,14 +100,17 @@ export default function(props: Props){
             <BackgroundBox  boxHeight='35%' >
                 <View style={styles.textBox}>
                     <TextHeader>Option Input</TextHeader>
-                    <TextInput style={styles.inputBox} onChangeText={(inputText: string) => {
-                                    locationValue = inputText;
-                                }}
-                                onEndEditing={onLocationInputEnd}/>
+                    <TextInput style={styles.inputBox}
+                                onChangeText={(inputText: string) => locationValue = inputText}
+                                />
                 </View>
             </BackgroundBox>
             <View style={{marginTop: '15%'}}>            
-            <SmallButton title="Add Option" onPress={changeFromLocationToConfirmation}/>
+            <SmallButton title="Add Option" onPress={() => {
+                setSavedLocationPoll(locationValue);
+                changeFromLocationToConfirmation()
+                }}
+                />
             </View>
             </View>
             </View>
@@ -161,23 +162,27 @@ export default function(props: Props){
 
             // Making the put requests:
            let pollId: number= activeGroupPollId;
-            // Activity Data
-            if(dateStringKey === "" && locationStringKey === "") {  
-            updateActivityPollDataWithNewOption(pollId, newActivityBundle).then((data) => {
-                setActivityBundle(data)
-            })
+
+            // Date/Time
+            if(dateStringKey !== "") {  
+                updateDatePollDataWithNewOption(pollId, newBundle).then((data) => {
+                    setDateBundle(data)
+                })
+            }
+            
             //Location Data
-            } else if (dateStringKey === "" && activityStringKey === "") {
+            if (locationStringKey !== "") {
+                console.log(newLocationBundle)
                 updateLocationPollDataWithNewOption(pollId, newLocationBundle).then((data) => {
                         setLocationBundle(data)
-                    })
-            
-            // Date/Time        
-            } else if (activityStringKey === "" && locationStringKey === "") {
-                 updateDatePollDataWithNewOption(pollId, newBundle).then((data) => {
-                setDateBundle(data)
-           
-            })
+                })                 
+            }
+
+            // Activity Data  
+            if (activityStringKey !== "") {
+                updateActivityPollDataWithNewOption(pollId, newActivityBundle).then((data) => {
+                    setActivityBundle(data)
+                })
             } 
           
                 setSavedActivityPoll("");
