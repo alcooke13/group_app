@@ -83,7 +83,7 @@ export default function SingleGroupSettings(props: Props) {
                 </View>
                 <View>
                     <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
-                        <Text style={styles.settingElements} >Past Events</Text>
+                        <Text style={styles.settingElements} >Past GroupUps</Text>
                     </TouchableOpacity>
                 </View>
                 <View>
@@ -95,7 +95,7 @@ export default function SingleGroupSettings(props: Props) {
                     <TouchableOpacity activeOpacity={0.7} onPress={() => {
                         updateCurrentView("Delete Event")
                     }}>
-                        <Text style={styles.settingElements} >Delete Event</Text>
+                        <Text style={styles.settingElements} >Delete GroupUp</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -191,6 +191,7 @@ export default function SingleGroupSettings(props: Props) {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long',
+                year: "numeric",
             });
 
             let eventTime = new Date(event.date).toLocaleTimeString("en-US", {
@@ -223,7 +224,7 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
                 </View>
-                <InfoBox header='Past Events' boxHeight='85%' boxMarginBottom='5%'>
+                <InfoBox header='Past GroupUps' boxHeight='85%' boxMarginBottom='5%'>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {pastEventItems}
                     </ScrollView>
@@ -277,11 +278,11 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
                 </View>
-                <InfoBox header='Delete Event' boxMarginBottom='20%'>
+                <InfoBox header='Delete GroupUp' boxMarginBottom='20%'>
                     <>
                         {parentUpcomingEvent ?
                             <>
-                                <Text style={styles.settingTitle}>Are you sure you want to delete the following?</Text>
+                                <Text style={styles.settingTitle}>Are you sure you want to delete the below?</Text>
                                 <View style={styles.deleteEventInfo}>
                                     {parentUpcomingEvent ? <Text style={styles.reviewText} >Title: {parentUpcomingEvent?.eventName}</Text> : ""}
                                     {eventDate ? <Text style={styles.reviewText} >Date: {eventDate}</Text> : ""}
@@ -389,7 +390,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     eventItem: {
-        padding: 15,
+        padding: 10,
         justifyContent: 'space-between',
         alignSelf: 'center'
     },

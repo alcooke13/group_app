@@ -352,8 +352,8 @@ export default function AllGroupsScreen (props: Props) {
           minute: '2-digit'
       })
       } else {
-        eventDate = "TBC";
-        eventTime = "TBC";
+        eventDate = "";
+        eventTime = "";
       }
 
       return (
@@ -372,9 +372,6 @@ export default function AllGroupsScreen (props: Props) {
           <View style={styles.eventDetailsHeader}>
             <TextHeader> No upcoming event </TextHeader>
           </View>
-          <Text style={styles.text}>Date:        </Text>
-          <Text style={styles.text}>Time:        </Text>
-          <Text style={styles.text}>Location:   </Text>
         </View>
       )
     }
@@ -488,7 +485,7 @@ export default function AllGroupsScreen (props: Props) {
           <BurgerIcon onPress={() => setGroupView('Settings')}></BurgerIcon>
         </View>
         <InfoBox 
-          header='Next Event' 
+          header='Next GroupUp' 
           boxHeight='60%'
           boxMarginBottom='5%'
           smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
