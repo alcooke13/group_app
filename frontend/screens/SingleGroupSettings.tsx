@@ -83,7 +83,7 @@ export default function SingleGroupSettings(props: Props) {
                 </View>
                 <View>
                     <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
-                        <Text style={styles.settingElements} >Past GroupUps</Text>
+                        <Text style={styles.settingElements} >Past Events</Text>
                     </TouchableOpacity>
                 </View>
                 <View>
@@ -95,7 +95,7 @@ export default function SingleGroupSettings(props: Props) {
                     <TouchableOpacity activeOpacity={0.7} onPress={() => {
                         updateCurrentView("Delete Event")
                     }}>
-                        <Text style={styles.settingElements} >Delete GroupUp</Text>
+                        <Text style={styles.settingElements} >Delete Event</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -224,7 +224,7 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
                 </View>
-                <InfoBox header='Past GroupUps' boxHeight='85%' boxMarginBottom='5%'>
+                <InfoBox header='Past Events' boxHeight='85%' boxMarginBottom='5%'>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {pastEventItems}
                     </ScrollView>
@@ -278,7 +278,7 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
                 </View>
-                <InfoBox header='Delete GroupUp' boxMarginBottom='20%'>
+                <InfoBox header='Delete Event' boxMarginBottom='20%'>
                     <>
                         {parentUpcomingEvent ?
                             <>

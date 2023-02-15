@@ -503,7 +503,7 @@ export default function AllGroupsScreen (props: Props) {
           <BurgerIcon onPress={() => setGroupView('Settings')}></BurgerIcon>
         </View>
         <InfoBox 
-          header='Next GroupUp' 
+          header='Next Event' 
           boxHeight='60%'
           boxMarginBottom='5%'
           smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
