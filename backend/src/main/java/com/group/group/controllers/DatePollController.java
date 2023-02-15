@@ -112,7 +112,7 @@ public class DatePollController {
         if (newDatePoll != null) {
             return new ResponseEntity<>(newDatePoll, HttpStatus.CREATED);
         } else {
-            throw new ServerException("error: could not create event");
+            throw new ServerException("error: could not create date poll");
         }
     }
 

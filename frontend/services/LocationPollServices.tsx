@@ -114,6 +114,8 @@ export function updateLocationPollDataWithNewOption(
     locationPollId: number,
     payload: { [key: string]: [] }
     ): Promise<LocationPollData> {
+
+    console.log("payload: ", JSON.stringify(payload))
     return fetch(
         "http://127.0.0.1:8080/location-polls/" + locationPollId.toString() + "/add-option",
         {
