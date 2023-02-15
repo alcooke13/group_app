@@ -128,9 +128,9 @@ const filteredList: Array<DatePollData | ActivityPollData | LocationPollData> = 
             <TextHeader>{event.eventName}</TextHeader>
           </View>
           <View style={styles.eventInfo}>
-            <Text style={styles.text}>Date: {eventDate}</Text>
-            <Text style={styles.text}>Time: {eventTime}</Text>
-            <Text style={styles.text}>Location: {event.eventLocation}</Text>
+            <Text style={styles.text}>Date:          {eventDate}</Text>
+            <Text style={styles.text}>Time:          {eventTime}</Text>
+            <Text style={styles.text}>Location:   {event.eventLocation}</Text>
           </View>
         </View>
         {index !== events?.length - 1 ? <LineBreak /> : ''}
@@ -144,28 +144,28 @@ const filteredList: Array<DatePollData | ActivityPollData | LocationPollData> = 
     }
   })
 
-    const filteredItems = filteredList.map(function (poll, index) {
-      return (
-        <View key={poll.id.toString() + poll.toString()}>
-          <View style={styles.pollItem}>
-            <TextHeader>{poll.event.eventName}</TextHeader>
-            <SmallButton
-              title='Vote'
-              onPress={() => {
-                navigation.navigate('Groups', {
-                  groupId: poll.event.group.id
-                })
-              }}
-            ></SmallButton>
-          </View>
-          {index !== polls?.length - 1 ? <LineBreak /> : ''}
+  const filteredItems = filteredList.map(function (poll, index) {
+    return (
+      <View key={poll.id.toString() + poll.type}>
+        <View style={styles.pollItem}>
+          <TextHeader>{poll.event.eventName}</TextHeader>
+          <SmallButton
+            title='Vote'
+            onPress={() => {
+              navigation.navigate('Groups', {
+                groupId: poll.event.group.id
+              })
+            }}
+          ></SmallButton>
         </View>
-      )
-    })
+        {index !== polls?.length - 1 ? <LineBreak /> : ''}
+      </View>
+    )
+  })
 
   return (
     <SafeAreaView style={styles.container}>
-      <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
+      <InfoBox header='Upcoming GroupUps' boxHeight='75%' boxMarginTop='5%'>
         <ScrollView showsVerticalScrollIndicator={false}>
           {eventItems}
         </ScrollView>

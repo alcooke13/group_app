@@ -83,7 +83,7 @@ export default function SingleGroupSettings(props: Props) {
                 </View>
                 <View>
                     <TouchableOpacity activeOpacity={0.7} onPress={() => updateCurrentView("Past Events")}>
-                        <Text style={styles.settingElements} >Past Events</Text>
+                        <Text style={styles.settingElements} >Past GroupUps</Text>
                     </TouchableOpacity>
                 </View>
                 <View>
@@ -95,7 +95,7 @@ export default function SingleGroupSettings(props: Props) {
                     <TouchableOpacity activeOpacity={0.7} onPress={() => {
                         updateCurrentView("Delete Event")
                     }}>
-                        <Text style={styles.settingElements} >Delete Event</Text>
+                        <Text style={styles.settingElements} >Delete GroupUp</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -191,6 +191,7 @@ export default function SingleGroupSettings(props: Props) {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long',
+                year: "numeric",
             });
 
             let eventTime = new Date(event.date).toLocaleTimeString("en-US", {
@@ -201,13 +202,15 @@ export default function SingleGroupSettings(props: Props) {
             return (
                 <>
                     <View style={styles.eventItem} key={index.toString + event.eventName}>
+                        <View style={styles.eventItem}>
                         <View style={styles.eventHeader}>
                             <TextHeader>{event.eventName}</TextHeader>
                         </View>
                         <View style={styles.eventInfo}>
-                            <Text style={styles.text}>Date: {eventDate}</Text>
-                            <Text style={styles.text}>Time: {eventTime}</Text>
-                            <Text style={styles.text}>Location: {event.eventLocation}</Text>
+                            <Text style={styles.text}>Date:          {eventDate}</Text>
+                            <Text style={styles.text}>Time:          {eventTime}</Text>
+                            <Text style={styles.text}>Location:   {event.eventLocation}</Text>
+                        </View>
                         </View>
                     </View>
                     {index !== pastEvents?.length - 1 ? <LineBreak /> : ''}
@@ -221,7 +224,7 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
                 </View>
-                <InfoBox header='Past Events' boxHeight='85%' boxMarginBottom='5%'>
+                <InfoBox header='Past GroupUps' boxHeight='85%' boxMarginBottom='5%'>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {pastEventItems}
                     </ScrollView>
@@ -275,11 +278,11 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => updateCurrentView("Settings")}></BackArrow>
                 </View>
-                <InfoBox header='Delete Event' boxMarginBottom='20%'>
+                <InfoBox header='Delete GroupUp' boxMarginBottom='20%'>
                     <>
                         {parentUpcomingEvent ?
                             <>
-                                <Text style={styles.settingTitle}>Are you sure you want to delete the following?</Text>
+                                <Text style={styles.settingTitle}>Are you sure you want to delete the below?</Text>
                                 <View style={styles.deleteEventInfo}>
                                     {parentUpcomingEvent ? <Text style={styles.reviewText} >Title: {parentUpcomingEvent?.eventName}</Text> : ""}
                                     {eventDate ? <Text style={styles.reviewText} >Date: {eventDate}</Text> : ""}
@@ -341,7 +344,8 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: 'Ubuntu-Regular',
-        fontSize: 18
+        fontSize: 18,
+        lineHeight: 30
     },
     settingsContainer: {
         width: '100%',
@@ -386,8 +390,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     eventItem: {
-        padding: 15,
-        justifyContent: 'space-between'
+        padding: 10,
+        justifyContent: 'space-between',
+        alignSelf: 'center'
     },
     eventHeader: {
         alignItems: 'center'

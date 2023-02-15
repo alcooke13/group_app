@@ -352,8 +352,8 @@ export default function AllGroupsScreen (props: Props) {
           minute: '2-digit'
       })
       } else {
-        eventDate = "TBC";
-        eventTime = "TBC";
+        eventDate = "";
+        eventTime = "";
       }
 
       return (
@@ -361,8 +361,8 @@ export default function AllGroupsScreen (props: Props) {
             <View style={styles.eventDetailsHeader}>
               <TextHeader>{upcomingEvent.eventName}</TextHeader>
             </View>
-            <Text style={styles.text}>Date:         {eventDate}</Text>
-            <Text style={styles.text}>Time:         {eventTime}</Text>
+            <Text style={styles.text}>Date:          {eventDate}</Text>
+            <Text style={styles.text}>Time:          {eventTime}</Text>
             <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
           </View>
       )
@@ -372,9 +372,6 @@ export default function AllGroupsScreen (props: Props) {
           <View style={styles.eventDetailsHeader}>
             <TextHeader> No upcoming event </TextHeader>
           </View>
-          <Text style={styles.text}>Date:        </Text>
-          <Text style={styles.text}>Time:        </Text>
-          <Text style={styles.text}>Location:   </Text>
         </View>
       )
     }
@@ -427,19 +424,17 @@ export default function AllGroupsScreen (props: Props) {
 
   function SingleGroupPollDetails () {
     if (activeGroupPoll) {
-      console.log(activeGroupPoll)
-      let availableOptionsArray = []
-      let allOptionsMap = new Map<string, Array<number>>()
-      for (const [option, user_ids] of Object.entries(
-        activeGroupPoll?.options
-      )) {
-        availableOptionsArray.push(option)
+      let availableOptionsArray = [];
+      let allOptionsMap = new Map<string, Array<number>>();
+
+      for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+        availableOptionsArray.push(option);
       }
 
-      for (const [option, user_ids] of Object.entries(
-        activeGroupPoll?.options
-      )) {
-        allOptionsMap.set(option, user_ids)
+      const availableOptionsCount = availableOptionsArray.length;
+
+      for (const [option, user_ids] of Object.entries(activeGroupPoll?.options)) {
+        allOptionsMap.set(option, user_ids);
       }
 
       const returnStatement = availableOptionsArray.map(function (option, index) {
@@ -458,24 +453,44 @@ export default function AllGroupsScreen (props: Props) {
         }
 
         return (
-          <View style={styles.pollOption} key={option + index.toString()}>
-            <ButtonSelector
-              key={index}
-              option={optionToDisplay}
-              onPress={() => captureChosenVote(option)}
-              selected={allOptionsMap.get(option)?.includes(user)}
-            ></ButtonSelector>
-            <View style={styles.pollOptionCounters}>
-              <Text style={styles.voteCounter}>
-                {allOptionsMap.get(option)?.length}
-              </Text>
+            <View style={styles.pollOption} key={option + index.toString()}>
+              <>
+                <ButtonSelector
+                  key={index}
+                  option={optionToDisplay}
+                  onPress={() => captureChosenVote(option)}
+                  selected={allOptionsMap.get(option)?.includes(user)}
+                ></ButtonSelector>
+                <View style={styles.pollOptionCounters}>
+                  <Text style={styles.voteCounter}>
+                    {allOptionsMap.get(option)?.length}
+                  </Text>
+                </View>
+              </>
+            </View>
+          )
+      })
+
+      if (availableOptionsCount == 0) {
+        return(
+          <View style={styles.eventDetails}>
+            <View style={styles.eventDetailsHeader}>
+              <TextHeader>No options have been added</TextHeader>
             </View>
           </View>
         )
-      })
-      return returnStatement
+      } else {
+        return returnStatement
+      }
+      
     } else {
-      ;<Text style={styles.text}>No current poll</Text>
+      return(
+        <View style={styles.eventDetails}>
+          <View style={styles.eventDetailsHeader}>
+            <TextHeader>No current poll</TextHeader>
+          </View>
+        </View>
+      )
     }
   }
 
@@ -488,9 +503,9 @@ export default function AllGroupsScreen (props: Props) {
           <BurgerIcon onPress={() => setGroupView('Settings')}></BurgerIcon>
         </View>
         <InfoBox 
-          header='Next Event' 
-          boxHeight='45%'
-          boxMarginTop='-5%'
+          header='Next GroupUp' 
+          boxHeight='60%'
+          boxMarginBottom='5%'
           smallPlus={upcomingEvent === null ? <SmallPlus onPress={()=> setGroupView('New Event')} /> : ""}
           >
           <SingleGroupDetails/>
@@ -577,7 +592,8 @@ const styles = StyleSheet.create({
   eventDetails: {
     padding: 20,
     paddingLeft: 30,
-    paddingRight: 30
+    paddingRight: 30,
+    alignSelf: 'center'
   },
   eventDetailsHeader: {
     paddingBottom: 15,
@@ -615,6 +631,8 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   text: {
-    fontFamily: 'Ubuntu-Regular'
-  },
+    fontFamily: 'Ubuntu-Regular',
+    fontSize: 18,
+    lineHeight: 30
+  }
 })

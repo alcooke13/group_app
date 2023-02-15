@@ -54,23 +54,19 @@ export default function (props: Props) {
 
   // Change state functions
   const changeFromActivityToConfirmation = () => {
-    if (activePollType === 'Activity') setPollView('confirmation')
+    if (activePollType === 'Activity') setPollView('confirmation');
   }
 
   const changeFromLocationToConfirmation = () => {
-    if (activePollType === 'Location') setPollView('confirmation')
-  }
-
-  const changeViewToCalender = () => {
-    if (activePollType === 'Date') setPollView('Date')
+    if (activePollType === 'Location') setPollView('confirmation');
   }
 
   const changeViewToDay = () => {
-    setPollView('dayOption')
+    setPollView('dayOption');
   }
 
   const changeConfirmationScreen = () => {
-    setPollView('confirmation')
+    prepareBundle();
   }
   const ActivityPollInput = () => {
     let activityValue: string
@@ -78,7 +74,7 @@ export default function (props: Props) {
     return (
       <View style={styles.outer}>
         <View style={styles.backButtonHeaderContainer}>
-          <View style={{ marginRight: '12%', marginLeft: '5%' }}>
+          <View style={styles.header}>
             <BackArrow onPress={() => setState('Single Group')} />
           </View>
           <ScreenHeaderText>Activity Poll</ScreenHeaderText>
@@ -116,7 +112,7 @@ export default function (props: Props) {
     return (
       <View style={styles.outer}>
         <View style={styles.backButtonHeaderContainer}>
-          <View style={{ marginRight: '10%', marginLeft: '5%' }}>
+          <View style={styles.header}>
             <BackArrow onPress={() => setState('Single Group')} />
           </View>
           <ScreenHeaderText>Location Poll</ScreenHeaderText>
@@ -175,115 +171,60 @@ export default function (props: Props) {
     }
   }
 
-  const ConfirmationScreen = () => {
-    function prepareBundle () {
-      // Date/Time Bundle
-      let dateStringKey: string = savedDate + savedTime
-      const newBundle: { [key: string]: [] } = {}
-      newBundle[dateStringKey] = []
+  function prepareBundle() {
+    // Date/Time Bundle
+    let dateStringKey: string = savedDate + savedTime
+    const newBundle: { [key: string]: [] } = {}
+    newBundle[dateStringKey] = []
 
-      //Location Bundle
-      let locationStringKey: string = savedLocationPoll
-      const newLocationBundle: { [key: string]: [] } = {}
-      newLocationBundle[locationStringKey] = []
+    //Location Bundle
+    let locationStringKey: string = savedLocationPoll
+    const newLocationBundle: { [key: string]: [] } = {}
+    newLocationBundle[locationStringKey] = []
 
-      //Activity Bundle
-      let activityStringKey: string = savedActivityPoll
-      const newActivityBundle: { [key: string]: [] } = {}
-      newActivityBundle[activityStringKey] = []
+    //Activity Bundle
+    let activityStringKey: string = savedActivityPoll
+    const newActivityBundle: { [key: string]: [] } = {}
+    newActivityBundle[activityStringKey] = []
 
-      // Making the put requests:
-      let pollId: number = activeGroupPollId
+    // Making the put requests:
+    let pollId: number = activeGroupPollId
 
-      // Date/Time
-      if (dateStringKey !== '') {
-        updateDatePollDataWithNewOption(pollId, newBundle).then(data => {
-          setDateBundle(data)
-        })
-      }
-
-      //Location Data
-      if (locationStringKey !== '') {
-        console.log(newLocationBundle)
-        updateLocationPollDataWithNewOption(pollId, newLocationBundle).then(
-          data => {
-            setLocationBundle(data)
-          }
-        )
-      }
-
-      // Activity Data
-      if (activityStringKey !== '') {
-        updateActivityPollDataWithNewOption(pollId, newActivityBundle).then(
-          data => {
-            setActivityBundle(data)
-          }
-        )
-      }
-
-      setSavedActivityPoll('')
-      setSavedLocationPoll('')
-      setSavedDated('')
-      setSavedTime('')
-
-      updatePollChange(true)
-      setState('Single Group')
+    // Date/Time
+    if (dateStringKey !== '') {
+      updateDatePollDataWithNewOption(pollId, newBundle).then(data => {
+        setDateBundle(data)
+      })
     }
-    return (
-      <View
-        style={{
-          flex: 0.8,
-          alignItems: 'center',
-          justifyContent: 'space-evenly'
-        }}
-      >
-        <BackgroundBox boxHeight='80%' boxWidth={'90%'}>
-          <>
-            <Text style={styles.title}>Check Details</Text>
-            <View style={{ width: '90%', alignSelf: 'center' }}></View>
-            {savedActivityPoll !== '' ? (
-              <Text style={styles.reviewText}>
-                Activity: {savedActivityPoll}
-              </Text>
-            ) : (
-              ''
-            )}
-            {savedLocationPoll !== '' ? (
-              <Text style={styles.reviewText}>
-                Location: {savedLocationPoll}
-              </Text>
-            ) : (
-              ''
-            )}
-            {savedTime !== '' && savedDate ? (
-              <>
-                <Text style={styles.reviewText}>Time: {eventTime}</Text>
-                <Text style={styles.reviewText}>Date: {eventDate}</Text>
-              </>
-            ) : (
-              ''
-            )}
-          </>
-        </BackgroundBox>
-        <View style={styles.backButtonHeaderContainer}>
-          <View style={styles.buttonContainer}>
-            <View style={styles.submitButton}>
-              <BigButton
-                title='Go Back'
-                onPress={() => detailsReset()}
-              ></BigButton>
-            </View>
-            <View style={styles.submitButton}>
-              <BigButton
-                title='Submit'
-                onPress={() => prepareBundle()}
-              ></BigButton>
-            </View>
-          </View>
-        </View>
-      </View>
-    )
+
+    //Location Data
+    if (locationStringKey !== '') {
+      console.log(newLocationBundle)
+      updateLocationPollDataWithNewOption(pollId, newLocationBundle).then(
+        data => {
+          setLocationBundle(data)
+        }
+      )
+    }
+
+    // Activity Data
+    if (activityStringKey !== '') {
+      updateActivityPollDataWithNewOption(pollId, newActivityBundle).then(
+        data => {
+          setActivityBundle(data)
+        }
+      )
+    }
+
+    setSavedActivityPoll('')
+    setSavedLocationPoll('')
+    setSavedDated('')
+    setSavedTime('')
+
+    updatePollChange(true)
+    setState('Single Group')
   }
+
 
   return (
     // container
@@ -307,13 +248,15 @@ export default function (props: Props) {
       {pollView === 'Date' ? (
         <View style={styles.outer}>
           <View style={styles.backButtonHeaderContainer}>
-            <BackArrow onPress={() => setState('Single Group')} />
-            <View style={{ marginLeft: '20%' }}>
+            <View style={styles.header}>
+              <BackArrow onPress={() => setState('Single Group')} />
+            </View>
+            <View style={{ marginLeft: '18%' }}>
               <ScreenHeaderText>Date Poll</ScreenHeaderText>
             </View>
           </View>
           <View style={styles.containerCalendar}>
-            <InfoBox header='Calendar'>
+            <InfoBox header='Calendar' boxMarginBottom='10%'>
               <CalendarOption
                 onPress={changeViewToDay}
                 changeViewToDay={changeViewToDay}
@@ -332,8 +275,10 @@ export default function (props: Props) {
         <View style={styles.outer}>
           <View>
             <View style={styles.backButtonHeaderContainer}>
-              <BackArrow onPress={() => changeViewToCalender()} />
-              <View style={{ marginLeft: '20%' }}>
+              <View style={styles.header}>
+                <BackArrow onPress={() => setState('Single Group')} />
+              </View>
+              <View style={{ marginLeft: '18%' }}>
                 <ScreenHeaderText>Date Poll</ScreenHeaderText>
               </View>
             </View>
@@ -377,13 +322,6 @@ export default function (props: Props) {
       ) : (
         ''
       )}
-      {pollView === 'confirmation' ? (
-        <>
-          <ConfirmationScreen />
-        </>
-      ) : (
-        ''
-      )}
     </>
   )
 }
@@ -419,7 +357,7 @@ const styles = StyleSheet.create({
   },
   outer: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   filteredBox: {
     justifyContent: 'center',
@@ -456,9 +394,9 @@ const styles = StyleSheet.create({
     padding: 20
   },
   submitButton: {
-    marginTop: '15%',
     alignItems: 'flex-end',
-    width: '90%'
+    paddingRight: '5%',
+    paddingTop: '10%',
   },
   dateQuestion: {
     fontSize: 24,
@@ -467,5 +405,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontFamily:'Ubuntu-Bold'
-}
+  },
+  header: {
+    marginTop: '5%',
+    marginLeft: '5%',
+    marginBottom: '5%',
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    fontFamily: 'Ubuntu-Bold'
+}, 
 })
