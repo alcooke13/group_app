@@ -119,9 +119,10 @@ export default function SingleGroupSettings(props: Props) {
                 payload["title"] = name;
                 updateGroupTitle(groupId, payload);
                 payload["title"] = "";
-                updateCurrentView("Settings")
+                updateCurrentView("Settings");
             }
         }
+
         const memberItems = members?.map((member, index) => {
             return (
                 <ButtonSelector option={member.userName} key={member.id}
@@ -130,7 +131,6 @@ export default function SingleGroupSettings(props: Props) {
                             const newMembersToRemove = [...membersToRemove];
                             newMembersToRemove.push(member.id);
                             updateMembersToRemove(newMembersToRemove);
-                            console.log(newMembersToRemove)
                         } else {
                             const index = membersToRemove.indexOf(member.id);
                             if (index !== -1) {
@@ -150,7 +150,6 @@ export default function SingleGroupSettings(props: Props) {
                 <View style={styles.header}>
                     <BackArrow onPress={() => { updateCurrentView("Settings") }}></BackArrow>
                 </View>
-
                 <BackgroundBox boxHeight='20%' >
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={styles.settingTitle}>Group Name</Text>
@@ -162,21 +161,21 @@ export default function SingleGroupSettings(props: Props) {
                         </TextInput>
                     </View>
                 </BackgroundBox>
-                <View style={{ marginTop: 15 }}>
-                    <SmallButton title='Submit' onPress={() => {
-                        setNewGroupTitle()
-                    }} ></SmallButton>
-
+                <View style={styles.groupNameButton}>
+                    <BigButton
+                        title='Update'
+                        onPress={() => setNewGroupTitle()}
+                        ></BigButton>
                 </View>
                 <InfoBox header='Contacts'
-                    boxHeight='60%'
+                    boxHeight='70%'
                 >
-                    <ScrollView showsVerticalScrollIndicator={false} snapToStart={false}>
-                        {memberItems}
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={styles.contactsMembers}>
+                            {memberItems}
+                        </View>
                     </ScrollView>
-
                 </InfoBox>
-
                 <View style={styles.membersButton}>
                     <BigButton
                         title='Remove Selected'
@@ -386,14 +385,25 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10
     },
+    groupNameButton: {
+        alignSelf: 'flex-end',
+        paddingTop: '7%',
+        paddingRight: '5%'
+    },
     membersButton: {
         alignSelf: 'flex-end',
-        paddingBottom: '10%',
+        paddingBottom: '8%',
         paddingRight: '5%'
+    },
+    contactsMembers: {
+        alignItems: 'center',
+        paddingTop: 10,
+        paddingBottom: 10,
+        fontFamily: 'Ubuntu-Regular'
     },
     settingTitle: {
         paddingTop: 20,
-        paddingBottom: 0,
+        paddingBottom: 20,
         fontSize: 24
     },
     newGroupNameInput: {
