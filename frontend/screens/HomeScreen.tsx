@@ -202,7 +202,8 @@ const styles = StyleSheet.create({
   eventInfo: {
     paddingTop: 10,
     paddingBottom: 5,
-    paddingLeft: 10
+    paddingLeft: 10,
+    alignSelf: 'center'
   },
   pollItem: {
     flexDirection: 'row',

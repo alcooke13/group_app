@@ -1,10 +1,6 @@
 import { Text, View, StyleSheet, SafeAreaView, TextInput } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getEventData, EventData } from '../services/EventServices';
+import { EventData } from '../services/EventServices';
 import { useEffect, useState } from 'react';
-
 import BackArrow from '../components/BackArrow';
 import BackgroundBox from '../components/BackgroundBox';
 import TickBox from '../components/TickBox';
@@ -15,8 +11,8 @@ import CalendarNewEvent from '../components/CalendarNewEvent';
 import InfoBox from '../components/InfoBox';
 import MenuText from '../components/MenuText';
 import TimeOfDayButton from '../components/TimeOfDayButton';
+import BigButton from '../components/BigButton';
 
-// const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
 export interface GroupInfoProps {
     singleGroupId: string;
@@ -26,8 +22,9 @@ export interface GroupInfoProps {
     setUpcomingEvent: React.Dispatch<React.SetStateAction<EventData>>
 }
 
+
 export default function NewEvent(props: GroupInfoProps) {
-    const { singleGroupId, singleGroupName, setState, updateGroupChanges, setUpcomingEvent } = props;
+    const { setState, updateGroupChanges, setUpcomingEvent } = props;
 
     const [dateQuestionStage, setDateQuestionStage] = useState('calendar');
     const [eventTitle, setEventTitle] = useState('');
@@ -41,9 +38,6 @@ export default function NewEvent(props: GroupInfoProps) {
     const [currentStage, updateStage] = useState<string>("Event Name")
     const [bundle, setBundle] = useState<EventData>()
 
-    useEffect(() => {
-
-    }, []);
 
     // set up useStates for logic flow
     // starts from group page, creates a new event for that group
@@ -89,10 +83,6 @@ export default function NewEvent(props: GroupInfoProps) {
                     updateStage("Event name");
                     break;
                 }
-                else {
-
-                    // go to group
-                }
         }
 
     }
@@ -112,122 +102,88 @@ export default function NewEvent(props: GroupInfoProps) {
         updateStage("Event Name")
     }
 
-    function goBackToDetalsKnown() {
+    function goBackToDetailsKnown() {
         updateStage("Details Known")
     }
 
-
-    // Step 1: Ask user for the Events name
     const EventName = () => {
         let titleValue: string;
         const onEventTitleEnd = () => {
             setEventTitle(titleValue)
         }
         return (
-
-
-            <SafeAreaView>
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 0.2, justifyContent: 'flex-start' }}>
-                        <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
+            <>
+                <View style={styles.backButtonheader}>
+                    <BackArrow onPress={() => { goBackToSingleGroupView() }}></BackArrow>
+                </View>
+                <BackgroundBox boxHeight={"28%"}>
+                    <View style={styles.questionBox}>
+                        <Text style={styles.questionHeader}>What is your events name?</Text>
+                        <TextInput
+                                style={styles.input}
+                                onChangeText={(eventTitleText: string) => {
+                                    titleValue = eventTitleText;
+                                }}
+                                onEndEditing={() => { onEventTitleEnd() }}
+                        />
                     </View>
-                    <View style={{ flex: 0.8, alignItems: 'center' }}>
-                        <View style={{ marginVertical: '20%' }}>
-
-                            <BackgroundBox boxHeight={250} >
-                                <View>
-                                    <Text style={{ fontSize: 24, color: 'black', margin: "10%", textAlign: 'center' }} >
-                                        What is your events name?
-                                    </Text>
-                                    <View>
-                                        <TextInput
-                                            style={styles.input}
-                                            onChangeText={(eventTitleText: string) => {
-                                                titleValue = eventTitleText;
-                                            }}
-                                            onEndEditing={() => { onEventTitleEnd() }}
-                                        />
-                                    </View>
-                                </View>
-                            </BackgroundBox>
-                        </View>
-                        <View style={styles.buttonParent}>
-
-                            <SmallButton title={"Submit"} onPress={() => {
-                                if (!titleValue) {
-                                    alert('Please enter an event name');
-                                }
-                                else {
-                                    setEventTitle(titleValue)
-                                    StageController()
-                                }
-                            }} ></SmallButton>
-
-                            </View>
-                        </View>
-
-                    </View>
-            </SafeAreaView> );
+                </BackgroundBox>
+                <View style={styles.buttonParent}>
+                    <BigButton title={"Submit"} onPress={() => {
+                        if (!titleValue) {
+                            alert('Please enter an event name');
+                        }
+                        else {
+                            setEventTitle(titleValue)
+                            StageController()
+                        }
+                    }} ></BigButton>
+                </View>
+            </> 
+        );
     };
 
 
-    // Step 2: Get the known details of the event
     function KnownDetails() {
         return (
-
-            <SafeAreaView style={{ justifyContent: 'space-between' }}>
-
-                <View style={{ flex: 0.15, justifyContent: 'flex-start', marginLeft: -20 }} >
+            <>
+                <View style={styles.backButtonheader}>
                     <BackArrow onPress={() => { goBackToEventName() }}></BackArrow>
-
                 </View>
-
-                <View style={{ flex: 0.85 }}>
-                    <BackgroundBox boxHeight='75%' boxWidth={'100%'} >
-                        <View>
-                     
-                            <View>
-                                <Text style={{ fontSize: 24, alignSelf: 'center', padding: 15, marginTop: 15, marginHorizontal: 30 }} >Select what you know</Text>
-                            </View>
-
-                            <View style={styles.checkBoxParent}>
-                                <Text style={styles.checkboxText}>Date</Text>
-                                <TickBox value={detailsKnown.date} onPress={() => { onDetailTickBoxPress("date") }}></TickBox>
-                            </View>
-                            <View style={{ width: '90%', alignSelf: 'center' }}>
-                                <LineBreak></LineBreak>
-                            </View>
-                            <View style={styles.checkBoxParent}>
-                                <Text style={styles.checkboxText} >Activity</Text>
-                                <TickBox value={detailsKnown.activity} onPress={() => onDetailTickBoxPress("activity")}></TickBox>
-                            </View>
-                            <View style={{ width: '90%', alignSelf: 'center' }}>
-                                <LineBreak></LineBreak>
-                            </View>
-                            <View style={styles.checkBoxParent} >
-                                <Text style={styles.checkboxText} >Location</Text>
-                                <TickBox value={detailsKnown.location} onPress={() => { onDetailTickBoxPress("location") }}></TickBox>
-                            </View>
-
+                <BackgroundBox boxHeight='65%' boxWidth={'90%'} >
+                    <View>
+                        <Text style={styles.questionHeader}>Select what you know:</Text>
+                        <View style={styles.checkBoxParent}>
+                            <Text style={styles.checkboxText}>Date</Text>
+                            <TickBox value={detailsKnown.date} onPress={() => { onDetailTickBoxPress("date") }}></TickBox>
                         </View>
-                    </BackgroundBox>
-                    <View style={styles.buttonParent}>
-                        <SmallButton title={"Next"} onPress={() => {
-                            setActivity("")
-                            setLocation("")
-                            setDate("")
-                            StageController();
-
-                        }} ></SmallButton>
+                        <View style={{ width: '90%', alignSelf: 'center' }}>
+                            <LineBreak></LineBreak>
+                        </View>
+                        <View style={styles.checkBoxParent}>
+                            <Text style={styles.checkboxText} >Activity</Text>
+                            <TickBox value={detailsKnown.activity} onPress={() => onDetailTickBoxPress("activity")}></TickBox>
+                        </View>
+                        <View style={{ width: '90%', alignSelf: 'center' }}>
+                            <LineBreak></LineBreak>
+                        </View>
+                        <View style={styles.checkBoxParent} >
+                            <Text style={styles.checkboxText} >Location</Text>
+                            <TickBox value={detailsKnown.location} onPress={() => { onDetailTickBoxPress("location") }}></TickBox>
+                        </View>
                     </View>
-
+                </BackgroundBox>
+                <View style={styles.buttonParent}>
+                    <BigButton title={"Next"} onPress={() => {
+                        setActivity("")
+                        setLocation("")
+                        setDate("")
+                        StageController();
+                    }} ></BigButton>
                 </View>
-
-            </SafeAreaView>
-
+            </>
         )
     }
-
 
     function CalendarViewDateQuestion() {
         let dateAnswer: string;
@@ -238,60 +194,48 @@ export default function NewEvent(props: GroupInfoProps) {
         }
         return (
 
-            <SafeAreaView style={{ justifyContent: 'space-between' }}>
-                <View style={{ flex: 0.15, justifyContent: 'flex-start' }} >
-                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
-
+            <>
+                <View style={styles.backButtonheader}>
+                    <BackArrow onPress={() => { goBackToDetailsKnown() }}></BackArrow>
                 </View>
-
-
-                <View style={{ flex: 0.85, alignItems: 'center' }}>
-                    <View>
-                        <Text style={{
-                            fontSize: 24,
-                            padding: 15,
-                            textAlign: 'center',
-                            color: '#FF914D'
-                        }}>What is the date of your event?</Text>
-                    </View>
-                    <InfoBox header={"Calendar"} >
-                        <CalendarNewEvent
-                            onPress={changeViewToDay}
-                            setSavedDate={setCalendarDate}
-                            changeViewToDay={changeViewToDay}
-                        ></CalendarNewEvent>
-                    </InfoBox>
+                <View>
+                    <Text style={styles.dateQuestion}>What is the date of your event?</Text>
                 </View>
-            </SafeAreaView>
+                <InfoBox header={"Calendar"} boxMarginBottom='10%'>
+                    <CalendarNewEvent
+                        onPress={changeViewToDay}
+                        setSavedDate={setCalendarDate}
+                        changeViewToDay={changeViewToDay}
+                    ></CalendarNewEvent>
+                </InfoBox>
+            </>
         )
-
     }
 
     function DayViewDateQuestion() {
         return (
-
-            <SafeAreaView>
-                <View style={{ flex: 0.15, justifyContent: 'flex-start' }}>
-                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
-
+            <>
+                <View style={styles.backButtonheader}>
+                    <BackArrow onPress={() => { 
+                        setDateQuestionStage("calendar")
+                        goBackToDetailsKnown();
+                        }}></BackArrow>
                 </View>
-                <View style={{ flex: 0.85, justifyContent: 'space-around' }} >
-                    <View style={{ alignSelf: 'center' }}>
-                        <MenuText>Date Poll</MenuText>
-                    </View>
-                    <View>
-                        <TimeOfDayButton timeOfDayOption='Morning' selected={timeProvided === "T09:00" ? true : false} onPress={() => setTime("T09:00")} />
-                        <TimeOfDayButton timeOfDayOption='Afternoon' selected={timeProvided === "T12:00" ? true : false} onPress={() => setTime("T12:00")} />
-                        <TimeOfDayButton timeOfDayOption='Evening' selected={timeProvided === "T18:00" ? true : false} onPress={() => setTime("T18:00")} />
-                    </View>
-                    <View style={{ flex: 0.2, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                        <SmallButton title="Next" onPress={() => {
-                            setDate(calendarDateProvided + timeProvided)
-                            StageController()
-                        }} />
-                    </View>
+                <View>
+                    <Text style={styles.dateQuestion}>What time of day will your event be?</Text>
                 </View>
-            </SafeAreaView>
+                <View>
+                    <TimeOfDayButton timeOfDayOption='Morning' selected={timeProvided === "T09:00" ? true : false} onPress={() => setTime("T09:00")} />
+                    <TimeOfDayButton timeOfDayOption='Afternoon' selected={timeProvided === "T12:00" ? true : false} onPress={() => setTime("T12:00")} />
+                    <TimeOfDayButton timeOfDayOption='Evening' selected={timeProvided === "T18:00" ? true : false} onPress={() => setTime("T18:00")} />
+                </View>
+                <View style={styles.buttonParent}>
+                    <BigButton title="Next" onPress={() => {
+                        setDate(calendarDateProvided + timeProvided)
+                        StageController()
+                    }} />
+                </View>
+            </>
         )
     }
 
@@ -310,34 +254,26 @@ export default function NewEvent(props: GroupInfoProps) {
             setActivity(activityAnswer)
         }
         return (
-
-
-            <View style={{ flex: 1, justifyContent: 'space-around' }}>
-                <View style={{ flex: 0.2 }}>
-
-                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+            <>
+                <View style={styles.backButtonheader}>
+                    <BackArrow onPress={() => { goBackToDetailsKnown() }}></BackArrow>
                 </View>
-                <View style={{ flex: 0.8, alignItems: 'center' }}>
-                    <View style={{ marginVertical: '20%' }}>
-                        <BackgroundBox boxHeight={250}  >
-                            <View style={{ margin: 30 }}>
-                                <Text style={styles.questionTitle} > What is the activity for your event?</Text>
-
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={(text) => {
-                                        activityAnswer = text;
-                                    }}
-                                    onEndEditing={() => {
-                                        onActivityEnd();
-                                    }}
-                                />
-                            </View>
-                        </BackgroundBox>
+                <BackgroundBox boxHeight={"30%"}>
+                    <View style={styles.questionBox}>
+                        <Text style={styles.questionHeader}>What is the activity for your event?</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => {
+                                activityAnswer = text;
+                            }}
+                            onEndEditing={() => {
+                                onActivityEnd();
+                            }}
+                        />
                     </View>
-                </View>
+                </BackgroundBox>
                 <View style={styles.buttonParent}>
-                    <SmallButton title={"Next"} onPress={() => {
+                <BigButton title={"Next"} onPress={() => {
                         if (!activityAnswer) {
                             alert('Please enter an activity');
                         }
@@ -345,13 +281,11 @@ export default function NewEvent(props: GroupInfoProps) {
                             setActivity(activityAnswer)
                             StageController()
                         }
-                    }} ></SmallButton>
+                    }} ></BigButton>
                 </View>
-            </View>
+                </> 
         )
-
     }
-
 
     function LocationQuestion() {
         let locationAnswer: string;
@@ -359,36 +293,31 @@ export default function NewEvent(props: GroupInfoProps) {
             setLocation(locationAnswer)
         }
         return (
-
-            <SafeAreaView style={{ flex: 1, justifyContent: 'space-around' }}>
-                <View style={{ flex: 0.2 }}>
-                    <BackArrow onPress={() => { goBackToDetalsKnown() }}></BackArrow>
+            <>
+                <View style={styles.backButtonheader}>
+                    <BackArrow onPress={() => { goBackToDetailsKnown() }}></BackArrow>
                 </View>
-                <View style={{ flex: 0.8, alignItems: 'center' }}>
-                    <View style={{ marginVertical: '20%' }}>
-                        <BackgroundBox boxHeight={250}  >
-                            <View style={{ margin: 30 }}>
-                                <Text style={styles.questionTitle} > What is the location of your event?</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={(text) => {
-                                        locationAnswer = text;
-                                    }}
-                                    onEndEditing={() => {
-                                        onLocationEnd();
-                                    }}
-                                />
-                            </View>
-                        </BackgroundBox>
+                <BackgroundBox boxHeight={"30%"}>
+                    <View style={styles.questionBox}>
+                        <Text style={styles.questionHeader}>What is the location of your event?</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => {
+                                locationAnswer = text;
+                            }}
+                            onEndEditing={() => {
+                                onLocationEnd();
+                            }}
+                        />
                     </View>
-                    <View style={styles.buttonParent}>
-                        <SmallButton title={"Next"} onPress={() => {
+                </BackgroundBox>
+                <View style={styles.buttonParent}>
+                <BigButton title={"Next"} onPress={() => {
                             setLocation(locationAnswer)
                             StageController()
-                        }} ></SmallButton>
-                    </View>
+                        }} ></BigButton>
                 </View>
-            </SafeAreaView>
+            </> 
         )
     }
 
@@ -417,9 +346,7 @@ export default function NewEvent(props: GroupInfoProps) {
         postEvent(newBundle).then((event) => {
             setUpcomingEvent(event);
             updateGroupChanges({"new event": event.id});
-        })
-
-        
+        })   
         setState("Single Group");
 
     }
@@ -438,51 +365,38 @@ export default function NewEvent(props: GroupInfoProps) {
 
         return (
 
-            <SafeAreaView>
-                <View style={{ flex: 0.8, alignItems: 'center', justifyContent: 'space-evenly' }}>
-                    <BackgroundBox boxHeight='80%' >
-                        <View style={{ margin: 20 }}>
-                            <Text style={styles.questionTitle}> Are you happy with the below details? </Text>
-                            <Text style={{
-                                fontSize: 24,
-                                padding: 10,
-                                textAlign: 'center',
-                                color: "#1E1E1E"
-                            }} >{eventTitle}</Text>
-                            <View style={{ width: '80%', alignSelf: 'center' }}>
-                                <LineBreak></LineBreak>
-                            </View>
-                            <View style={{ marginTop: 15 }}>
-                                {dateProvided != "" ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Date:</Text>  {eventDate}</Text> : ""}
-                                {dateProvided != "" ? <Text style={styles.reviewText} ><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Time:</Text>  {eventTime}</Text> : ""}
-                                {activityProvided != "" ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Activity:</Text>  {activityProvided}</Text> : ""}
-                                {locationProvided != "" ? <Text style={styles.reviewText}><Text style={{ color: "#1E1E1E", fontStyle: 'italic' }}>Location:</Text>  {locationProvided}</Text> : ""}
-                            </View>
+            <>
+                <BackgroundBox boxHeight='55%' boxMarginTop='30%' boxMarginBottom='10%'>
+                    <View style={{ margin: 20 }}>
+                        <Text style={styles.questionHeader}> Are you happy with the below details? </Text>
+                        <Text style={styles.reviewEventHeader} >{eventTitle}</Text>
+                        <View style={{ width: '80%', alignSelf: 'center' }}>
+                            <LineBreak></LineBreak>
                         </View>
-                    </BackgroundBox>
-                </View>
-                <View style={{ flex: 0.2 }}>
-                    <View style={styles.buttonParent}>
-                        <View style={{ flexDirection: 'row', padding: 15, marginBottom: '30%' }}>
-                            <View style={{ padding: 15 }}>
-                                <SmallButton title={"Yes"} onPress={() => {
-                                    prepareBundle();
-                                }} ></SmallButton>
-                            </View>
-                            <View style={{ padding: 15 }}>
-                                <SmallButton title={"No"} onPress={() => {
-                                    console.log(currentStage)
-                                    updateStage("Details Known")
-                                }} ></SmallButton>
-                            </View>
+                        <View style={styles.reviewInfo}>
+                            {dateProvided != "" ? <Text style={styles.reviewText}>Date: {eventDate}</Text> : ""}
+                            {dateProvided != "" ? <Text style={styles.reviewText}>Time: {eventTime}</Text> : ""}
+                            {activityProvided != "" ? <Text style={styles.reviewText}>Activity: {activityProvided}</Text> : ""}
+                            {locationProvided != "" ? <Text style={styles.reviewText}>Location: {locationProvided}</Text> : ""}
                         </View>
                     </View>
+                </BackgroundBox>
+                <View style={styles.buttonsParent}>
+                    <View style={{ padding: 15 }}>
+                        <BigButton title={"Yes"} onPress={() => {
+                            prepareBundle();
+                        }} ></BigButton>
+                    </View>
+                    <View style={{ padding: 15 }}>
+                        <BigButton title={"No"} onPress={() => {
+                            console.log(currentStage)
+                            updateStage("Details Known")
+                        }} ></BigButton>
+                    </View>
                 </View>
-            </SafeAreaView>
+            </>
         )
     }
-
-
 
     return (
         <>
@@ -499,16 +413,12 @@ export default function NewEvent(props: GroupInfoProps) {
 
 const styles = StyleSheet.create({
     input: {
-        height: 40,
-        borderWidth: 1,
-        padding: 10,
-        width: '80%',
+        justifyContent: 'center',
         backgroundColor: 'white',
-        alignSelf: 'center'
-    },
-    container: {
-        width: '80%'
-        // flex: 1, alignItems: 'center', justifyContent: 'center', width: '80%'
+        alignItems: 'stretch',
+        padding: 10,
+        fontSize: 16,
+        fontFamily:'Ubuntu-Regular'
     },
     title: {
         fontSize: 24,
@@ -519,7 +429,6 @@ const styles = StyleSheet.create({
     buttonsParent: {
         flex: 1,
         flexDirection: 'row',
-
     },
     buttons: {
         padding: 15
@@ -532,7 +441,7 @@ const styles = StyleSheet.create({
     },
     checkboxText: {
         fontSize: 24,
-        // paddingLeft: "10%"
+        fontFamily:'Ubuntu-Regular'
     },
     questionTitle: {
         fontSize: 24,
@@ -540,25 +449,14 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     reviewText: {
-        fontSize: 18,
+        fontSize: 22,
         padding: 10,
+        fontFamily:'Ubuntu-Regular'
     },
     buttonParent: {
-        width: '100%',
-        height: 50,
-        padding: '10%',
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        position: 'absolute',
-        bottom: 0,
-    },
-
-    containerCalendar: {
-        backgroundColor: "#25242B",
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-
+        paddingTop: '10%',
+        padding: '5%',
+        alignSelf: 'flex-end',
     },
     header: {
         flexDirection: 'row',
@@ -566,23 +464,46 @@ const styles = StyleSheet.create({
         alignContent: 'flex-start',
         width: "100%",
         justifyContent: 'space-around',
-
-    },
-
-    containerArea : {
-        flex: 1,
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        justifyContent: 'space-evenly'
     },
     backButtonheader : {
-        flexDirection: 'row',
         alignSelf: 'flex-start',
-        // paddingTop: '5%',
-        // paddingLeft: '5%'
+        paddingTop: '5%',
+        paddingLeft: '5%',
+        paddingBottom: '10%'
+    },
+    questionBox: {
+        justifySelf: 'center',
+        alignSelf: 'center',
+        width: '80%'
+      },
+    questionHeader: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        paddingTop: 40,
+        paddingBottom: 30,
+        fontSize: 24,
+        paddingHorizontal: '10%',
+        fontFamily: 'Ubuntu-Bold'
+    },
+    dateQuestion: {
+        fontSize: 24,
+        marginHorizontal: '10%',
+        marginVertical: '10%',
+        textAlign: 'center',
+        color: 'white',
+        fontFamily:'Ubuntu-Bold'
+    },
+    reviewInfo: {
+        paddingTop: '10%',
+        alignSelf: 'center'
+    },
+    reviewEventHeader: {
+        fontSize: 24,
+        padding: 10,
+        textAlign: 'center',
+        color: "#1E1E1E",
+        fontFamily:'Ubuntu-Regular'
     }
-
 })
 
 

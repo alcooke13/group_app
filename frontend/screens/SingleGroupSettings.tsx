@@ -23,11 +23,7 @@ interface Props {
     groupName: string;
     setState: React.Dispatch<React.SetStateAction<string>>;
     parentUpcomingEvent?: EventData;
-
-
 }
-
-
 
 export default function SingleGroupSettings(props: Props) {
 
@@ -164,9 +160,7 @@ export default function SingleGroupSettings(props: Props) {
                         onPress={() => setNewGroupTitle()}
                         ></BigButton>
                 </View>
-                <InfoBox header='Contacts'
-                    boxHeight='70%'
-                >
+                <InfoBox header='Contacts'boxHeight='70%'>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={styles.contactsMembers}>
                             {memberItems}
@@ -287,11 +281,11 @@ export default function SingleGroupSettings(props: Props) {
                             <>
                                 <Text style={styles.settingTitle}>Are you sure you want to delete the following?</Text>
                                 <View style={styles.deleteEventInfo}>
-                                    {parentUpcomingEvent ? <Text style={styles.text} >Title: {parentUpcomingEvent?.eventName}</Text> : ""}
-                                    {eventDate ? <Text style={styles.text} >Date: {eventDate}</Text> : ""}
-                                    {eventTime ? <Text style={styles.text} >Time: {eventTime}</Text> : ""}
-                                    {parentUpcomingEvent?.activity ? <Text style={styles.text}>Activity: {parentUpcomingEvent?.activity}</Text> : ""}
-                                    {parentUpcomingEvent?.eventLocation ? <Text style={styles.text}>Location: {parentUpcomingEvent?.eventLocation}</Text> : ""}
+                                    {parentUpcomingEvent ? <Text style={styles.reviewText} >Title: {parentUpcomingEvent?.eventName}</Text> : ""}
+                                    {eventDate ? <Text style={styles.reviewText} >Date: {eventDate}</Text> : ""}
+                                    {eventTime ? <Text style={styles.reviewText} >Time: {eventTime}</Text> : ""}
+                                    {parentUpcomingEvent?.activity ? <Text style={styles.reviewText}>Activity: {parentUpcomingEvent?.activity}</Text> : ""}
+                                    {parentUpcomingEvent?.eventLocation ? <Text style={styles.reviewText}>Location: {parentUpcomingEvent?.eventLocation}</Text> : ""}
                                 </View>
                             </>
                             :
@@ -391,10 +385,6 @@ const styles = StyleSheet.create({
         color: 'black',
         justifyContent: 'center'
     },
-    reviewText: {
-        fontSize: 18,
-        padding: 10,
-    },
     eventItem: {
         padding: 15,
         justifyContent: 'space-between'
@@ -437,5 +427,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: '5%',
         marginBottom: '10%'
-    }
+    },
+    reviewText: {
+        fontSize: 22,
+        padding: 10,
+        fontFamily:'Ubuntu-Regular'
+    },
 });
