@@ -2,19 +2,19 @@ import { Text, View, StyleSheet, SafeAreaView, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getEventData, EventData } from '../../services/EventServices';
+import { getEventData, EventData } from '../services/EventServices';
 import { useEffect, useState } from 'react';
 
-import BackArrow from '../../components/BackArrow';
-import BackgroundBox from '../../components/BackgroundBox';
-import TickBox from '../../components/TickBox';
-import SmallButton from '../../components/SmallButton';
-import LineBreak from '../../components/LineBreak';
-import { postEvent } from '../../services/EventServices';
-import CalendarNewEvent from '../../components/CalendarNewEvent';
-import InfoBox from '../../components/InfoBox';
-import MenuText from '../../components/MenuText';
-import TimeOfDayButton from '../../components/TimeOfDayButton';
+import BackArrow from '../components/BackArrow';
+import BackgroundBox from '../components/BackgroundBox';
+import TickBox from '../components/TickBox';
+import SmallButton from '../components/SmallButton';
+import LineBreak from '../components/LineBreak';
+import { postEvent } from '../services/EventServices';
+import CalendarNewEvent from '../components/CalendarNewEvent';
+import InfoBox from '../components/InfoBox';
+import MenuText from '../components/MenuText';
+import TimeOfDayButton from '../components/TimeOfDayButton';
 
 // const detailsKnownCheck: { [key: string]: boolean } = { 'date': false, 'activity': false, 'location': false };
 
@@ -22,11 +22,12 @@ export interface GroupInfoProps {
     singleGroupId: string;
     singleGroupName: string;
     setState: React.Dispatch<React.SetStateAction<string>>;
-
+    updateGroupChanges: React.Dispatch<React.SetStateAction<Object>>;
+    setUpcomingEvent: React.Dispatch<React.SetStateAction<EventData>>
 }
 
 export default function NewEvent(props: GroupInfoProps) {
-    const { singleGroupId, singleGroupName, setState } = props;
+    const { singleGroupId, singleGroupName, setState, updateGroupChanges, setUpcomingEvent } = props;
 
     const [dateQuestionStage, setDateQuestionStage] = useState('calendar');
     const [eventTitle, setEventTitle] = useState('');
@@ -413,10 +414,13 @@ export default function NewEvent(props: GroupInfoProps) {
         if (!locationProvided) {
             newBundle.eventLocation = null;
         }
-        postEvent(newBundle).then((data) => {
-            setBundle(data)
+        postEvent(newBundle).then((event) => {
+            setUpcomingEvent(event);
+            updateGroupChanges({"new event": event.id});
         })
-        setState("Single Group")
+
+        
+        setState("Single Group");
 
     }
 
