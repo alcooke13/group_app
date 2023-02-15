@@ -212,6 +212,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   text: {
-    fontFamily: 'Ubuntu-Regular'
+    fontFamily: 'Ubuntu-Regular',
+    fontSize: 18,
+    lineHeight: 30
   }
 })
