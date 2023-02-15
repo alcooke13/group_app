@@ -144,24 +144,24 @@ const filteredList: Array<DatePollData | ActivityPollData | LocationPollData> = 
     }
   })
 
-    const filteredItems = filteredList.map(function (poll, index) {
-      return (
-        <View key={poll.id.toString() + poll.toString()}>
-          <View style={styles.pollItem}>
-            <TextHeader>{poll.event.eventName}</TextHeader>
-            <SmallButton
-              title='Vote'
-              onPress={() => {
-                navigation.navigate('Groups', {
-                  groupId: poll.event.group.id
-                })
-              }}
-            ></SmallButton>
-          </View>
-          {index !== polls?.length - 1 ? <LineBreak /> : ''}
+  const filteredItems = filteredList.map(function (poll, index) {
+    return (
+      <View key={poll.id.toString() + poll.type}>
+        <View style={styles.pollItem}>
+          <TextHeader>{poll.event.eventName}</TextHeader>
+          <SmallButton
+            title='Vote'
+            onPress={() => {
+              navigation.navigate('Groups', {
+                groupId: poll.event.group.id
+              })
+            }}
+          ></SmallButton>
         </View>
-      )
-    })
+        {index !== polls?.length - 1 ? <LineBreak /> : ''}
+      </View>
+    )
+  })
 
   return (
     <SafeAreaView style={styles.container}>
