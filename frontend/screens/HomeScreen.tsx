@@ -165,7 +165,7 @@ const filteredList: Array<DatePollData | ActivityPollData | LocationPollData> = 
 
   return (
     <SafeAreaView style={styles.container}>
-      <InfoBox header='Upcoming Event' boxHeight='75%' boxMarginTop='5%'>
+      <InfoBox header='Upcoming Events' boxHeight='75%' boxMarginTop='5%'>
         <ScrollView showsVerticalScrollIndicator={false}>
           {eventItems}
         </ScrollView>
