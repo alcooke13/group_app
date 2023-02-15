@@ -339,13 +339,20 @@ export default function AllGroupsScreen (props: Props) {
   function SingleGroupDetails (): JSX.Element {
     if (upcomingEvent) {
       let eventDate
-
+      let eventTime;
       if (upcomingEvent.date) {
         eventDate = new Date(upcomingEvent.date).toLocaleString('en-GB', {
           weekday: 'long',
           day: 'numeric',
           month: 'long'
         })
+        eventTime = new Date(upcomingEvent.date).toLocaleTimeString("en-US", {
+          hour: '2-digit',
+          minute: '2-digit'
+      })
+      } else {
+        eventDate = "TBC";
+        eventTime = "TBC";
       }
 
       return (
@@ -354,7 +361,7 @@ export default function AllGroupsScreen (props: Props) {
               <TextHeader>{upcomingEvent.eventName}</TextHeader>
             </View>
             <Text style={styles.text}>Date:         {eventDate}</Text>
-            <Text style={styles.text}>Time:         TBC</Text>
+            <Text style={styles.text}>Time:         {eventTime}</Text>
             <Text style={styles.text}>Location:   {upcomingEvent.eventLocation}</Text>
           </View>
       )
