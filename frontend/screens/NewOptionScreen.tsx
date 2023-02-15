@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet, SafeAreaView, TextInput, Text } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BackArrow from '../components/BackArrow'
 import TextHeader from '../components/TextHeader'
 import BackgroundBox from '../components/BackgroundBox'
@@ -51,14 +51,25 @@ export default function (props: Props) {
   const [dateBundle, setDateBundle] = useState<DatePollData>()
   const [locationBundle, setLocationBundle] = useState<LocationPollData>()
   const [activityBundle, setActivityBundle] = useState<ActivityPollData>()
+  const [settingsUpdated, updateSettingsUpdated] = useState<boolean>(false);
+
+  
+  useEffect(() => {
+    if (settingsUpdated) {
+      prepareBundle();
+      updateSettingsUpdated(false);
+      setState('Single Group');
+    }
+
+  }, [settingsUpdated]);
 
   // Change state functions
   const changeFromActivityToConfirmation = () => {
-    if (activePollType === 'Activity') setPollView('confirmation');
+    prepareBundle();
   }
 
   const changeFromLocationToConfirmation = () => {
-    if (activePollType === 'Location') setPollView('confirmation');
+    prepareBundle();
   }
 
   const changeViewToDay = () => {
@@ -97,7 +108,6 @@ export default function (props: Props) {
               title='Add Option'
               onPress={() => {
                 setSavedActivityPoll(activityValue)
-                changeFromActivityToConfirmation()
               }}
             />
           </View>
@@ -125,7 +135,7 @@ export default function (props: Props) {
               <TextInput
                 style={styles.inputBox}
                 onChangeText={(inputText: string) =>
-                  (locationValue = inputText)
+                  locationValue = inputText
                 }
               />
             </View>
@@ -134,8 +144,8 @@ export default function (props: Props) {
             <BigButton
               title='Add Option'
               onPress={() => {
-                setSavedLocationPoll(locationValue)
-                changeFromLocationToConfirmation()
+                setSavedLocationPoll(locationValue);
+                updateSettingsUpdated(true);
               }}
             />
           </View>
@@ -143,6 +153,7 @@ export default function (props: Props) {
       </View>
     )
   }
+
   let eventDate = new Date(savedDate + savedTime).toLocaleString('en-GB', {
     weekday: 'long',
     day: 'numeric',
@@ -172,6 +183,7 @@ export default function (props: Props) {
   }
 
   function prepareBundle() {
+    console.log("got here")
     // Date/Time Bundle
     let dateStringKey: string = savedDate + savedTime
     const newBundle: { [key: string]: [] } = {}
@@ -197,9 +209,10 @@ export default function (props: Props) {
       })
     }
 
+    console.log('loction stirng', locationStringKey)
     //Location Data
     if (locationStringKey !== '') {
-      console.log(newLocationBundle)
+      console.log("location bundle", newLocationBundle)
       updateLocationPollDataWithNewOption(pollId, newLocationBundle).then(
         data => {
           setLocationBundle(data)
@@ -216,13 +229,7 @@ export default function (props: Props) {
       )
     }
 
-    setSavedActivityPoll('')
-    setSavedLocationPoll('')
-    setSavedDated('')
-    setSavedTime('')
-
-    updatePollChange(true)
-    setState('Single Group')
+    updatePollChange(true);
   }
 
 
