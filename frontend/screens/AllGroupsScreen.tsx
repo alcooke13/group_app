@@ -18,7 +18,7 @@ import { DatePollData, getDatePollDataByGroupId, getDatePollDataById, postDatePo
 import { getLocationPollDataByGroupId, getLocationPollDataById, LocationPollData, postLocationPoll, updateLocationPollTimeout, updateLocationPollToComplete, updateLocationPollWithRemovedVote } from '../services/LocationPollServices'
 import { ActivityPollData, getActivityPollDataByGroupId, getActivityPollDataById, postActivityPoll, updateActivityPollTimeout, updateActivityPollToComplete, updateActivityPollWithRemovedVote } from '../services/ActivityPollServices'
 import ButtonSelector from '../components/ButtonSelector'
-import NewEvent from './NewEvent/NewEvent'
+import NewEvent from './NewEvent'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens'
 import AddGroupScreen from './AddGroupScreen'
 import SmallPlus from '../components/SmallPlus'
@@ -82,6 +82,10 @@ export default function AllGroupsScreen (props: Props) {
     if ('new group' in groupChanges) {
       getSingleGroupData(groupChanges['new group'])
       updateGroupChanges({})
+    } 
+    
+    if ('new event' in groupChanges) {
+      getSingleGroupData(singleGroup.id)
     }
   }, [groupChanges]);
 
@@ -519,15 +523,7 @@ export default function AllGroupsScreen (props: Props) {
     <SafeAreaView style={styles.container}>
       {groupView === 'All Groups' ? <AllGroupView /> : ''}
       {groupView === 'Single Group' ? <SingleGroupView /> : ''}
-      {groupView === 'New Event' ? (
-        <NewEvent
-          singleGroupName={singleGroup.groupName}
-          singleGroupId={singleGroup.id}
-          setState={setGroupView}
-        />
-      ) : (
-        ''
-      )}
+      {groupView === 'New Event' ? (<NewEvent singleGroupName={singleGroup.groupName} singleGroupId={singleGroup.id} setState={setGroupView} updateGroupChanges={updateGroupChanges} setUpcomingEvent={setUpcomingEvent} />) : ('')}
       {groupView === 'Loading' ? '' : ''}
       {groupView === 'Add Option' ? <NewOptionScreen user={user} setState={setGroupView} activePollType={activeGroupPoll?.type} activeGroupPollId={activeGroupPoll?.id} updatePollChange={updatePollChange} /> : ''}
       {groupView === 'Add Group' ? <AddGroupScreen user={user} setState={setGroupView} newGroup={updateGroupChanges} /> : ''}

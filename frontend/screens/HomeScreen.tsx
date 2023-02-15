@@ -38,7 +38,7 @@ import {
   useIsFocused,
   useNavigation
 } from '@react-navigation/native'
-import NewEvent from './NewEvent/NewEvent'
+import NewEvent from './NewEvent'
 import AllGroupsScreen from './AllGroupsScreen'
 import navigation from '../navigation'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
